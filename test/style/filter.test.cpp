@@ -1,6 +1,7 @@
 #include <mbgl/test/util.hpp>
 #include <mbgl/util/feature.hpp>
 #include <mbgl/util/geometry.hpp>
+#include <mbgl/util/feature.hpp>
 
 #include <mbgl/style/filter.hpp>
 #include <mbgl/style/filter_evaluator.hpp>
@@ -40,7 +41,7 @@ TEST(Filter, EqualsNumber) {
     ASSERT_FALSE(f(feature({{ "foo", std::string("0") }})));
     ASSERT_FALSE(f(feature({{ "foo", false }})));
     ASSERT_FALSE(f(feature({{ "foo", true }})));
-    ASSERT_FALSE(f(feature({{ "foo", mapbox::geometry::null_value }})));
+    ASSERT_FALSE(f(feature({{ "foo", mapbox::feature::null_value }})));
     ASSERT_FALSE(f(feature({{}})));
 }
 

@@ -5,6 +5,6 @@
 namespace mbgl {
 
 using GeoJSON = mapbox::geojson::geojson;
-using FeatureCollection = mapbox::geojson::feature_collection;
+using GeoJSONFeatureCollection = mapbox::geojson::feature_collection;
 
 } // namespace mbgl

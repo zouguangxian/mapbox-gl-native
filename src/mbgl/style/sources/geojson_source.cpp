@@ -67,7 +67,7 @@ void GeoJSONSource::loadDescription(FileSource& fileSource) {
                            error.message.c_str());
                 // Create an empty GeoJSON VT object to make sure we're not infinitely waiting for
                 // tiles to load.
-                baseImpl = makeMutable<Impl>(impl(), GeoJSON{ FeatureCollection{} });
+                baseImpl = makeMutable<Impl>(impl(), GeoJSON{ GeoJSONFeatureCollection{} });
             } else {
                 baseImpl = makeMutable<Impl>(impl(), *geoJSON);
             }

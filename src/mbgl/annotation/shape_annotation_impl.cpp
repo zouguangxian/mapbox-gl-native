@@ -6,6 +6,7 @@
 #include <mbgl/util/string.hpp>
 #include <mbgl/util/constants.hpp>
 #include <mbgl/util/geometry.hpp>
+#include <mbgl/util/feature.hpp>
 
 namespace mbgl {
 
@@ -22,7 +23,7 @@ void ShapeAnnotationImpl::updateTileData(const CanonicalTileID& tileID, Annotati
     static const double baseTolerance = 4;
 
     if (!shapeTiler) {
-        mapbox::geometry::feature_collection<double> features;
+        mbgl::FeatureCollection features;
         features.emplace_back(ShapeAnnotationGeometry::visit(geometry(), [] (auto&& geom) {
             return Feature { std::move(geom) };
         }));
