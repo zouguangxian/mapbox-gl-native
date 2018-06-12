@@ -48,6 +48,7 @@
 #include "snapshotter/map_snapshot.hpp"
 #include "text/local_glyph_rasterizer_jni.hpp"
 #include "java/lang.hpp"
+#include "local.hpp"
 
 namespace mbgl {
 namespace android {
@@ -159,6 +160,7 @@ void registerNatives(JavaVM *vm) {
     // Bitmap
     Bitmap::registerNative(env);
     BitmapFactory::registerNative(env);
+    Locale::registerNative(env);
 
     // Style
     TransitionOptions::registerNative(env);

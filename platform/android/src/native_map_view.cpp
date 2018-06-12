@@ -52,6 +52,7 @@
 #include  "map/image.hpp"
 #include "style/light.hpp"
 #include "bitmap_factory.hpp"
+#include "local.hpp"
 
 namespace mbgl {
 namespace android {
@@ -84,6 +85,9 @@ NativeMapView::NativeMapView(jni::JNIEnv& _env,
                                                   static_cast<uint32_t>(height) }, pixelRatio,
                                       fileSource, *threadPool, MapMode::Continuous,
                                       ConstrainMode::HeightOnly, ViewportMode::Default);
+
+    auto locale = Locale::ForLanguageTag(_env, jni::Make<jni::String>(_env, "en"));
+    assert(locale);
 }
 
 /**

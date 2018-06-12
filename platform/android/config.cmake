@@ -53,7 +53,9 @@ macro(mbgl_platform_core)
         PRIVATE platform/android/src/bitmap_factory.cpp
         PRIVATE platform/android/src/bitmap_factory.hpp
         PRIVATE platform/android/src/image.cpp
-
+        PRIVATE platform/android/src/local.hpp
+        PRIVATE platform/android/src/local.cpp
+        
         # Thread pool
         PRIVATE platform/default/mbgl/util/shared_thread_pool.cpp
         PRIVATE platform/default/mbgl/util/shared_thread_pool.hpp
