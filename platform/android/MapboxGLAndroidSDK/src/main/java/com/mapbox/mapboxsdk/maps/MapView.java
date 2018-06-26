@@ -1129,7 +1129,7 @@ public class MapView extends FrameLayout implements NativeMapView.ViewCallback {
 
     @Override
     public void onMapChanged(@MapChange int change) {
-      if (change == DID_FINISH_LOADING_STYLE && initialLoad) {
+      if (change == WILL_START_RENDERING_MAP && initialLoad) {
         initialLoad = false;
         mapboxMap.onPreMapReady();
         onMapReady();
