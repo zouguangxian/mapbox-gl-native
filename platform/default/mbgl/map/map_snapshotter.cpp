@@ -85,6 +85,12 @@ void MapSnapshotter::Impl::snapshot(ActorRef<MapSnapshotter::Callback> callback)
             return transform.latLngToScreenCoordinate(unwrappedLatLng);
         }};
 
+        assert (frontend.getRenderer());
+        QueryPointForFn  queryPointForFn { [=] (const mapbox::geometry::point<double>& point,
+                                                const RenderedQueryOptions& renderedQueryOptions){
+                return frontend.getRenderer()->queryRenderedFeatures({point.x, point.y}, renderedQueryOptions);
+        }};
+
         // Collect all source attributions
         std::vector<std::string> attributions;
         for (auto source : map.getStyle().getSources()) {

@@ -10,6 +10,8 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <mbgl/util/feature.hpp>
+#include <mbgl/renderer/query.hpp>
 
 namespace mbgl {
 
@@ -52,6 +54,8 @@ public:
     LatLngBounds getRegion() const;
 
     using PointForFn = std::function<ScreenCoordinate (const LatLng&)>;
+    using QueryPointForFn = std::function<std::vector<mbgl::Feature> (const mapbox::geometry::point<double>&,
+                                                                      const RenderedQueryOptions&)>;
     using Attributions = std::vector<std::string>;
     using Callback = std::function<void (std::exception_ptr, PremultipliedImage, Attributions, PointForFn)>;
     void snapshot(ActorRef<Callback>);

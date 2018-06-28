@@ -91,6 +91,8 @@ optional<TransformState> HeadlessFrontend::getTransformState() const {
     } else {
         return {};
     }
+
+
 }
 
 } // namespace mbgl

@@ -7,6 +7,8 @@
 #include <mbgl/util/optional.hpp>
 
 #include <memory>
+#include <mbgl/renderer/query.hpp>
+#include <mbgl/util/geo.hpp>
 
 namespace mbgl {
 
@@ -37,6 +39,7 @@ public:
     PremultipliedImage render(Map&);
 
     optional<TransformState> getTransformState() const;
+    std::vector<Feature> queryRenderedFeatures(const ScreenCoordinate&, const RenderedQueryOptions&) const;
 
 private:
     Size size;
