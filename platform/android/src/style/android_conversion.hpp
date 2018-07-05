@@ -95,7 +95,10 @@ public:
             return { value.toString() };
         } else if (value.isNumber()) {
             auto doubleVal = value.toDouble();
-            return { doubleVal - (int) doubleVal > 0.0 ? doubleVal : value.toLong() };
+            return {doubleVal - (int) doubleVal > 0.0 ? doubleVal : value.toLong()};
+        } else if (value.isObject()) {
+            auto caseSensitive = objectMember(value, "caseSensitive");
+            return {};
         } else {
             return {};
         }

@@ -14,7 +14,9 @@ import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The value for any layout property, paint property, or filter may be specified as an expression.
@@ -386,6 +388,31 @@ public class Expression {
 
   /**
    * Returns true if the input values are equal, false otherwise.
+   * The inputs must be numbers, strings, or booleans, and both of the same type.
+   * <p>
+   * Example usage:
+   * </p>
+   * <pre>
+   * {@code
+   * FillLayer fillLayer = new FillLayer("layer-id", "source-id");
+   * fillLayer.setFilter(
+   *     eq(get("keyToValue"), get("keyToOtherValue"))
+   * );
+   * }
+   * </pre>
+   *
+   * @param compareOne the first expression
+   * @param compareTwo the second expression
+   * @param collator   the string collator
+   * @return expression
+   * @see <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-==">Style specification</a>
+   */
+  public static Expression eq(@NonNull Expression compareOne, @NonNull Expression compareTwo, @NonNull Expression collator) {
+    return new Expression("==", compareOne, compareTwo, collator);
+  }
+
+  /**
+   * Returns true if the input values are equal, false otherwise.
    * <p>
    * Example usage:
    * </p>
@@ -422,12 +449,36 @@ public class Expression {
    * </pre>
    *
    * @param compareOne the first expression
-   * @param compareTwo the second number
+   * @param compareTwo the second string
    * @return expression
    * @see <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-==">Style specification</a>
    */
   public static Expression eq(@NonNull Expression compareOne, @NonNull String compareTwo) {
     return eq(compareOne, literal(compareTwo));
+  }
+
+  /**
+   * Returns true if the input values are equal, false otherwise.
+   * <p>
+   * Example usage:
+   * </p>
+   * <pre>
+   * {@code
+   * FillLayer fillLayer = new FillLayer("layer-id", "source-id");
+   * fillLayer.setFilter(
+   *     eq(get("keyToValue"), "value")
+   * );
+   * }
+   * </pre>
+   *
+   * @param compareOne the first expression
+   * @param compareTwo the second string
+   * @param collator   the string collator
+   * @return expression
+   * @see <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-==">Style specification</a>
+   */
+  public static Expression eq(@NonNull Expression compareOne, @NonNull String compareTwo, @NonNull Expression collator) {
+    return eq(compareOne, literal(compareTwo), collator);
   }
 
   /**
@@ -475,6 +526,32 @@ public class Expression {
    */
   public static Expression neq(@NonNull Expression compareOne, @NonNull Expression compareTwo) {
     return new Expression("!=", compareOne, compareTwo);
+  }
+
+
+  /**
+   * Returns true if the input values are not equal, false otherwise.
+   * The inputs must be numbers, strings, or booleans, and both of the same type.
+   * <p>
+   * Example usage:
+   * </p>
+   * <pre>
+   * {@code
+   * FillLayer fillLayer = new FillLayer("layer-id", "source-id");
+   * fillLayer.setFilter(
+   *     neq(get("keyToValue"), get("keyToOtherValue"))
+   * );
+   * }
+   * </pre>
+   *
+   * @param compareOne the first expression
+   * @param compareTwo the second expression
+   * @param collator   the string collator
+   * @return expression
+   * @see <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-!=">Style specification</a>
+   */
+  public static Expression neq(@NonNull Expression compareOne, @NonNull Expression compareTwo, @NonNull Expression collator) {
+    return new Expression("!=", compareOne, compareTwo, collator);
   }
 
   /**
@@ -532,6 +609,30 @@ public class Expression {
    * {@code
    * FillLayer fillLayer = new FillLayer("layer-id", "source-id");
    * fillLayer.setFilter(
+   *     neq(get("keyToValue"), "value"))
+   * );
+   * }
+   * </pre>
+   *
+   * @param compareOne the first expression
+   * @param compareTwo the second string
+   * @param collator   the string collator
+   * @return expression
+   * @see <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-!=">Style specification</a>
+   */
+  public static Expression neq(@NonNull Expression compareOne, @NonNull String compareTwo, @NonNull Expression collator) {
+    return new Expression("!=", compareOne, literal(compareTwo), collator);
+  }
+
+  /**
+   * Returns `true` if the input values are not equal, `false` otherwise.
+   * <p>
+   * Example usage:
+   * </p>
+   * <pre>
+   * {@code
+   * FillLayer fillLayer = new FillLayer("layer-id", "source-id");
+   * fillLayer.setFilter(
    *     neq(get("keyToValue"), 2.0f))
    * );
    * }
@@ -568,6 +669,31 @@ public class Expression {
    */
   public static Expression gt(@NonNull Expression compareOne, @NonNull Expression compareTwo) {
     return new Expression(">", compareOne, compareTwo);
+  }
+
+  /**
+   * Returns true if the first input is strictly greater than the second, false otherwise.
+   * The inputs must be numbers or strings, and both of the same type.
+   * <p>
+   * Example usage:
+   * </p>
+   * <pre>
+   * {@code
+   * FillLayer fillLayer = new FillLayer("layer-id", "source-id");
+   * fillLayer.setFilter(
+   *     gt(get("keyToValue"), get("keyToOtherValue"))
+   * );
+   * }
+   * </pre>
+   *
+   * @param compareOne the first expression
+   * @param compareTwo the second expression
+   * @param collator   the string collator
+   * @return expression
+   * @see <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-%3E">Style specification</a>
+   */
+  public static Expression gt(@NonNull Expression compareOne, @NonNull Expression compareTwo, @NonNull Expression collator) {
+    return new Expression(">", compareOne, compareTwo, collator);
   }
 
   /**
@@ -617,6 +743,30 @@ public class Expression {
   }
 
   /**
+   * Returns true if the first input is strictly greater than the second, false otherwise.
+   * <p>
+   * Example usage:
+   * </p>
+   * <pre>
+   * {@code
+   * FillLayer fillLayer = new FillLayer("layer-id", "source-id");
+   * fillLayer.setFilter(
+   *     gt(get("keyToValue"), "value")
+   * );
+   * }
+   * </pre>
+   *
+   * @param compareOne the first expression
+   * @param compareTwo the second string
+   * @param collator   the string collator
+   * @return expression
+   * @see <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-%3E">Style specification</a>
+   */
+  public static Expression gt(@NonNull Expression compareOne, @NonNull String compareTwo, @NonNull Expression collator) {
+    return new Expression(">", compareOne, literal(compareTwo), collator);
+  }
+
+  /**
    * Returns true if the first input is strictly less than the second, false otherwise.
    * The inputs must be numbers or strings, and both of the same type.
    * <p>
@@ -638,6 +788,32 @@ public class Expression {
    */
   public static Expression lt(@NonNull Expression compareOne, @NonNull Expression compareTwo) {
     return new Expression("<", compareOne, compareTwo);
+  }
+
+
+  /**
+   * Returns true if the first input is strictly less than the second, false otherwise.
+   * The inputs must be numbers or strings, and both of the same type.
+   * <p>
+   * Example usage:
+   * </p>
+   * <pre>
+   * {@code
+   * FillLayer fillLayer = new FillLayer("layer-id", "source-id");
+   * fillLayer.setFilter(
+   *     lt(get("keyToValue"), get("keyToOtherValue"))
+   * );
+   * }
+   * </pre>
+   *
+   * @param compareOne the first expression
+   * @param compareTwo the second number
+   * @param collator   the string collator
+   * @return expression
+   * @see <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-%3C">Style specification</a>
+   */
+  public static Expression lt(@NonNull Expression compareOne, @NonNull Expression compareTwo, @NonNull Expression collator) {
+    return new Expression("<", compareOne, compareTwo, collator);
   }
 
   /**
@@ -686,6 +862,31 @@ public class Expression {
     return new Expression("<", compareOne, literal(compareTwo));
   }
 
+
+  /**
+   * Returns true if the first input is strictly less than the second, false otherwise.
+   * <p>
+   * Example usage:
+   * </p>
+   * <pre>
+   * {@code
+   * FillLayer fillLayer = new FillLayer("layer-id", "source-id");
+   * fillLayer.setFilter(
+   *     lt(get("keyToValue"), "value"))
+   * );
+   * }
+   * </pre>
+   *
+   * @param compareOne the first expression
+   * @param compareTwo the second string
+   * @param collator   the string collator
+   * @return expression
+   * @see <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-%3C">Style specification</a>
+   */
+  public static Expression lt(@NonNull Expression compareOne, @NonNull String compareTwo, @NonNull Expression collator) {
+    return new Expression("<", compareOne, literal(compareTwo), collator);
+  }
+
   /**
    * Returns true if the first input is greater than or equal to the second, false otherwise.
    * The inputs must be numbers or strings, and both of the same type.
@@ -708,6 +909,31 @@ public class Expression {
    */
   public static Expression gte(@NonNull Expression compareOne, @NonNull Expression compareTwo) {
     return new Expression(">=", compareOne, compareTwo);
+  }
+
+  /**
+   * Returns true if the first input is greater than or equal to the second, false otherwise.
+   * The inputs must be numbers or strings, and both of the same type.
+   * <p>
+   * Example usage:
+   * </p>
+   * <pre>
+   * {@code
+   * FillLayer fillLayer = new FillLayer("layer-id", "source-id");
+   * fillLayer.setFilter(
+   *     gte(get("keyToValue"), get("keyToOtherValue"))
+   * );
+   * }
+   * </pre>
+   *
+   * @param compareOne the first expression
+   * @param compareTwo the second expression
+   * @param collator   the string collator
+   * @return expression
+   * @see <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-%3E%3D">Style specification</a>
+   */
+  public static Expression gte(@NonNull Expression compareOne, @NonNull Expression compareTwo, @NonNull Expression collator) {
+    return new Expression(">=", compareOne, compareTwo, collator);
   }
 
   /**
@@ -757,6 +983,30 @@ public class Expression {
   }
 
   /**
+   * Returns true if the first input is greater than or equal to the second, false otherwise.
+   * <p>
+   * Example usage:
+   * </p>
+   * <pre>
+   * {@code
+   * FillLayer fillLayer = new FillLayer("layer-id", "source-id");
+   * fillLayer.setFilter(
+   *     neq(get("keyToValue"), "value")
+   * );
+   * }
+   * </pre>
+   *
+   * @param compareOne the first expression
+   * @param compareTwo the second string
+   * @param collator   the string collator
+   * @return expression
+   * @see <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-%3E%3D">Style specification</a>
+   */
+  public static Expression gte(@NonNull Expression compareOne, @NonNull String compareTwo, @NonNull Expression collator) {
+    return new Expression(">=", compareOne, literal(compareTwo), collator);
+  }
+
+  /**
    * Returns true if the first input is less than or equal to the second, false otherwise.
    * The inputs must be numbers or strings, and both of the same type.
    * <p>
@@ -778,6 +1028,31 @@ public class Expression {
    */
   public static Expression lte(@NonNull Expression compareOne, @NonNull Expression compareTwo) {
     return new Expression("<=", compareOne, compareTwo);
+  }
+
+  /**
+   * Returns true if the first input is less than or equal to the second, false otherwise.
+   * The inputs must be numbers or strings, and both of the same type.
+   * <p>
+   * Example usage:
+   * </p>
+   * <pre>
+   * {@code
+   * FillLayer fillLayer = new FillLayer("layer-id", "source-id");
+   * fillLayer.setFilter(
+   *     lte(get("keyToValue"), get("keyToOtherValue"))
+   * );
+   * }
+   * </pre>
+   *
+   * @param compareOne the first expression
+   * @param compareTwo the second expression
+   * @param collator   the string collator
+   * @return expression
+   * @see <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-%3C%3D">Style specification</a>
+   */
+  public static Expression lte(@NonNull Expression compareOne, @NonNull Expression compareTwo, @NonNull Expression collator) {
+    return new Expression("<=", compareOne, compareTwo, collator);
   }
 
   /**
@@ -824,6 +1099,30 @@ public class Expression {
    */
   public static Expression lte(@NonNull Expression compareOne, @NonNull String compareTwo) {
     return new Expression("<=", compareOne, literal(compareTwo));
+  }
+
+  /**
+   * Returns true if the first input is less than or equal to the second, false otherwise.
+   * <p>
+   * Example usage:
+   * </p>
+   * <pre>
+   * {@code
+   * FillLayer fillLayer = new FillLayer("layer-id", "source-id");
+   * fillLayer.setFilter(
+   *     lte(get("keyToValue"), "value")
+   * );
+   * }
+   * </pre>
+   *
+   * @param compareOne the first expression
+   * @param compareTwo the second string
+   * @param collator   the string collator
+   * @return expression
+   * @see <a href="https://www.mapbox.com/mapbox-gl-js/style-spec/#expressions-%3C%3D">Style specification</a>
+   */
+  public static Expression lte(@NonNull Expression compareOne, @NonNull String compareTwo, @NonNull Expression collator) {
+    return new Expression("<=", compareOne, literal(compareTwo), collator);
   }
 
   /**
@@ -2737,6 +3036,60 @@ public class Expression {
     return new Expression("to-string", input);
   }
 
+
+  /**
+   * Returns a `collator` for use in locale-dependent comparison operations.
+   * The `caseSensitive` and `diacriticSensitive` options default to `false`.
+   * The `locale` argument specifies the IETF language tag of the locale to use.
+   * If none is provided, the default locale is used.
+   * If the requested locale is not available, the `collator` will use a system-defined fallback locale.
+   * Use `resolved-locale` to test the results of locale fallback behavior.
+   */
+  public static Expression collator(Expression caseSensitive, Expression diacriticSensitive, Expression locale) {
+    //["collator", {"case-sensitive": false, "diacritic-sensitive": true, "locale": "en"}]
+//    JsonObject jsonObject = new JsonObject();
+//    jsonObject.addProperty("caseSensitive",false);
+//    jsonObject.addProperty("diacriticSensitive",true);
+//    jsonObject.addProperty("locale","en");
+//    Map<String, Object> map = new HashMap<String, Object>() {
+//      {
+//        put("caseSensitive", false);
+//        put("diacriticSensitive", true);
+//        put("locale", "en");
+//      }
+//    };
+    return new Expression("collator", literal(new Collator()));
+  }
+  private static class Collator {
+    private boolean caseSensitive = false;
+    private boolean diacriticSensitive = true;
+    private String locale = "en";
+  }
+
+//  public static Expression collator(boolean caseSensitive, boolean diacriticSensitive, boolean locale) {
+//    //["collator", {"case-sensitive": false, "diacritic-sensitive": true, "locale": "en"}]
+//    return new Expression("collator", new Expression[] {literal(caseSensitive), literal(diacriticSensitive), literal(locale)});
+//  }
+
+  // todo add boolean variant
+  public static Expression caseSensitive(Expression caseSensitive) {
+    return new Expression("case-sensitive", caseSensitive);
+  }
+
+  // todo add boolean variant
+  public static Expression diacriticSensitive(Expression diacriticSensitive) {
+    return new Expression("diacritic-sensitive", diacriticSensitive);
+  }
+
+  // todo add String variant
+  public static Expression locale(Expression locale) {
+    return new Expression("locale", locale);
+  }
+
+  public static Expression resolvedLocale(Expression collator) {
+    return new Expression("resolved-locale", collator);
+  }
+
   /**
    * Converts the input value to a number, if possible.
    * If the input is null or false, the result is 0.
@@ -3565,6 +3918,27 @@ public class Expression {
         object = ((Number) object).floatValue();
       }
       this.literal = object;
+    }
+
+    private Object unwrapMapToString(Map<String, Object> map) {
+      // {"case-sensitive": false, "diacritic-sensitive": true, "locale": "en"}
+      StringBuilder builder = new StringBuilder("{");
+      String templateValue = "\"%s\": %s";
+      String templateString = "\"%s\": \"%s\"";
+      for (Map.Entry<String, Object> objectEntry : map.entrySet()) {
+        Object value = objectEntry.getValue();
+        if (value instanceof String) {
+          builder.append(String.format(templateString, objectEntry.getKey(), value));
+        } else {
+          builder.append(String.format(templateValue, objectEntry.getKey(), value));
+        }
+        builder.append(",");
+      }
+
+      if(!map.entrySet().isEmpty()){
+        builder.deleteCharAt(builder.length()-1);
+      }
+      return builder.append("}").toString();
     }
 
     /**

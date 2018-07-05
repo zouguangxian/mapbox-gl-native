@@ -17,12 +17,14 @@ import static com.mapbox.mapboxsdk.style.expressions.Expression.asin;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.at;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.atan;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.bool;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.caseSensitive;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.ceil;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.coalesce;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.color;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.concat;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.cos;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.cubicBezier;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.diacriticSensitive;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.division;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.downcase;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.e;
@@ -43,6 +45,7 @@ import static com.mapbox.mapboxsdk.style.expressions.Expression.linear;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.ln;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.ln2;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.locale;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.log10;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.log2;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.lt;
@@ -903,6 +906,19 @@ public class ExpressionTest {
   public void testToString() throws Exception {
     Object[] expected = new Object[] {"to-string", 3f};
     Object[] actual = Expression.toString(literal(3)).toArray();
+    assertTrue("expression should match", Arrays.deepEquals(expected, actual));
+  }
+
+  @Test
+  public void testCollator() throws Exception {
+    Object[] expected =  new Object[]{"collator",
+      new Object[]{"case-sensitive","false","diacritic-sensitive","true", "locale","en"}
+    };
+    Object[] actual = Expression.collator(
+      caseSensitive(literal(false)),
+      diacriticSensitive(literal(true)),
+      locale(literal("en"))
+    ).toArray();
     assertTrue("expression should match", Arrays.deepEquals(expected, actual));
   }
 

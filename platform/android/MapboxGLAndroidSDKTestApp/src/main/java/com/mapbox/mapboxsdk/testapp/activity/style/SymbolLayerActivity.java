@@ -30,11 +30,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.any;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.collator;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.has;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.lte;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.not;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.resolvedLocale;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.string;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAnchor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconColor;
@@ -77,8 +80,10 @@ public class SymbolLayerActivity extends AppCompatActivity implements MapboxMap.
 
       // Add a source
       FeatureCollection markers = FeatureCollection.fromFeatures(new Feature[] {
-        Feature.fromGeometry(Point.fromLngLat(4.91638, 52.35673), featureProperties("Marker 1")),
-        Feature.fromGeometry(Point.fromLngLat(4.91638, 52.34673), featureProperties("Marker 2"))
+        Feature.fromGeometry(Point.fromLngLat(4.91638, 52.35673), featureProperties("Marker 1","ä","a")),
+        Feature.fromGeometry(Point.fromLngLat(4.91638, 52.34673), featureProperties("Marker 2","A","a")),
+        Feature.fromGeometry(Point.fromLngLat(4.90655, 52.35673), featureProperties("Marker 3", "a", "a")),
+        Feature.fromGeometry(Point.fromLngLat(4.90655, 52.34673), featureProperties("Marker 4", "ä", "b")),
       });
       mapboxMap.addSource(new GeoJsonSource(MARKER_SOURCE, markers));
 
@@ -89,16 +94,22 @@ public class SymbolLayerActivity extends AppCompatActivity implements MapboxMap.
             iconImage("my-layers-image"),
             iconAllowOverlap(true),
             iconAnchor(Property.ICON_ANCHOR_BOTTOM),
-            textField(get("title")),
+            textField(resolvedLocale(collator(literal(false),literal(true),literal("en")))),
             iconColor(Color.RED),
             textColor(Color.RED),
             textAnchor(Property.TEXT_ANCHOR_TOP),
             textSize(10f)
-          ).withFilter((any(not(has("price")), lte(get("price"), literal(25)))))
+          ).withFilter(
+            lte(
+              string(get("lhs")),
+              string(get("rhs")),
+              collator(literal(false),literal(true),literal("en"))
+            )
+        )
       );
 
       // Show
-      mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.35273, 4.91638), 14));
+      mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(52.35273, 4.91638), 13));
 
       // Set a click-listener so we can manipulate the map
       mapboxMap.setOnMapClickListener(SymbolLayerActivity.this);
@@ -141,9 +152,11 @@ public class SymbolLayerActivity extends AppCompatActivity implements MapboxMap.
     }
   }
 
-  private JsonObject featureProperties(String title) {
+  private JsonObject featureProperties(String title, String lhs, String rhs) {
     JsonObject object = new JsonObject();
     object.add("title", new JsonPrimitive(title));
+    object.add("lhs", new JsonPrimitive(lhs));
+    object.add("rhs", new JsonPrimitive(rhs));
     return object;
   }
 

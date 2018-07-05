@@ -132,6 +132,7 @@ namespace android {
             return;
         }
 
+
         layer.accept(SetFilterEvaluator {std::move(*converted)});
     }
 
