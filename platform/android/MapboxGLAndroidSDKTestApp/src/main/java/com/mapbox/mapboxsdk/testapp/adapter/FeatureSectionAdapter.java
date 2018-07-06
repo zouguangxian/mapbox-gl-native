@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.mapbox.mapboxsdk.testapp.utils.FontCache;
+import com.mapbox.mapboxsdk.maps.utils.FontCache;
 
 import java.util.Arrays;
 

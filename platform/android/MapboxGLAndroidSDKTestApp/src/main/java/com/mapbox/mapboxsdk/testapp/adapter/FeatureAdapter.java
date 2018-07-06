@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.mapbox.mapboxsdk.testapp.R;
 import com.mapbox.mapboxsdk.testapp.model.activity.Feature;
-import com.mapbox.mapboxsdk.testapp.utils.FontCache;
+import com.mapbox.mapboxsdk.maps.utils.FontCache;
 
 import java.util.List;
 

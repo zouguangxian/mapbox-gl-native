@@ -1,15 +1,15 @@
 package com.mapbox.mapboxsdk.maps;
 
-import com.mapbox.mapboxsdk.testapp.activity.BaseActivityTest;
-import com.mapbox.mapboxsdk.testapp.activity.camera.CameraAnimationTypeActivity;
+import com.mapbox.mapboxsdk.maps.activity.BaseActivityTest;
+import com.mapbox.mapboxsdk.maps.activity.camera.CameraAnimationTypeActivity;
 import org.junit.Test;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
-import static com.mapbox.mapboxsdk.testapp.action.OrientationChangeAction.orientationLandscape;
-import static com.mapbox.mapboxsdk.testapp.action.OrientationChangeAction.orientationLandscapeReverse;
-import static com.mapbox.mapboxsdk.testapp.action.OrientationChangeAction.orientationPortrait;
-import static com.mapbox.mapboxsdk.testapp.action.OrientationChangeAction.orientationPortraitReverse;
+import static com.mapbox.mapboxsdk.maps.action.OrientationChangeAction.orientationLandscape;
+import static com.mapbox.mapboxsdk.maps.action.OrientationChangeAction.orientationLandscapeReverse;
+import static com.mapbox.mapboxsdk.maps.action.OrientationChangeAction.orientationPortrait;
+import static com.mapbox.mapboxsdk.maps.action.OrientationChangeAction.orientationPortraitReverse;
 
 public class OrientationTest extends BaseActivityTest {
 

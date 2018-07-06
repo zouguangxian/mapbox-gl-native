@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.maplayout.LocalGlyphActivity">
+    tools:context="com.mapbox.mapboxsdk.maps.activity.maplayout.LocalGlyphActivity">
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@id/mapView"

@@ -5,7 +5,7 @@ import android.os.StrictMode;
 import android.text.TextUtils;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.Telemetry;
-import com.mapbox.mapboxsdk.testapp.utils.TokenUtils;
+import com.mapbox.mapboxsdk.maps.utils.TokenUtils;
 import com.squareup.leakcanary.LeakCanary;
 import timber.log.Timber;
 
