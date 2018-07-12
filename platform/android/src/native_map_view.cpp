@@ -52,6 +52,7 @@
 #include  "map/image.hpp"
 #include "style/light.hpp"
 #include "bitmap_factory.hpp"
+#include "timber.hpp"
 
 namespace mbgl {
 namespace android {
@@ -71,6 +72,8 @@ NativeMapView::NativeMapView(jni::JNIEnv& _env,
         _env.ExceptionDescribe();
         return;
     }
+
+    Timber::logError(_env, jni::Make<jni::String>(_env, "hello world"));
 
     // Get native peer for file source
     mbgl::FileSource& fileSource = mbgl::android::FileSource::getDefaultFileSource(_env, jFileSource);

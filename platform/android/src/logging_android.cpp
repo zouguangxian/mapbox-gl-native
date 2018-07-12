@@ -1,6 +1,8 @@
 #include <mbgl/util/logging.hpp>
 
 #include <android/log.h>
+#include "timber.hpp"
+#include "attach_env.hpp"
 
 namespace mbgl {
 
@@ -29,6 +31,9 @@ int severityToPriority(EventSeverity severity) {
 
 void Log::platformRecord(EventSeverity severity, const std::string &msg) {
     __android_log_print(severityToPriority(severity), "mbgl", "%s", msg.c_str());
+    if(severity == EventSeverity::Error) {
+        auto env{ android::AttachEnv() };
+        android::Timber::logError(*env, jni::Make<jni::String>(*env, msg.c_str()));
+    }
 }
-
 }
