@@ -558,15 +558,10 @@ android-$1: platform/android/gradle/configuration.gradle
 .PHONY: android-core-test-$1
 android-core-test-$1: android-test-lib-$1
 	# Compile main sources and extract the classes (using the test app to get all transitive dependencies in one place)
-	mkdir -p $(MBGL_ANDROID_CORE_TEST_DIR)
-	unzip -o platform/android/MapboxGLAndroidSDKTestApp/build/outputs/apk/MapboxGLAndroidSDKTestApp-$(MBGL_ANDROID_APK_SUFFIX).apk classes.dex -d $(MBGL_ANDROID_CORE_TEST_DIR)
-
-	# Compile Test runner
-	find platform/android/src/test -name "*.java" > $(MBGL_ANDROID_CORE_TEST_DIR)/java-sources.txt
-	javac -sourcepath platform/android/src/test -d $(MBGL_ANDROID_CORE_TEST_DIR) -source 1.7 -target 1.7 @$(MBGL_ANDROID_CORE_TEST_DIR)/java-sources.txt
-
-	# Combine and dex
-	cd $(MBGL_ANDROID_CORE_TEST_DIR) && $(ANDROID_HOME)/build-tools/25.0.0/dx --dex --output=test.jar *.class classes.dex
+	adb push platform/android/MapboxGLAndroidSDK/build/intermediates/cmake/debug/obj/arm64-v8a/libmapbox-gl.so /data/local/tmp/
+	adb push platform/android/MapboxGLAndroidSDK/build/intermediates/cmake/debug/obj/arm64-v8a/libmbgl-test.so /data/local/tmp/
+	adb shell chmod 775 /data/local/tmp/libmbgl-test.so
+	adb shell "LD_LIBRARY_PATH=/data/local/tmp /data/local/tmp/libmbgl-test.so"
 
 run-android-core-test-$1-%: android-core-test-$1
 	# Ensure clean state on the device
