@@ -8,11 +8,23 @@ namespace android {
 namespace java {
 namespace lang {
 
+
+class CharSequence : private mbgl::util::noncopyable {
+public:
+    static constexpr auto Name() { return "java/lang/CharSequence"; };
+
+    static jni::Class<CharSequence> javaClass;
+
+    static void registerNative(jni::JNIEnv&);
+};
+
 class String : private mbgl::util::noncopyable {
 public:
     static jni::String toUpperCase(JNIEnv&, jni::String);
 
     static jni::String toLowerCase(JNIEnv&, jni::String);
+
+    static jni::String replaceAll(JNIEnv&, jni::String, jni::String, jni::String);
 
     static jni::Class<jni::StringTag> javaClass;
 

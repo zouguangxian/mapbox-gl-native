@@ -5,6 +5,7 @@
 #include <unaccent.hpp>
 
 #include <jni/jni.hpp>
+#include "src/java/lang.hpp"
 
 #include "../attach_env.hpp"
 #include "collator_jni.hpp"
@@ -34,6 +35,45 @@ jni::jint Collator::compare(jni::JNIEnv& env, jni::Object<Collator> collator, jn
     using Signature = jni::jint(jni::String, jni::String);
     auto static method = javaClass.GetMethod<Signature>(env, "compare");
     return collator.Call(env, method, lhs, rhs);
+}
+
+void Normalizer::Form::registerNative(jni::JNIEnv& env) {
+    javaClass = *jni::Class<Form>::Find(env).NewGlobalRef(env).release();
+}
+
+jni::Class<Normalizer::Form> Normalizer::Form::javaClass;
+
+jni::Object<Normalizer::Form> Normalizer::Form::create(jni::JNIEnv& env, Value value) {
+    switch (value) {
+    case  NFC:
+        return javaClass.Get(env,
+                          jni::StaticField<Form, jni::Object<Form>>(env, javaClass, "NFC"));
+    case NFKC:
+        return javaClass.Get(env,
+                          jni::StaticField<Form, jni::Object<Form>>(env, javaClass, "NFKC"));
+    case NFD:
+        return javaClass.Get(env,
+                          jni::StaticField<Form, jni::Object<Form>>(env, javaClass, "NFD"));
+    case NFKD:
+        return javaClass.Get(env,
+                          jni::StaticField<Form, jni::Object<Form>>(env, javaClass, "NFKD"));
+    default:
+        throw std::runtime_error("invalid enum value for Normalizer.Form");
+    }
+}
+
+void Normalizer::registerNative(jni::JNIEnv& env) {
+    javaClass = *jni::Class<Normalizer>::Find(env).NewGlobalRef(env).release();
+    Form::registerNative(env);
+}
+
+jni::Class<Normalizer> Normalizer::javaClass;
+
+jni::String Normalizer::normalize(jni::JNIEnv& env, jni::String value) {
+    using Signature = jni::String(jni::Object<java::lang::CharSequence>,jni::Object<Normalizer::Form>);
+    auto charSequence = jni::Cast(env, value, java::lang::CharSequence::javaClass);
+    auto method = javaClass.GetStaticMethod<Signature>(env, "normalize");
+    return javaClass.Call(env, method, charSequence, Form::create(env, Form::NFD));
 }
 
 void Locale::registerNative(jni::JNIEnv& env) {

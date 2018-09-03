@@ -53,5 +53,35 @@ public:
 
 };
 
+class Normalizer {
+public:
+    class Form {
+    public:
+        static constexpr auto Name() { return "java/text/Normalizer$Form"; };
+
+        enum Value {
+            NFC,
+            NFD,
+            NFKC,
+            NFKD,
+        };
+
+        static jni::Object<Form> create(jni::JNIEnv&, Value);
+
+        static jni::Class<Form> javaClass;
+
+        static void registerNative(jni::JNIEnv&);
+    };
+
+    static constexpr auto Name() { return "java/text/Normalizer"; };
+
+    static jni::String normalize(jni::JNIEnv&, jni::String);
+
+    static jni::Class<Normalizer> javaClass;
+
+    static void registerNative(jni::JNIEnv&);
+
+};
+
 } // namespace android
 } // namespace mbgl

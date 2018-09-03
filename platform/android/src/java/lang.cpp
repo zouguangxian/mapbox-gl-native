@@ -5,6 +5,15 @@ namespace android {
 namespace java {
 namespace lang {
 
+// CharSequence
+
+void CharSequence::registerNative(jni::JNIEnv &env) {
+    // Lookup the class
+    javaClass = *jni::Class<CharSequence>::Find(env).NewGlobalRef(env).release();
+}
+
+jni::Class<CharSequence> CharSequence::javaClass;
+
 // String
 
 jni::String String::toUpperCase(JNIEnv& env, jni::String value) {
@@ -15,6 +24,11 @@ jni::String String::toUpperCase(JNIEnv& env, jni::String value) {
 jni::String String::toLowerCase(JNIEnv& env, jni::String value) {
     static auto method = javaClass.GetMethod<jni::String ()>(env, "toLowerCase");
     return value.Call(env, method);
+}
+
+jni::String String::replaceAll(JNIEnv& env, jni::String value, jni::String regex, jni::String replaceValue) {
+    static auto method = javaClass.GetMethod<jni::String (jni::String, jni::String)>(env, "replaceAll");
+    return value.Call(env, method, regex, replaceValue);
 }
 
 void String::registerNative(jni::JNIEnv& env) {

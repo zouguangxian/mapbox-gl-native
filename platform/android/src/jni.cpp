@@ -121,6 +121,7 @@ void registerNatives(JavaVM *vm) {
     java::lang::Double::registerNative(env);
     java::lang::Long::registerNative(env);
     java::lang::String::registerNative(env);
+    java::lang::CharSequence::registerNative(env);
 
     // GeoJSON
     geojson::Feature::registerNative(env);
@@ -194,6 +195,7 @@ void registerNatives(JavaVM *vm) {
     LocalGlyphRasterizer::registerNative(env);
     Locale::registerNative(env);
     Collator::registerNative(env);
+    Normalizer::registerNative(env);
 
     // Logger
     Logger::registerNative(env);
