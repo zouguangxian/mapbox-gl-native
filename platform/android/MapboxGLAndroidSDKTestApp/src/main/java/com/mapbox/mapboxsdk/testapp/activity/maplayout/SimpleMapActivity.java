@@ -11,9 +11,11 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.symbol.OnSymbolClickListener;
 import com.mapbox.mapboxsdk.symbol.Symbol;
 import com.mapbox.mapboxsdk.symbol.SymbolManager;
 import com.mapbox.mapboxsdk.testapp.R;
+import timber.log.Timber;
 
 import java.util.Random;
 
@@ -41,6 +43,14 @@ public class SimpleMapActivity extends AppCompatActivity {
 
       // create symbol manager
       SymbolManager symbolManager = new SymbolManager(mapboxMap);
+      symbolManager.setOnSymbolClickListener(new OnSymbolClickListener() {
+        @Override
+        public void onSymbolClick(Symbol symbol) {
+          Timber.e("Symbol clicked with id: %s", symbol.getId());
+        }
+      });
+
+
       // set non data driven properties
       symbolManager.setIconAllowOverlap(true);
       symbolManager.setTextAllowOverlap(true);
