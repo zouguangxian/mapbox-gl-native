@@ -5,8 +5,8 @@ package com.mapbox.mapboxsdk.testapp.symbol;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.symbol.Symbol;
-import com.mapbox.mapboxsdk.symbol.SymbolManager;
+import com.mapbox.mapboxsdk.annotations.symbol.Symbol;
+import com.mapbox.mapboxsdk.annotations.symbol.SymbolManager;
 import timber.log.Timber;
 
 import com.mapbox.mapboxsdk.testapp.activity.BaseActivityTest;

@@ -1,13 +1,15 @@
 // This file is generated. Edit android/platform/scripts/generate-style-code.js, then run `make android-style-code`.
 
-package com.mapbox.mapboxsdk.symbol;
+package com.mapbox.mapboxsdk.annotations.symbol;
 
 import android.support.annotation.UiThread;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.mapbox.geojson.Geometry;
-import com.mapbox.geojson.Point;
+import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @UiThread
 public class Symbol {
@@ -21,11 +23,11 @@ public class Symbol {
   /**
    * Create a symbol.
    *
-   * @param symbolManager the symbol manager created and managing the symbol
+   * @param manager the symbol manager created and managing the symbol
    * @param id            the id of the symbol
    */
-  Symbol(SymbolManager symbolManager, long id) {
-    this.symbolManager = symbolManager;
+  Symbol(SymbolManager manager, long id) {
+    this.symbolManager = manager;
     this.jsonObject.addProperty(ID_KEY, id);
   }
 
