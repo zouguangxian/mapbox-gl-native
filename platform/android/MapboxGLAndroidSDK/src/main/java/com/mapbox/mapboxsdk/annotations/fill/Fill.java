@@ -79,11 +79,6 @@ public class Fill {
     fillManager.updateSource();
   }
 
-  public void setGeometry(Geometry geometry){
-    geometry =  geometry;
-    fillManager.updateSource();
-  }
-
   // Property accessors
   /**
    * Get the FillOpacity property

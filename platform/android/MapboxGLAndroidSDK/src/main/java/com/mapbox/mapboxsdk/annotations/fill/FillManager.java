@@ -31,11 +31,13 @@ public class FillManager {
   public static final String ID_GEOJSON_LAYER = "mapbox-android-fill-layer";
 
   // map integration components
+  private MapboxMap mapboxMap;
   private GeoJsonSource geoJsonSource;
   private FillLayer layer;
 
   // callback listeners
-  private OnFillClickListener fillClickListener;
+  private List<OnFillClickListener> fillClickListeners = new ArrayList<>();
+  private final MapClickResolver mapClickResolver;
 
   // internal data set
   private final LongSparseArray<Fill> fills = new LongSparseArray<>();
@@ -65,11 +67,21 @@ public class FillManager {
    */
   @VisibleForTesting
   public FillManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, FillLayer layer) {
+    this.mapboxMap = mapboxMap;
     this.geoJsonSource = geoJsonSource;
     this.layer = layer;
     mapboxMap.addSource(geoJsonSource);
     mapboxMap.addLayer(layer);
-    mapboxMap.addOnMapClickListener(new MapClickResolver(mapboxMap));
+    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
+  }
+
+  /**
+   * Cleanup fill manager, used to clear listeners
+   */
+  @UiThread
+  public void onDestroy() {
+    mapboxMap.removeOnMapClickListener(mapClickResolver);
+    fillClickListeners.clear();
   }
 
   /**
@@ -123,15 +135,25 @@ public class FillManager {
   }
 
   /**
-   * Set a callback to be invoked when a fill has been clicked.
-   * <p>
-   * To unset, use a null argument.
-   * </p>
+   * Add a callback to be invoked when a fill has been clicked.
    *
-   * @param fillClickListener the callback to be invoked when a fill is clicked, or null to unset
+   * @param listener the callback to be invoked when a fill is clicked
    */
-  public void setOnFillClickListener(@Nullable OnFillClickListener fillClickListener) {
-    this.fillClickListener = fillClickListener;
+  @UiThread
+  public void addOnFillClickListener(@NonNull OnFillClickListener listener) {
+    fillClickListeners.add(listener);
+  }
+
+  /**
+   * Remove a previously added callback that was to be invoked when fill has been clicked.
+   *
+   * @param listener the callback to be removed
+   */
+  @UiThread
+  public void removeOnFillClickListener(@NonNull OnFillClickListener listener) {
+    if (fillClickListeners.contains(listener)) {
+      fillClickListeners.remove(listener);
+    }
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {
@@ -139,7 +161,6 @@ public class FillManager {
      fillOpacity(get("fill-opacity")),
      fillColor(get("fill-color")),
      fillOutlineColor(get("fill-outline-color")),
-     //fillPattern(get("fill-pattern")),
     };
   }
 
@@ -211,7 +232,7 @@ public class FillManager {
 
     @Override
     public void onMapClick(@NonNull LatLng point) {
-      if (fillClickListener == null) {
+      if (fillClickListeners.isEmpty()) {
         return;
       }
 
@@ -221,7 +242,9 @@ public class FillManager {
         long fillId = features.get(0).getProperty(Fill.ID_KEY).getAsLong();
         Fill fill = fills.get(fillId);
         if (fill != null) {
-          fillClickListener.onFillClick(fills.get(fillId));
+          for (OnFillClickListener listener : fillClickListeners) {
+            listener.onFillClick(fill);
+          }
         }
       }
     }

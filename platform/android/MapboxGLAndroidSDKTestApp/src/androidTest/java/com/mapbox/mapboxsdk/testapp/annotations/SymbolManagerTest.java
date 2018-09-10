@@ -80,6 +80,19 @@ public class SymbolManagerTest extends BaseActivityTest {
   }
 
   @Test
+  public void testSymbolZOrderAsConstant() {
+    validateTestSetup();
+    setupSymbolManager();
+    Timber.i("symbol-z-order");
+    invoke(mapboxMap, (uiController, mapboxMap) -> {
+      assertNotNull(symbolManager);
+
+      symbolManager.setSymbolZOrder(SYMBOL_Z_ORDER_VIEWPORT_Y);
+      assertEquals((String) symbolManager.getSymbolZOrder(), (String) SYMBOL_Z_ORDER_VIEWPORT_Y);
+    });
+  }
+
+  @Test
   public void testIconAllowOverlapAsConstant() {
     validateTestSetup();
     setupSymbolManager();

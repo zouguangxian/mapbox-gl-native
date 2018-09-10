@@ -31,11 +31,13 @@ public class CircleManager {
   public static final String ID_GEOJSON_LAYER = "mapbox-android-circle-layer";
 
   // map integration components
+  private MapboxMap mapboxMap;
   private GeoJsonSource geoJsonSource;
   private CircleLayer layer;
 
   // callback listeners
-  private OnCircleClickListener circleClickListener;
+  private List<OnCircleClickListener> circleClickListeners = new ArrayList<>();
+  private final MapClickResolver mapClickResolver;
 
   // internal data set
   private final LongSparseArray<Circle> circles = new LongSparseArray<>();
@@ -65,11 +67,21 @@ public class CircleManager {
    */
   @VisibleForTesting
   public CircleManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, CircleLayer layer) {
+    this.mapboxMap = mapboxMap;
     this.geoJsonSource = geoJsonSource;
     this.layer = layer;
     mapboxMap.addSource(geoJsonSource);
     mapboxMap.addLayer(layer);
-    mapboxMap.addOnMapClickListener(new MapClickResolver(mapboxMap));
+    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
+  }
+
+  /**
+   * Cleanup circle manager, used to clear listeners
+   */
+  @UiThread
+  public void onDestroy() {
+    mapboxMap.removeOnMapClickListener(mapClickResolver);
+    circleClickListeners.clear();
   }
 
   /**
@@ -123,15 +135,25 @@ public class CircleManager {
   }
 
   /**
-   * Set a callback to be invoked when a circle has been clicked.
-   * <p>
-   * To unset, use a null argument.
-   * </p>
+   * Add a callback to be invoked when a circle has been clicked.
    *
-   * @param circleClickListener the callback to be invoked when a circle is clicked, or null to unset
+   * @param listener the callback to be invoked when a circle is clicked
    */
-  public void setOnCircleClickListener(@Nullable OnCircleClickListener circleClickListener) {
-    this.circleClickListener = circleClickListener;
+  @UiThread
+  public void addOnCircleClickListener(@NonNull OnCircleClickListener listener) {
+    circleClickListeners.add(listener);
+  }
+
+  /**
+   * Remove a previously added callback that was to be invoked when circle has been clicked.
+   *
+   * @param listener the callback to be removed
+   */
+  @UiThread
+  public void removeOnCircleClickListener(@NonNull OnCircleClickListener listener) {
+    if (circleClickListeners.contains(listener)) {
+      circleClickListeners.remove(listener);
+    }
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {
@@ -232,7 +254,7 @@ public class CircleManager {
 
     @Override
     public void onMapClick(@NonNull LatLng point) {
-      if (circleClickListener == null) {
+      if (circleClickListeners.isEmpty()) {
         return;
       }
 
@@ -242,7 +264,9 @@ public class CircleManager {
         long circleId = features.get(0).getProperty(Circle.ID_KEY).getAsLong();
         Circle circle = circles.get(circleId);
         if (circle != null) {
-          circleClickListener.onCircleClick(circles.get(circleId));
+          for (OnCircleClickListener listener : circleClickListeners) {
+            listener.onCircleClick(circle);
+          }
         }
       }
     }

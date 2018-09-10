@@ -36,11 +36,13 @@ public class <%- camelize(type) %>Manager {
   public static final String ID_GEOJSON_LAYER = "mapbox-android-<%- type %>-layer";
 
   // map integration components
+  private MapboxMap mapboxMap;
   private GeoJsonSource geoJsonSource;
   private <%- camelize(type) %>Layer layer;
 
   // callback listeners
-  private On<%- camelize(type) %>ClickListener <%- type %>ClickListener;
+  private List<On<%- camelize(type) %>ClickListener> <%- type %>ClickListeners = new ArrayList<>();
+  private final MapClickResolver mapClickResolver;
 
   // internal data set
   private final LongSparseArray<<%- camelize(type) %>> <%- type %>s = new LongSparseArray<>();
@@ -70,11 +72,21 @@ public class <%- camelize(type) %>Manager {
    */
   @VisibleForTesting
   public <%- camelize(type) %>Manager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, <%- camelize(type) %>Layer layer) {
+    this.mapboxMap = mapboxMap;
     this.geoJsonSource = geoJsonSource;
     this.layer = layer;
     mapboxMap.addSource(geoJsonSource);
     mapboxMap.addLayer(layer);
-    mapboxMap.addOnMapClickListener(new MapClickResolver(mapboxMap));
+    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
+  }
+
+  /**
+   * Cleanup <%- type %> manager, used to clear listeners
+   */
+  @UiThread
+  public void onDestroy() {
+    mapboxMap.removeOnMapClickListener(mapClickResolver);
+    <%- type %>ClickListeners.clear();
   }
 <% if (type === "circle" || type === "symbol") { -%>
 
@@ -162,21 +174,31 @@ public class <%- camelize(type) %>Manager {
   }
 
   /**
-   * Set a callback to be invoked when a <%- type %> has been clicked.
-   * <p>
-   * To unset, use a null argument.
-   * </p>
+   * Add a callback to be invoked when a <%- type %> has been clicked.
    *
-   * @param <%- type %>ClickListener the callback to be invoked when a <%- type %> is clicked, or null to unset
+   * @param listener the callback to be invoked when a <%- type %> is clicked
    */
-  public void setOn<%- camelize(type) %>ClickListener(@Nullable On<%- camelize(type) %>ClickListener <%- type %>ClickListener) {
-    this.<%- type %>ClickListener = <%- type %>ClickListener;
+  @UiThread
+  public void addOn<%- camelize(type) %>ClickListener(@NonNull On<%- camelize(type) %>ClickListener listener) {
+    <%- type %>ClickListeners.add(listener);
+  }
+
+  /**
+   * Remove a previously added callback that was to be invoked when <%- type %> has been clicked.
+   *
+   * @param listener the callback to be removed
+   */
+  @UiThread
+  public void removeOn<%- camelize(type) %>ClickListener(@NonNull On<%- camelize(type) %>ClickListener listener) {
+    if (<%- type %>ClickListeners.contains(listener)) {
+      <%- type %>ClickListeners.remove(listener);
+    }
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {
     return new PropertyValue[]{
 <% for (const property of properties) { -%>
-<% if (supportsPropertyFunction(property)) { -%>
+<% if (supportsPropertyFunction(property) && property.name !== "fill-pattern" && property.name !== "line-pattern") { -%>
      <%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")),
 <% } -%><% } -%>
     };
@@ -218,7 +240,7 @@ public class <%- camelize(type) %>Manager {
 
     @Override
     public void onMapClick(@NonNull LatLng point) {
-      if (<%- type %>ClickListener == null) {
+      if (<%- type %>ClickListeners.isEmpty()) {
         return;
       }
 
@@ -228,7 +250,9 @@ public class <%- camelize(type) %>Manager {
         long <%- type %>Id = features.get(0).getProperty(<%- camelize(type) %>.ID_KEY).getAsLong();
         <%- camelize(type) %> <%- type %> = <%- type %>s.get(<%- type %>Id);
         if (<%- type %> != null) {
-          <%- type %>ClickListener.on<%- camelize(type) %>Click(<%- type %>s.get(<%- type %>Id));
+          for (On<%- camelize(type) %>ClickListener listener : <%- type %>ClickListeners) {
+            listener.on<%- camelize(type) %>Click(<%- type %>);
+          }
         }
       }
     }

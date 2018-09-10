@@ -31,11 +31,13 @@ public class LineManager {
   public static final String ID_GEOJSON_LAYER = "mapbox-android-line-layer";
 
   // map integration components
+  private MapboxMap mapboxMap;
   private GeoJsonSource geoJsonSource;
   private LineLayer layer;
 
   // callback listeners
-  private OnLineClickListener lineClickListener;
+  private List<OnLineClickListener> lineClickListeners = new ArrayList<>();
+  private final MapClickResolver mapClickResolver;
 
   // internal data set
   private final LongSparseArray<Line> lines = new LongSparseArray<>();
@@ -65,11 +67,21 @@ public class LineManager {
    */
   @VisibleForTesting
   public LineManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, LineLayer layer) {
+    this.mapboxMap = mapboxMap;
     this.geoJsonSource = geoJsonSource;
     this.layer = layer;
     mapboxMap.addSource(geoJsonSource);
     mapboxMap.addLayer(layer);
-    mapboxMap.addOnMapClickListener(new MapClickResolver(mapboxMap));
+    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
+  }
+
+  /**
+   * Cleanup line manager, used to clear listeners
+   */
+  @UiThread
+  public void onDestroy() {
+    mapboxMap.removeOnMapClickListener(mapClickResolver);
+    lineClickListeners.clear();
   }
 
   /**
@@ -123,15 +135,25 @@ public class LineManager {
   }
 
   /**
-   * Set a callback to be invoked when a line has been clicked.
-   * <p>
-   * To unset, use a null argument.
-   * </p>
+   * Add a callback to be invoked when a line has been clicked.
    *
-   * @param lineClickListener the callback to be invoked when a line is clicked, or null to unset
+   * @param listener the callback to be invoked when a line is clicked
    */
-  public void setOnLineClickListener(@Nullable OnLineClickListener lineClickListener) {
-    this.lineClickListener = lineClickListener;
+  @UiThread
+  public void addOnLineClickListener(@NonNull OnLineClickListener listener) {
+    lineClickListeners.add(listener);
+  }
+
+  /**
+   * Remove a previously added callback that was to be invoked when line has been clicked.
+   *
+   * @param listener the callback to be removed
+   */
+  @UiThread
+  public void removeOnLineClickListener(@NonNull OnLineClickListener listener) {
+    if (lineClickListeners.contains(listener)) {
+      lineClickListeners.remove(listener);
+    }
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {
@@ -143,7 +165,6 @@ public class LineManager {
      lineGapWidth(get("line-gap-width")),
      lineOffset(get("line-offset")),
      lineBlur(get("line-blur")),
-     linePattern(get("line-pattern")),
     };
   }
 
@@ -269,7 +290,7 @@ public class LineManager {
 
     @Override
     public void onMapClick(@NonNull LatLng point) {
-      if (lineClickListener == null) {
+      if (lineClickListeners.isEmpty()) {
         return;
       }
 
@@ -279,7 +300,9 @@ public class LineManager {
         long lineId = features.get(0).getProperty(Line.ID_KEY).getAsLong();
         Line line = lines.get(lineId);
         if (line != null) {
-          lineClickListener.onLineClick(lines.get(lineId));
+          for (OnLineClickListener listener : lineClickListeners) {
+            listener.onLineClick(line);
+          }
         }
       }
     }

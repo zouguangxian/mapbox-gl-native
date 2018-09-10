@@ -31,11 +31,13 @@ public class SymbolManager {
   public static final String ID_GEOJSON_LAYER = "mapbox-android-symbol-layer";
 
   // map integration components
+  private MapboxMap mapboxMap;
   private GeoJsonSource geoJsonSource;
   private SymbolLayer layer;
 
   // callback listeners
-  private OnSymbolClickListener symbolClickListener;
+  private List<OnSymbolClickListener> symbolClickListeners = new ArrayList<>();
+  private final MapClickResolver mapClickResolver;
 
   // internal data set
   private final LongSparseArray<Symbol> symbols = new LongSparseArray<>();
@@ -65,11 +67,21 @@ public class SymbolManager {
    */
   @VisibleForTesting
   public SymbolManager(MapboxMap mapboxMap, @NonNull GeoJsonSource geoJsonSource, SymbolLayer layer) {
+    this.mapboxMap = mapboxMap;
     this.geoJsonSource = geoJsonSource;
     this.layer = layer;
     mapboxMap.addSource(geoJsonSource);
     mapboxMap.addLayer(layer);
-    mapboxMap.addOnMapClickListener(new MapClickResolver(mapboxMap));
+    mapboxMap.addOnMapClickListener(mapClickResolver = new MapClickResolver(mapboxMap));
+  }
+
+  /**
+   * Cleanup symbol manager, used to clear listeners
+   */
+  @UiThread
+  public void onDestroy() {
+    mapboxMap.removeOnMapClickListener(mapClickResolver);
+    symbolClickListeners.clear();
   }
 
   /**
@@ -123,15 +135,25 @@ public class SymbolManager {
   }
 
   /**
-   * Set a callback to be invoked when a symbol has been clicked.
-   * <p>
-   * To unset, use a null argument.
-   * </p>
+   * Add a callback to be invoked when a symbol has been clicked.
    *
-   * @param symbolClickListener the callback to be invoked when a symbol is clicked, or null to unset
+   * @param listener the callback to be invoked when a symbol is clicked
    */
-  public void setOnSymbolClickListener(@Nullable OnSymbolClickListener symbolClickListener) {
-    this.symbolClickListener = symbolClickListener;
+  @UiThread
+  public void addOnSymbolClickListener(@NonNull OnSymbolClickListener listener) {
+    symbolClickListeners.add(listener);
+  }
+
+  /**
+   * Remove a previously added callback that was to be invoked when symbol has been clicked.
+   *
+   * @param listener the callback to be removed
+   */
+  @UiThread
+  public void removeOnSymbolClickListener(@NonNull OnSymbolClickListener listener) {
+    if (symbolClickListeners.contains(listener)) {
+      symbolClickListeners.remove(listener);
+    }
   }
 
   private static PropertyValue<?>[] getLayerDefinition() {
@@ -217,6 +239,24 @@ public class SymbolManager {
    */
   public void setSymbolAvoidEdges(Boolean value) {
     layer.setProperties(symbolAvoidEdges(value));
+  }
+
+  /**
+   * Get the SymbolZOrder property
+   *
+   * @return property wrapper value around String
+   */
+  public String getSymbolZOrder() {
+    return layer.getSymbolZOrder().value;
+  }
+
+  /**
+   * Set the SymbolZOrder property
+   *
+   * @param value property wrapper value around String
+   */
+  public void setSymbolZOrder(String value) {
+    layer.setProperties(symbolZOrder(value));
   }
 
   /**
@@ -628,7 +668,7 @@ public class SymbolManager {
 
     @Override
     public void onMapClick(@NonNull LatLng point) {
-      if (symbolClickListener == null) {
+      if (symbolClickListeners.isEmpty()) {
         return;
       }
 
@@ -638,7 +678,9 @@ public class SymbolManager {
         long symbolId = features.get(0).getProperty(Symbol.ID_KEY).getAsLong();
         Symbol symbol = symbols.get(symbolId);
         if (symbol != null) {
-          symbolClickListener.onSymbolClick(symbols.get(symbolId));
+          for (OnSymbolClickListener listener : symbolClickListeners) {
+            listener.onSymbolClick(symbol);
+          }
         }
       }
     }

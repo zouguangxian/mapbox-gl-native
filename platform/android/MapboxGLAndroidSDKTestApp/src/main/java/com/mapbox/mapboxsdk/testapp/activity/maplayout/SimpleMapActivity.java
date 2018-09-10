@@ -38,6 +38,11 @@ public class SimpleMapActivity extends AppCompatActivity {
   private static final String MAKI_ICON_CAR = "car-15";
   private static final String MAKI_ICON_CAFE = "cafe-15";
 
+  private SymbolManager symbolManager;
+  private FillManager fillManager;
+  private CircleManager circleManager;
+  private LineManager lineManager;
+
   private MapView mapView;
   private Symbol symbol;
   private Circle circle;
@@ -61,8 +66,8 @@ public class SimpleMapActivity extends AppCompatActivity {
 
   private void createSymbols(MapboxMap mapboxMap) {
     // create symbol manager
-    SymbolManager symbolManager = new SymbolManager(mapboxMap);
-    symbolManager.setOnSymbolClickListener(symbol -> Timber.e("Symbol clicked with id: %s", symbol.getId()));
+    symbolManager = new SymbolManager(mapboxMap);
+    symbolManager.addOnSymbolClickListener(symbol -> Timber.e("Symbol clicked with id: %s", symbol.getId()));
 
     // set non data driven properties
     symbolManager.setIconAllowOverlap(true);
@@ -83,8 +88,8 @@ public class SimpleMapActivity extends AppCompatActivity {
 
   private void createCircles(MapboxMap mapboxMap) {
     // create circle manager
-    CircleManager circleManager = new CircleManager(mapboxMap);
-    circleManager.setOnCircleClickListener(circle -> Timber.e("Symbol clicked with id: %s", circle.getId()));
+    circleManager = new CircleManager(mapboxMap);
+    circleManager.addOnCircleClickListener(circle -> Timber.e("Circle clicked with id: %s", circle.getId()));
 
     // set non data driven properties
     // circleManager.
@@ -98,8 +103,8 @@ public class SimpleMapActivity extends AppCompatActivity {
 
   private void createLines(MapboxMap mapboxMap) {
     // create line manager
-    LineManager lineManager = new LineManager(mapboxMap);
-    lineManager.setOnLineClickListener(line -> Timber.e("Symbol clicked with id: %s", line.getId()));
+    lineManager = new LineManager(mapboxMap);
+    lineManager.addOnLineClickListener(line -> Timber.e("Line clicked with id: %s", line.getId()));
 
     // set non data driven properties
     lineManager.setLineCap(LINE_CAP_ROUND);
@@ -117,8 +122,8 @@ public class SimpleMapActivity extends AppCompatActivity {
 
   private void createFills(MapboxMap mapboxMap) {
     // create fill manager
-    FillManager fillManager = new FillManager(mapboxMap);
-    fillManager.setOnFillClickListener(fill -> Timber.e("Symbol clicked with id: %s", fill.getId()));
+    fillManager = new FillManager(mapboxMap);
+    fillManager.addOnFillClickListener(fill -> Timber.e("Fill clicked with id: %s", fill.getId()));
 
     // set non data driven properties
     //fillManager.
@@ -207,6 +212,10 @@ public class SimpleMapActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    symbolManager.onDestroy();
+    lineManager.onDestroy();
+    circleManager.onDestroy();
+    fillManager.onDestroy();
     mapView.onDestroy();
   }
 
