@@ -20,6 +20,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.<%- camelize(type) %>Layer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -212,6 +213,7 @@ public class <%- camelize(type) %>Manager {
    *
    * @return property wrapper value around <%- propertyType(property) %>
    */
+  <%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), "") %>
   public <%- propertyType(property) %> get<%- camelize(property.name) %>() {
     return layer.get<%- camelize(property.name) %>().value;
   }
@@ -221,7 +223,7 @@ public class <%- camelize(type) %>Manager {
    *
    * @param value property wrapper value around <%- propertyType(property) %>
    */
-  public void set<%- camelize(property.name) %>(<%- propertyType(property) %> value) {
+  public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), "") %> <%- propertyType(property) %> value) {
     layer.setProperties(<%- camelizeWithLeadingLowercase(property.name) %>(value));
   }
 

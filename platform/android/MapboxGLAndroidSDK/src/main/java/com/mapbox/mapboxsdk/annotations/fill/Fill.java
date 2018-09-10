@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mapbox.geojson.*;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +86,7 @@ public class Fill {
    *
    * @return property wrapper value around Float
    */
+  
   public Float getFillOpacity() {
     return jsonObject.get("fill-opacity").getAsFloat();
   }
@@ -92,9 +94,9 @@ public class Fill {
   /**
    * Set the FillOpacity property
    *
-   * @return property wrapper value around Float
+   * @param value constant property value for Float
    */
-  public void setFillOpacity(Float value) {
+  public void setFillOpacity( Float value) {
     jsonObject.addProperty("fill-opacity", value);
     fillManager.updateSource();
   }
@@ -104,6 +106,7 @@ public class Fill {
    *
    * @return property wrapper value around String
    */
+  
   public String getFillColor() {
     return jsonObject.get("fill-color").getAsString();
   }
@@ -111,9 +114,9 @@ public class Fill {
   /**
    * Set the FillColor property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
-  public void setFillColor(String value) {
+  public void setFillColor( String value) {
     jsonObject.addProperty("fill-color", value);
     fillManager.updateSource();
   }
@@ -123,6 +126,7 @@ public class Fill {
    *
    * @return property wrapper value around String
    */
+  
   public String getFillOutlineColor() {
     return jsonObject.get("fill-outline-color").getAsString();
   }
@@ -130,9 +134,9 @@ public class Fill {
   /**
    * Set the FillOutlineColor property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
-  public void setFillOutlineColor(String value) {
+  public void setFillOutlineColor( String value) {
     jsonObject.addProperty("fill-outline-color", value);
     fillManager.updateSource();
   }
@@ -142,6 +146,7 @@ public class Fill {
    *
    * @return property wrapper value around String
    */
+  
   public String getFillPattern() {
     return jsonObject.get("fill-pattern").getAsString();
   }
@@ -149,9 +154,9 @@ public class Fill {
   /**
    * Set the FillPattern property
    *
-   * @return property wrapper value around String
+   * @param value constant property value for String
    */
-  public void setFillPattern(String value) {
+  public void setFillPattern( String value) {
     jsonObject.addProperty("fill-pattern", value);
     fillManager.updateSource();
   }

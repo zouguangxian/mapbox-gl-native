@@ -15,6 +15,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.CircleLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -174,6 +175,7 @@ public class CircleManager {
    *
    * @return property wrapper value around Float[]
    */
+  
   public Float[] getCircleTranslate() {
     return layer.getCircleTranslate().value;
   }
@@ -183,7 +185,7 @@ public class CircleManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setCircleTranslate(Float[] value) {
+  public void setCircleTranslate( Float[] value) {
     layer.setProperties(circleTranslate(value));
   }
 
@@ -192,6 +194,7 @@ public class CircleManager {
    *
    * @return property wrapper value around String
    */
+  @Property.CIRCLE_TRANSLATE_ANCHOR
   public String getCircleTranslateAnchor() {
     return layer.getCircleTranslateAnchor().value;
   }
@@ -201,7 +204,7 @@ public class CircleManager {
    *
    * @param value property wrapper value around String
    */
-  public void setCircleTranslateAnchor(String value) {
+  public void setCircleTranslateAnchor(@Property.CIRCLE_TRANSLATE_ANCHOR String value) {
     layer.setProperties(circleTranslateAnchor(value));
   }
 
@@ -210,6 +213,7 @@ public class CircleManager {
    *
    * @return property wrapper value around String
    */
+  @Property.CIRCLE_PITCH_SCALE
   public String getCirclePitchScale() {
     return layer.getCirclePitchScale().value;
   }
@@ -219,7 +223,7 @@ public class CircleManager {
    *
    * @param value property wrapper value around String
    */
-  public void setCirclePitchScale(String value) {
+  public void setCirclePitchScale(@Property.CIRCLE_PITCH_SCALE String value) {
     layer.setProperties(circlePitchScale(value));
   }
 
@@ -228,6 +232,7 @@ public class CircleManager {
    *
    * @return property wrapper value around String
    */
+  @Property.CIRCLE_PITCH_ALIGNMENT
   public String getCirclePitchAlignment() {
     return layer.getCirclePitchAlignment().value;
   }
@@ -237,7 +242,7 @@ public class CircleManager {
    *
    * @param value property wrapper value around String
    */
-  public void setCirclePitchAlignment(String value) {
+  public void setCirclePitchAlignment(@Property.CIRCLE_PITCH_ALIGNMENT String value) {
     layer.setProperties(circlePitchAlignment(value));
   }
 

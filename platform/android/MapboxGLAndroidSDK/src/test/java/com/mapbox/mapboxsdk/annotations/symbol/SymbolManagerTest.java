@@ -1,6 +1,5 @@
 package com.mapbox.mapboxsdk.annotations.symbol;
 
-import android.support.v4.util.LongSparseArray;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;

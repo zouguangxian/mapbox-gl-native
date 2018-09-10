@@ -15,6 +15,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,6 +171,7 @@ public class FillManager {
    *
    * @return property wrapper value around Boolean
    */
+  
   public Boolean getFillAntialias() {
     return layer.getFillAntialias().value;
   }
@@ -179,7 +181,7 @@ public class FillManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setFillAntialias(Boolean value) {
+  public void setFillAntialias( Boolean value) {
     layer.setProperties(fillAntialias(value));
   }
 
@@ -188,6 +190,7 @@ public class FillManager {
    *
    * @return property wrapper value around Float[]
    */
+  
   public Float[] getFillTranslate() {
     return layer.getFillTranslate().value;
   }
@@ -197,7 +200,7 @@ public class FillManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setFillTranslate(Float[] value) {
+  public void setFillTranslate( Float[] value) {
     layer.setProperties(fillTranslate(value));
   }
 
@@ -206,6 +209,7 @@ public class FillManager {
    *
    * @return property wrapper value around String
    */
+  @Property.FILL_TRANSLATE_ANCHOR
   public String getFillTranslateAnchor() {
     return layer.getFillTranslateAnchor().value;
   }
@@ -215,7 +219,7 @@ public class FillManager {
    *
    * @param value property wrapper value around String
    */
-  public void setFillTranslateAnchor(String value) {
+  public void setFillTranslateAnchor(@Property.FILL_TRANSLATE_ANCHOR String value) {
     layer.setProperties(fillTranslateAnchor(value));
   }
 

@@ -15,6 +15,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -174,6 +175,7 @@ public class LineManager {
    *
    * @return property wrapper value around String
    */
+  @Property.LINE_CAP
   public String getLineCap() {
     return layer.getLineCap().value;
   }
@@ -183,7 +185,7 @@ public class LineManager {
    *
    * @param value property wrapper value around String
    */
-  public void setLineCap(String value) {
+  public void setLineCap(@Property.LINE_CAP String value) {
     layer.setProperties(lineCap(value));
   }
 
@@ -192,6 +194,7 @@ public class LineManager {
    *
    * @return property wrapper value around Float
    */
+  
   public Float getLineMiterLimit() {
     return layer.getLineMiterLimit().value;
   }
@@ -201,7 +204,7 @@ public class LineManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setLineMiterLimit(Float value) {
+  public void setLineMiterLimit( Float value) {
     layer.setProperties(lineMiterLimit(value));
   }
 
@@ -210,6 +213,7 @@ public class LineManager {
    *
    * @return property wrapper value around Float
    */
+  
   public Float getLineRoundLimit() {
     return layer.getLineRoundLimit().value;
   }
@@ -219,7 +223,7 @@ public class LineManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setLineRoundLimit(Float value) {
+  public void setLineRoundLimit( Float value) {
     layer.setProperties(lineRoundLimit(value));
   }
 
@@ -228,6 +232,7 @@ public class LineManager {
    *
    * @return property wrapper value around Float[]
    */
+  
   public Float[] getLineTranslate() {
     return layer.getLineTranslate().value;
   }
@@ -237,7 +242,7 @@ public class LineManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setLineTranslate(Float[] value) {
+  public void setLineTranslate( Float[] value) {
     layer.setProperties(lineTranslate(value));
   }
 
@@ -246,6 +251,7 @@ public class LineManager {
    *
    * @return property wrapper value around String
    */
+  @Property.LINE_TRANSLATE_ANCHOR
   public String getLineTranslateAnchor() {
     return layer.getLineTranslateAnchor().value;
   }
@@ -255,7 +261,7 @@ public class LineManager {
    *
    * @param value property wrapper value around String
    */
-  public void setLineTranslateAnchor(String value) {
+  public void setLineTranslateAnchor(@Property.LINE_TRANSLATE_ANCHOR String value) {
     layer.setProperties(lineTranslateAnchor(value));
   }
 
@@ -264,6 +270,7 @@ public class LineManager {
    *
    * @return property wrapper value around Float[]
    */
+  
   public Float[] getLineDasharray() {
     return layer.getLineDasharray().value;
   }
@@ -273,7 +280,7 @@ public class LineManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setLineDasharray(Float[] value) {
+  public void setLineDasharray( Float[] value) {
     layer.setProperties(lineDasharray(value));
   }
 

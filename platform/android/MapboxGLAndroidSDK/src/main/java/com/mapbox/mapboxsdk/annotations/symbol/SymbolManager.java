@@ -15,6 +15,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,6 +193,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
+  @Property.SYMBOL_PLACEMENT
   public String getSymbolPlacement() {
     return layer.getSymbolPlacement().value;
   }
@@ -201,7 +203,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setSymbolPlacement(String value) {
+  public void setSymbolPlacement(@Property.SYMBOL_PLACEMENT String value) {
     layer.setProperties(symbolPlacement(value));
   }
 
@@ -210,6 +212,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float
    */
+  
   public Float getSymbolSpacing() {
     return layer.getSymbolSpacing().value;
   }
@@ -219,7 +222,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setSymbolSpacing(Float value) {
+  public void setSymbolSpacing( Float value) {
     layer.setProperties(symbolSpacing(value));
   }
 
@@ -228,6 +231,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
+  
   public Boolean getSymbolAvoidEdges() {
     return layer.getSymbolAvoidEdges().value;
   }
@@ -237,7 +241,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setSymbolAvoidEdges(Boolean value) {
+  public void setSymbolAvoidEdges( Boolean value) {
     layer.setProperties(symbolAvoidEdges(value));
   }
 
@@ -246,6 +250,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
+  @Property.SYMBOL_Z_ORDER
   public String getSymbolZOrder() {
     return layer.getSymbolZOrder().value;
   }
@@ -255,7 +260,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setSymbolZOrder(String value) {
+  public void setSymbolZOrder(@Property.SYMBOL_Z_ORDER String value) {
     layer.setProperties(symbolZOrder(value));
   }
 
@@ -264,6 +269,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
+  
   public Boolean getIconAllowOverlap() {
     return layer.getIconAllowOverlap().value;
   }
@@ -273,7 +279,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setIconAllowOverlap(Boolean value) {
+  public void setIconAllowOverlap( Boolean value) {
     layer.setProperties(iconAllowOverlap(value));
   }
 
@@ -282,6 +288,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
+  
   public Boolean getIconIgnorePlacement() {
     return layer.getIconIgnorePlacement().value;
   }
@@ -291,7 +298,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setIconIgnorePlacement(Boolean value) {
+  public void setIconIgnorePlacement( Boolean value) {
     layer.setProperties(iconIgnorePlacement(value));
   }
 
@@ -300,6 +307,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
+  
   public Boolean getIconOptional() {
     return layer.getIconOptional().value;
   }
@@ -309,7 +317,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setIconOptional(Boolean value) {
+  public void setIconOptional( Boolean value) {
     layer.setProperties(iconOptional(value));
   }
 
@@ -318,6 +326,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
+  @Property.ICON_ROTATION_ALIGNMENT
   public String getIconRotationAlignment() {
     return layer.getIconRotationAlignment().value;
   }
@@ -327,7 +336,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setIconRotationAlignment(String value) {
+  public void setIconRotationAlignment(@Property.ICON_ROTATION_ALIGNMENT String value) {
     layer.setProperties(iconRotationAlignment(value));
   }
 
@@ -336,6 +345,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
+  @Property.ICON_TEXT_FIT
   public String getIconTextFit() {
     return layer.getIconTextFit().value;
   }
@@ -345,7 +355,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setIconTextFit(String value) {
+  public void setIconTextFit(@Property.ICON_TEXT_FIT String value) {
     layer.setProperties(iconTextFit(value));
   }
 
@@ -354,6 +364,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float[]
    */
+  
   public Float[] getIconTextFitPadding() {
     return layer.getIconTextFitPadding().value;
   }
@@ -363,7 +374,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setIconTextFitPadding(Float[] value) {
+  public void setIconTextFitPadding( Float[] value) {
     layer.setProperties(iconTextFitPadding(value));
   }
 
@@ -372,6 +383,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float
    */
+  
   public Float getIconPadding() {
     return layer.getIconPadding().value;
   }
@@ -381,7 +393,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setIconPadding(Float value) {
+  public void setIconPadding( Float value) {
     layer.setProperties(iconPadding(value));
   }
 
@@ -390,6 +402,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
+  
   public Boolean getIconKeepUpright() {
     return layer.getIconKeepUpright().value;
   }
@@ -399,7 +412,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setIconKeepUpright(Boolean value) {
+  public void setIconKeepUpright( Boolean value) {
     layer.setProperties(iconKeepUpright(value));
   }
 
@@ -408,6 +421,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
+  @Property.ICON_PITCH_ALIGNMENT
   public String getIconPitchAlignment() {
     return layer.getIconPitchAlignment().value;
   }
@@ -417,7 +431,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setIconPitchAlignment(String value) {
+  public void setIconPitchAlignment(@Property.ICON_PITCH_ALIGNMENT String value) {
     layer.setProperties(iconPitchAlignment(value));
   }
 
@@ -426,6 +440,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
+  @Property.TEXT_PITCH_ALIGNMENT
   public String getTextPitchAlignment() {
     return layer.getTextPitchAlignment().value;
   }
@@ -435,7 +450,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setTextPitchAlignment(String value) {
+  public void setTextPitchAlignment(@Property.TEXT_PITCH_ALIGNMENT String value) {
     layer.setProperties(textPitchAlignment(value));
   }
 
@@ -444,6 +459,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
+  @Property.TEXT_ROTATION_ALIGNMENT
   public String getTextRotationAlignment() {
     return layer.getTextRotationAlignment().value;
   }
@@ -453,7 +469,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setTextRotationAlignment(String value) {
+  public void setTextRotationAlignment(@Property.TEXT_ROTATION_ALIGNMENT String value) {
     layer.setProperties(textRotationAlignment(value));
   }
 
@@ -462,6 +478,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float
    */
+  
   public Float getTextLineHeight() {
     return layer.getTextLineHeight().value;
   }
@@ -471,7 +488,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setTextLineHeight(Float value) {
+  public void setTextLineHeight( Float value) {
     layer.setProperties(textLineHeight(value));
   }
 
@@ -480,6 +497,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float
    */
+  
   public Float getTextMaxAngle() {
     return layer.getTextMaxAngle().value;
   }
@@ -489,7 +507,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setTextMaxAngle(Float value) {
+  public void setTextMaxAngle( Float value) {
     layer.setProperties(textMaxAngle(value));
   }
 
@@ -498,6 +516,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float
    */
+  
   public Float getTextPadding() {
     return layer.getTextPadding().value;
   }
@@ -507,7 +526,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float
    */
-  public void setTextPadding(Float value) {
+  public void setTextPadding( Float value) {
     layer.setProperties(textPadding(value));
   }
 
@@ -516,6 +535,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
+  
   public Boolean getTextKeepUpright() {
     return layer.getTextKeepUpright().value;
   }
@@ -525,7 +545,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setTextKeepUpright(Boolean value) {
+  public void setTextKeepUpright( Boolean value) {
     layer.setProperties(textKeepUpright(value));
   }
 
@@ -534,6 +554,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
+  
   public Boolean getTextAllowOverlap() {
     return layer.getTextAllowOverlap().value;
   }
@@ -543,7 +564,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setTextAllowOverlap(Boolean value) {
+  public void setTextAllowOverlap( Boolean value) {
     layer.setProperties(textAllowOverlap(value));
   }
 
@@ -552,6 +573,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
+  
   public Boolean getTextIgnorePlacement() {
     return layer.getTextIgnorePlacement().value;
   }
@@ -561,7 +583,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setTextIgnorePlacement(Boolean value) {
+  public void setTextIgnorePlacement( Boolean value) {
     layer.setProperties(textIgnorePlacement(value));
   }
 
@@ -570,6 +592,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
+  
   public Boolean getTextOptional() {
     return layer.getTextOptional().value;
   }
@@ -579,7 +602,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Boolean
    */
-  public void setTextOptional(Boolean value) {
+  public void setTextOptional( Boolean value) {
     layer.setProperties(textOptional(value));
   }
 
@@ -588,6 +611,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float[]
    */
+  
   public Float[] getIconTranslate() {
     return layer.getIconTranslate().value;
   }
@@ -597,7 +621,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setIconTranslate(Float[] value) {
+  public void setIconTranslate( Float[] value) {
     layer.setProperties(iconTranslate(value));
   }
 
@@ -606,6 +630,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
+  @Property.ICON_TRANSLATE_ANCHOR
   public String getIconTranslateAnchor() {
     return layer.getIconTranslateAnchor().value;
   }
@@ -615,7 +640,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setIconTranslateAnchor(String value) {
+  public void setIconTranslateAnchor(@Property.ICON_TRANSLATE_ANCHOR String value) {
     layer.setProperties(iconTranslateAnchor(value));
   }
 
@@ -624,6 +649,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float[]
    */
+  
   public Float[] getTextTranslate() {
     return layer.getTextTranslate().value;
   }
@@ -633,7 +659,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around Float[]
    */
-  public void setTextTranslate(Float[] value) {
+  public void setTextTranslate( Float[] value) {
     layer.setProperties(textTranslate(value));
   }
 
@@ -642,6 +668,7 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
+  @Property.TEXT_TRANSLATE_ANCHOR
   public String getTextTranslateAnchor() {
     return layer.getTextTranslateAnchor().value;
   }
@@ -651,7 +678,7 @@ public class SymbolManager {
    *
    * @param value property wrapper value around String
    */
-  public void setTextTranslateAnchor(String value) {
+  public void setTextTranslateAnchor(@Property.TEXT_TRANSLATE_ANCHOR String value) {
     layer.setProperties(textTranslateAnchor(value));
   }
 

@@ -1,6 +1,6 @@
 // This file is generated. Edit android/platform/scripts/generate-style-code.js, then run `make android-style-code`.
 
-package com.mapbox.mapboxsdk.testapp.symbol;
+package com.mapbox.mapboxsdk.testapp.annotations;
 
 import android.support.test.runner.AndroidJUnit4;
 
