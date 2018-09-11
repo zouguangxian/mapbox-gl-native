@@ -174,7 +174,6 @@ public class FillManager {
    *
    * @return property wrapper value around Boolean
    */
-  
   public Boolean getFillAntialias() {
     return layer.getFillAntialias().value;
   }
@@ -193,7 +192,6 @@ public class FillManager {
    *
    * @return property wrapper value around Float[]
    */
-  
   public Float[] getFillTranslate() {
     return layer.getFillTranslate().value;
   }
@@ -212,7 +210,6 @@ public class FillManager {
    *
    * @return property wrapper value around String
    */
-  @Property.FILL_TRANSLATE_ANCHOR
   public String getFillTranslateAnchor() {
     return layer.getFillTranslateAnchor().value;
   }

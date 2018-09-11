@@ -81,7 +81,6 @@ public class Line {
    *
    * @return property wrapper value around String
    */
-  @Property.LINE_JOIN
   public String getLineJoin() {
     return jsonObject.get("line-join").getAsString();
   }
@@ -101,7 +100,6 @@ public class Line {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getLineOpacity() {
     return jsonObject.get("line-opacity").getAsFloat();
   }
@@ -111,7 +109,7 @@ public class Line {
    *
    * @param value constant property value for Float
    */
-  public void setLineOpacity( Float value) {
+  public void setLineOpacity(Float value) {
     jsonObject.addProperty("line-opacity", value);
     lineManager.updateSource();
   }
@@ -121,7 +119,6 @@ public class Line {
    *
    * @return property wrapper value around String
    */
-  
   public String getLineColor() {
     return jsonObject.get("line-color").getAsString();
   }
@@ -131,7 +128,7 @@ public class Line {
    *
    * @param value constant property value for String
    */
-  public void setLineColor( String value) {
+  public void setLineColor(String value) {
     jsonObject.addProperty("line-color", value);
     lineManager.updateSource();
   }
@@ -141,7 +138,6 @@ public class Line {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getLineWidth() {
     return jsonObject.get("line-width").getAsFloat();
   }
@@ -151,7 +147,7 @@ public class Line {
    *
    * @param value constant property value for Float
    */
-  public void setLineWidth( Float value) {
+  public void setLineWidth(Float value) {
     jsonObject.addProperty("line-width", value);
     lineManager.updateSource();
   }
@@ -161,7 +157,6 @@ public class Line {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getLineGapWidth() {
     return jsonObject.get("line-gap-width").getAsFloat();
   }
@@ -171,7 +166,7 @@ public class Line {
    *
    * @param value constant property value for Float
    */
-  public void setLineGapWidth( Float value) {
+  public void setLineGapWidth(Float value) {
     jsonObject.addProperty("line-gap-width", value);
     lineManager.updateSource();
   }
@@ -181,7 +176,6 @@ public class Line {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getLineOffset() {
     return jsonObject.get("line-offset").getAsFloat();
   }
@@ -191,7 +185,7 @@ public class Line {
    *
    * @param value constant property value for Float
    */
-  public void setLineOffset( Float value) {
+  public void setLineOffset(Float value) {
     jsonObject.addProperty("line-offset", value);
     lineManager.updateSource();
   }
@@ -201,7 +195,6 @@ public class Line {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getLineBlur() {
     return jsonObject.get("line-blur").getAsFloat();
   }
@@ -211,7 +204,7 @@ public class Line {
    *
    * @param value constant property value for Float
    */
-  public void setLineBlur( Float value) {
+  public void setLineBlur(Float value) {
     jsonObject.addProperty("line-blur", value);
     lineManager.updateSource();
   }
@@ -221,7 +214,6 @@ public class Line {
    *
    * @return property wrapper value around String
    */
-  
   public String getLinePattern() {
     return jsonObject.get("line-pattern").getAsString();
   }
@@ -231,7 +223,7 @@ public class Line {
    *
    * @param value constant property value for String
    */
-  public void setLinePattern( String value) {
+  public void setLinePattern(String value) {
     jsonObject.addProperty("line-pattern", value);
     lineManager.updateSource();
   }

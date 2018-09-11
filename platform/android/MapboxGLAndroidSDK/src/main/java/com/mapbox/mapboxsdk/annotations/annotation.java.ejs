@@ -154,7 +154,6 @@ public class <%- camelize(type) %> {
    *
    * @return property wrapper value around <%- propertyType(property) %>
    */
-  <%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), "") %>
   public <%- propertyType(property) %> get<%- camelize(property.name) %>() {
     JsonArray jsonArray = jsonObject.getAsJsonArray("<%-property.name %>");
     <%- propertyType(property) %> value = new <%- propertyType(property).substring(0, propertyType(property).length-1) %>jsonArray.size()];
@@ -167,9 +166,9 @@ public class <%- camelize(type) %> {
   /**
    * Set the <%- camelize(property.name) %> property
    *
-   * @return property wrapper value around <%- propertyType(property) %>
+   * @param value constant property value for <%- propertyType(property) %>
    */
-  public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), "") %><%- propertyType(property) %> value) {
+  public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), " ") %><%- propertyType(property) %> value) {
     JsonArray jsonArray = new JsonArray();
     for (<%- propertyType(property).substring(0, propertyType(property).length-2) %> element : value) {
       jsonArray.add(element);
@@ -184,7 +183,6 @@ public class <%- camelize(type) %> {
    *
    * @return property wrapper value around <%- propertyType(property) %>
    */
-  <%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), "") %>
   public <%- propertyType(property) %> get<%- camelize(property.name) %>() {
     return jsonObject.get("<%- property.name %>").getAs<%- propertyType(property) %>();
   }
@@ -194,7 +192,7 @@ public class <%- camelize(type) %> {
    *
    * @param value constant property value for <%- propertyType(property) %>
    */
-  public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), "") %> <%- propertyType(property) %> value) {
+  public void set<%- camelize(property.name) %>(<%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), " ") %><%- propertyType(property) %> value) {
     jsonObject.addProperty("<%- property.name %>", value);
     <%- type %>Manager.updateSource();
   }

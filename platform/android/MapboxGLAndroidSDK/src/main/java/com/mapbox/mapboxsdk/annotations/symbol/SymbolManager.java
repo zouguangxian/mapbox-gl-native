@@ -200,7 +200,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
-  @Property.SYMBOL_PLACEMENT
   public String getSymbolPlacement() {
     return layer.getSymbolPlacement().value;
   }
@@ -219,7 +218,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getSymbolSpacing() {
     return layer.getSymbolSpacing().value;
   }
@@ -238,7 +236,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
-  
   public Boolean getSymbolAvoidEdges() {
     return layer.getSymbolAvoidEdges().value;
   }
@@ -257,7 +254,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
-  
   public Boolean getIconAllowOverlap() {
     return layer.getIconAllowOverlap().value;
   }
@@ -276,7 +272,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
-  
   public Boolean getIconIgnorePlacement() {
     return layer.getIconIgnorePlacement().value;
   }
@@ -295,7 +290,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
-  
   public Boolean getIconOptional() {
     return layer.getIconOptional().value;
   }
@@ -314,7 +308,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
-  @Property.ICON_ROTATION_ALIGNMENT
   public String getIconRotationAlignment() {
     return layer.getIconRotationAlignment().value;
   }
@@ -333,7 +326,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
-  @Property.ICON_TEXT_FIT
   public String getIconTextFit() {
     return layer.getIconTextFit().value;
   }
@@ -352,7 +344,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float[]
    */
-  
   public Float[] getIconTextFitPadding() {
     return layer.getIconTextFitPadding().value;
   }
@@ -371,7 +362,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getIconPadding() {
     return layer.getIconPadding().value;
   }
@@ -390,7 +380,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
-  
   public Boolean getIconKeepUpright() {
     return layer.getIconKeepUpright().value;
   }
@@ -409,7 +398,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
-  @Property.ICON_PITCH_ALIGNMENT
   public String getIconPitchAlignment() {
     return layer.getIconPitchAlignment().value;
   }
@@ -428,7 +416,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
-  @Property.TEXT_PITCH_ALIGNMENT
   public String getTextPitchAlignment() {
     return layer.getTextPitchAlignment().value;
   }
@@ -447,7 +434,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
-  @Property.TEXT_ROTATION_ALIGNMENT
   public String getTextRotationAlignment() {
     return layer.getTextRotationAlignment().value;
   }
@@ -466,7 +452,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getTextLineHeight() {
     return layer.getTextLineHeight().value;
   }
@@ -485,7 +470,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getTextMaxAngle() {
     return layer.getTextMaxAngle().value;
   }
@@ -504,7 +488,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getTextPadding() {
     return layer.getTextPadding().value;
   }
@@ -523,7 +506,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
-  
   public Boolean getTextKeepUpright() {
     return layer.getTextKeepUpright().value;
   }
@@ -542,7 +524,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
-  
   public Boolean getTextAllowOverlap() {
     return layer.getTextAllowOverlap().value;
   }
@@ -561,7 +542,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
-  
   public Boolean getTextIgnorePlacement() {
     return layer.getTextIgnorePlacement().value;
   }
@@ -580,7 +560,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Boolean
    */
-  
   public Boolean getTextOptional() {
     return layer.getTextOptional().value;
   }
@@ -599,7 +578,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float[]
    */
-  
   public Float[] getIconTranslate() {
     return layer.getIconTranslate().value;
   }
@@ -618,7 +596,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
-  @Property.ICON_TRANSLATE_ANCHOR
   public String getIconTranslateAnchor() {
     return layer.getIconTranslateAnchor().value;
   }
@@ -637,7 +614,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around Float[]
    */
-  
   public Float[] getTextTranslate() {
     return layer.getTextTranslate().value;
   }
@@ -656,7 +632,6 @@ public class SymbolManager {
    *
    * @return property wrapper value around String
    */
-  @Property.TEXT_TRANSLATE_ANCHOR
   public String getTextTranslateAnchor() {
     return layer.getTextTranslateAnchor().value;
   }

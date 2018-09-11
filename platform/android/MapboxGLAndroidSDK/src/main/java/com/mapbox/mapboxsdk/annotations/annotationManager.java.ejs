@@ -226,7 +226,6 @@ public class <%- camelize(type) %>Manager {
    *
    * @return property wrapper value around <%- propertyType(property) %>
    */
-  <%- propertyTypeAnnotation(property) %><%- iff(() => propertyTypeAnnotation(property), "") %>
   public <%- propertyType(property) %> get<%- camelize(property.name) %>() {
     return layer.get<%- camelize(property.name) %>().value;
   }

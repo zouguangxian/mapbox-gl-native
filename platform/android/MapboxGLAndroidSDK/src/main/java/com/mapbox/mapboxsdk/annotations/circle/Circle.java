@@ -77,7 +77,6 @@ public class Circle {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getCircleRadius() {
     return jsonObject.get("circle-radius").getAsFloat();
   }
@@ -87,7 +86,7 @@ public class Circle {
    *
    * @param value constant property value for Float
    */
-  public void setCircleRadius( Float value) {
+  public void setCircleRadius(Float value) {
     jsonObject.addProperty("circle-radius", value);
     circleManager.updateSource();
   }
@@ -97,7 +96,6 @@ public class Circle {
    *
    * @return property wrapper value around String
    */
-  
   public String getCircleColor() {
     return jsonObject.get("circle-color").getAsString();
   }
@@ -107,7 +105,7 @@ public class Circle {
    *
    * @param value constant property value for String
    */
-  public void setCircleColor( String value) {
+  public void setCircleColor(String value) {
     jsonObject.addProperty("circle-color", value);
     circleManager.updateSource();
   }
@@ -117,7 +115,6 @@ public class Circle {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getCircleBlur() {
     return jsonObject.get("circle-blur").getAsFloat();
   }
@@ -127,7 +124,7 @@ public class Circle {
    *
    * @param value constant property value for Float
    */
-  public void setCircleBlur( Float value) {
+  public void setCircleBlur(Float value) {
     jsonObject.addProperty("circle-blur", value);
     circleManager.updateSource();
   }
@@ -137,7 +134,6 @@ public class Circle {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getCircleOpacity() {
     return jsonObject.get("circle-opacity").getAsFloat();
   }
@@ -147,7 +143,7 @@ public class Circle {
    *
    * @param value constant property value for Float
    */
-  public void setCircleOpacity( Float value) {
+  public void setCircleOpacity(Float value) {
     jsonObject.addProperty("circle-opacity", value);
     circleManager.updateSource();
   }
@@ -157,7 +153,6 @@ public class Circle {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getCircleStrokeWidth() {
     return jsonObject.get("circle-stroke-width").getAsFloat();
   }
@@ -167,7 +162,7 @@ public class Circle {
    *
    * @param value constant property value for Float
    */
-  public void setCircleStrokeWidth( Float value) {
+  public void setCircleStrokeWidth(Float value) {
     jsonObject.addProperty("circle-stroke-width", value);
     circleManager.updateSource();
   }
@@ -177,7 +172,6 @@ public class Circle {
    *
    * @return property wrapper value around String
    */
-  
   public String getCircleStrokeColor() {
     return jsonObject.get("circle-stroke-color").getAsString();
   }
@@ -187,7 +181,7 @@ public class Circle {
    *
    * @param value constant property value for String
    */
-  public void setCircleStrokeColor( String value) {
+  public void setCircleStrokeColor(String value) {
     jsonObject.addProperty("circle-stroke-color", value);
     circleManager.updateSource();
   }
@@ -197,7 +191,6 @@ public class Circle {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getCircleStrokeOpacity() {
     return jsonObject.get("circle-stroke-opacity").getAsFloat();
   }
@@ -207,7 +200,7 @@ public class Circle {
    *
    * @param value constant property value for Float
    */
-  public void setCircleStrokeOpacity( Float value) {
+  public void setCircleStrokeOpacity(Float value) {
     jsonObject.addProperty("circle-stroke-opacity", value);
     circleManager.updateSource();
   }

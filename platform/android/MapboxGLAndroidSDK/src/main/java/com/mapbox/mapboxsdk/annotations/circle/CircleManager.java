@@ -178,7 +178,6 @@ public class CircleManager {
    *
    * @return property wrapper value around Float[]
    */
-  
   public Float[] getCircleTranslate() {
     return layer.getCircleTranslate().value;
   }
@@ -197,7 +196,6 @@ public class CircleManager {
    *
    * @return property wrapper value around String
    */
-  @Property.CIRCLE_TRANSLATE_ANCHOR
   public String getCircleTranslateAnchor() {
     return layer.getCircleTranslateAnchor().value;
   }
@@ -216,7 +214,6 @@ public class CircleManager {
    *
    * @return property wrapper value around String
    */
-  @Property.CIRCLE_PITCH_SCALE
   public String getCirclePitchScale() {
     return layer.getCirclePitchScale().value;
   }
@@ -235,7 +232,6 @@ public class CircleManager {
    *
    * @return property wrapper value around String
    */
-  @Property.CIRCLE_PITCH_ALIGNMENT
   public String getCirclePitchAlignment() {
     return layer.getCirclePitchAlignment().value;
   }

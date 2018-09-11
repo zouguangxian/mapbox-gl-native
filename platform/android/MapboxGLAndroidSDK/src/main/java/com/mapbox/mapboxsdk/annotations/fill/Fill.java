@@ -85,7 +85,6 @@ public class Fill {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getFillOpacity() {
     return jsonObject.get("fill-opacity").getAsFloat();
   }
@@ -95,7 +94,7 @@ public class Fill {
    *
    * @param value constant property value for Float
    */
-  public void setFillOpacity( Float value) {
+  public void setFillOpacity(Float value) {
     jsonObject.addProperty("fill-opacity", value);
     fillManager.updateSource();
   }
@@ -105,7 +104,6 @@ public class Fill {
    *
    * @return property wrapper value around String
    */
-  
   public String getFillColor() {
     return jsonObject.get("fill-color").getAsString();
   }
@@ -115,7 +113,7 @@ public class Fill {
    *
    * @param value constant property value for String
    */
-  public void setFillColor( String value) {
+  public void setFillColor(String value) {
     jsonObject.addProperty("fill-color", value);
     fillManager.updateSource();
   }
@@ -125,7 +123,6 @@ public class Fill {
    *
    * @return property wrapper value around String
    */
-  
   public String getFillOutlineColor() {
     return jsonObject.get("fill-outline-color").getAsString();
   }
@@ -135,7 +132,7 @@ public class Fill {
    *
    * @param value constant property value for String
    */
-  public void setFillOutlineColor( String value) {
+  public void setFillOutlineColor(String value) {
     jsonObject.addProperty("fill-outline-color", value);
     fillManager.updateSource();
   }
@@ -145,7 +142,6 @@ public class Fill {
    *
    * @return property wrapper value around String
    */
-  
   public String getFillPattern() {
     return jsonObject.get("fill-pattern").getAsString();
   }
@@ -155,7 +151,7 @@ public class Fill {
    *
    * @param value constant property value for String
    */
-  public void setFillPattern( String value) {
+  public void setFillPattern(String value) {
     jsonObject.addProperty("fill-pattern", value);
     fillManager.updateSource();
   }

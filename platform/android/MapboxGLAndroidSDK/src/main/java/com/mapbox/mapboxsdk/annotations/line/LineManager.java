@@ -178,7 +178,6 @@ public class LineManager {
    *
    * @return property wrapper value around String
    */
-  @Property.LINE_CAP
   public String getLineCap() {
     return layer.getLineCap().value;
   }
@@ -197,7 +196,6 @@ public class LineManager {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getLineMiterLimit() {
     return layer.getLineMiterLimit().value;
   }
@@ -216,7 +214,6 @@ public class LineManager {
    *
    * @return property wrapper value around Float
    */
-  
   public Float getLineRoundLimit() {
     return layer.getLineRoundLimit().value;
   }
@@ -235,7 +232,6 @@ public class LineManager {
    *
    * @return property wrapper value around Float[]
    */
-  
   public Float[] getLineTranslate() {
     return layer.getLineTranslate().value;
   }
@@ -254,7 +250,6 @@ public class LineManager {
    *
    * @return property wrapper value around String
    */
-  @Property.LINE_TRANSLATE_ANCHOR
   public String getLineTranslateAnchor() {
     return layer.getLineTranslateAnchor().value;
   }
@@ -273,7 +268,6 @@ public class LineManager {
    *
    * @return property wrapper value around Float[]
    */
-  
   public Float[] getLineDasharray() {
     return layer.getLineDasharray().value;
   }
