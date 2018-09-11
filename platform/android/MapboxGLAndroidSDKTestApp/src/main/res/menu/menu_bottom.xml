@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_action_hide"
+        android:title="Hide"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_action_show"
+        android:title="Show"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_action_detach"
+        android:title="Detach"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_action_attach"
+        android:title="Attach"
+        app:showAsAction="never"/>
+</menu>
