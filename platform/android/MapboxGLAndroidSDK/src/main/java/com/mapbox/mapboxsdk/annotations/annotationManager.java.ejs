@@ -23,10 +23,13 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
+import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The <%- type %> manager allows to add <%- type %>s to a map.
@@ -49,6 +52,10 @@ public class <%- camelize(type) %>Manager {
   private final LongSparseArray<<%- camelize(type) %>> <%- type %>s = new LongSparseArray<>();
   private final List<Feature> features = new ArrayList<>();
   private long currentId;
+<% if (type === "symbol") { -%>
+
+  private final SymbolComparator symbolComparator = new SymbolComparator();
+<% } -%>
 
   /**
    * Create a <%- type %> manager, used to manage <%- type %>s.
@@ -171,6 +178,9 @@ public class <%- camelize(type) %>Manager {
       <%- type %> = <%- type %>s.valueAt(i);
       features.add(Feature.fromGeometry(<%- type %>.getGeometry(), <%- type %>.getFeature()));
     }
+<% if (type === "symbol") { -%>
+    Collections.sort(features, symbolComparator);
+<% } -%>
     geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
   }
 
@@ -200,14 +210,17 @@ public class <%- camelize(type) %>Manager {
     return new PropertyValue[]{
 <% for (const property of properties) { -%>
 <% if (supportsPropertyFunction(property) && property.name !== "fill-pattern" && property.name !== "line-pattern") { -%>
-     <%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")),
+      <%- camelizeWithLeadingLowercase(property.name) %>(get("<%- property.name %>")),
 <% } -%><% } -%>
+<% if (type === "symbol") { -%>
+      symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE)
+<% } -%>
     };
   }
 
   // Property accessors
 <% for (const property of properties) { -%>
-<% if (!supportsPropertyFunction(property) && property.name !== "line-gradient") { -%>
+<% if (!supportsPropertyFunction(property) && property.name !== "line-gradient" && property.name !== "symbol-z-order") { -%>
   /**
    * Get the <%- camelize(property.name) %> property
    *
@@ -259,5 +272,13 @@ public class <%- camelize(type) %>Manager {
       }
     }
   }
+<% if (type === "symbol") { -%>
 
+  private class SymbolComparator implements Comparator<Feature> {
+    @Override
+    public int compare(Feature left, Feature right) {
+      return right.getProperty(Z_INDEX).getAsInt() - left.getProperty(Z_INDEX).getAsInt();
+    }
+  }
+<% } -%>
 }

@@ -18,10 +18,13 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
+import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The symbol manager allows to add symbols to a map.
@@ -44,6 +47,8 @@ public class SymbolManager {
   private final LongSparseArray<Symbol> symbols = new LongSparseArray<>();
   private final List<Feature> features = new ArrayList<>();
   private long currentId;
+
+  private final SymbolComparator symbolComparator = new SymbolComparator();
 
   /**
    * Create a symbol manager, used to manage symbols.
@@ -132,6 +137,7 @@ public class SymbolManager {
       symbol = symbols.valueAt(i);
       features.add(Feature.fromGeometry(symbol.getGeometry(), symbol.getFeature()));
     }
+    Collections.sort(features, symbolComparator);
     geoJsonSource.setGeoJson(FeatureCollection.fromFeatures(features));
   }
 
@@ -159,31 +165,32 @@ public class SymbolManager {
 
   private static PropertyValue<?>[] getLayerDefinition() {
     return new PropertyValue[]{
-     iconSize(get("icon-size")),
-     iconImage(get("icon-image")),
-     iconRotate(get("icon-rotate")),
-     iconOffset(get("icon-offset")),
-     iconAnchor(get("icon-anchor")),
-     textField(get("text-field")),
-     textFont(get("text-font")),
-     textSize(get("text-size")),
-     textMaxWidth(get("text-max-width")),
-     textLetterSpacing(get("text-letter-spacing")),
-     textJustify(get("text-justify")),
-     textAnchor(get("text-anchor")),
-     textRotate(get("text-rotate")),
-     textTransform(get("text-transform")),
-     textOffset(get("text-offset")),
-     iconOpacity(get("icon-opacity")),
-     iconColor(get("icon-color")),
-     iconHaloColor(get("icon-halo-color")),
-     iconHaloWidth(get("icon-halo-width")),
-     iconHaloBlur(get("icon-halo-blur")),
-     textOpacity(get("text-opacity")),
-     textColor(get("text-color")),
-     textHaloColor(get("text-halo-color")),
-     textHaloWidth(get("text-halo-width")),
-     textHaloBlur(get("text-halo-blur")),
+      iconSize(get("icon-size")),
+      iconImage(get("icon-image")),
+      iconRotate(get("icon-rotate")),
+      iconOffset(get("icon-offset")),
+      iconAnchor(get("icon-anchor")),
+      textField(get("text-field")),
+      textFont(get("text-font")),
+      textSize(get("text-size")),
+      textMaxWidth(get("text-max-width")),
+      textLetterSpacing(get("text-letter-spacing")),
+      textJustify(get("text-justify")),
+      textAnchor(get("text-anchor")),
+      textRotate(get("text-rotate")),
+      textTransform(get("text-transform")),
+      textOffset(get("text-offset")),
+      iconOpacity(get("icon-opacity")),
+      iconColor(get("icon-color")),
+      iconHaloColor(get("icon-halo-color")),
+      iconHaloWidth(get("icon-halo-width")),
+      iconHaloBlur(get("icon-halo-blur")),
+      textOpacity(get("text-opacity")),
+      textColor(get("text-color")),
+      textHaloColor(get("text-halo-color")),
+      textHaloWidth(get("text-halo-width")),
+      textHaloBlur(get("text-halo-blur")),
+      symbolZOrder(Property.SYMBOL_Z_ORDER_SOURCE)
     };
   }
 
@@ -243,25 +250,6 @@ public class SymbolManager {
    */
   public void setSymbolAvoidEdges( Boolean value) {
     layer.setProperties(symbolAvoidEdges(value));
-  }
-
-  /**
-   * Get the SymbolZOrder property
-   *
-   * @return property wrapper value around String
-   */
-  @Property.SYMBOL_Z_ORDER
-  public String getSymbolZOrder() {
-    return layer.getSymbolZOrder().value;
-  }
-
-  /**
-   * Set the SymbolZOrder property
-   *
-   * @param value property wrapper value around String
-   */
-  public void setSymbolZOrder(@Property.SYMBOL_Z_ORDER String value) {
-    layer.setProperties(symbolZOrder(value));
   }
 
   /**
@@ -713,4 +701,10 @@ public class SymbolManager {
     }
   }
 
+  private class SymbolComparator implements Comparator<Feature> {
+    @Override
+    public int compare(Feature left, Feature right) {
+      return right.getProperty(Z_INDEX).getAsInt() - left.getProperty(Z_INDEX).getAsInt();
+    }
+  }
 }

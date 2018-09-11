@@ -77,6 +77,7 @@ public class SimpleMapActivity extends AppCompatActivity {
     symbol = symbolManager.createSymbol(new LatLng(6.687337, 0.381457));
     symbol.setIconImage(MAKI_ICON_AIRPORT);
     symbol.setIconSize(1.2f);
+    symbol.setZIndex(10);
 
     // random add symbols across the globe
     Symbol currentSymbol;

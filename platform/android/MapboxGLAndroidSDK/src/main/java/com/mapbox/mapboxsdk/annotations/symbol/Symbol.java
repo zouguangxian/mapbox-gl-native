@@ -16,7 +16,7 @@ import java.util.List;
 public class Symbol {
 
   public static final String ID_KEY = "id-symbol";
-
+  public static final String Z_INDEX = "z-index";
   private final SymbolManager symbolManager;
   private final JsonObject jsonObject = new JsonObject();
   private Geometry geometry;
@@ -30,6 +30,7 @@ public class Symbol {
   Symbol(SymbolManager manager, long id) {
     this.symbolManager = manager;
     this.jsonObject.addProperty(ID_KEY, id);
+    this.jsonObject.addProperty(Z_INDEX, 0);
   }
 
   /**
@@ -70,6 +71,31 @@ public class Symbol {
   public void setLatLng(LatLng latLng) {
     geometry = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
     symbolManager.updateSource();
+  }
+
+  /**
+   * Set the z-index of a symbol.
+   * <p>
+   * If a symbol z-index is higher as another symbol it will be rendered above it.
+   * </p>
+   * <p>
+   * Default value is 0.
+   * </p>
+   *
+   * @param index the z-index value
+   */
+  public void setZIndex(int index) {
+    jsonObject.addProperty(Z_INDEX, index);
+    symbolManager.updateSource();
+  }
+
+  /**
+   * Get the z-index of a symbol.
+   *
+   * @return the z-index value, 0 if not set
+   */
+  public int getZIndex() {
+    return jsonObject.get(Z_INDEX).getAsInt();
   }
 
   // Property accessors

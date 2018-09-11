@@ -16,7 +16,6 @@ import java.util.List;
 public class Circle {
 
   public static final String ID_KEY = "id-circle";
-
   private final CircleManager circleManager;
   private final JsonObject jsonObject = new JsonObject();
   private Geometry geometry;

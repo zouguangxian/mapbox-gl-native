@@ -18,10 +18,13 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
+import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The fill manager allows to add fills to a map.
@@ -159,9 +162,9 @@ public class FillManager {
 
   private static PropertyValue<?>[] getLayerDefinition() {
     return new PropertyValue[]{
-     fillOpacity(get("fill-opacity")),
-     fillColor(get("fill-color")),
-     fillOutlineColor(get("fill-outline-color")),
+      fillOpacity(get("fill-opacity")),
+      fillColor(get("fill-color")),
+      fillOutlineColor(get("fill-outline-color")),
     };
   }
 
@@ -253,5 +256,4 @@ public class FillManager {
       }
     }
   }
-
 }

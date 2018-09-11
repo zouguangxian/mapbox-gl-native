@@ -21,7 +21,9 @@ import java.util.List;
 public class <%- camelize(type) %> {
 
   public static final String ID_KEY = "id-<%- type %>";
-
+<% if (type === "symbol") { -%>
+  public static final String Z_INDEX = "z-index";
+<% } -%>
   private final <%- camelize(type) %>Manager <%- type %>Manager;
   private final JsonObject jsonObject = new JsonObject();
   private Geometry geometry;
@@ -35,6 +37,9 @@ public class <%- camelize(type) %> {
   <%- camelize(type) %>(<%- camelize(type) %>Manager manager, long id) {
     this.<%- type %>Manager = manager;
     this.jsonObject.addProperty(ID_KEY, id);
+<% if (type === "symbol") { -%>
+    this.jsonObject.addProperty(Z_INDEX, 0);
+<% } -%>
   }
 
   /**
@@ -110,6 +115,33 @@ public class <%- camelize(type) %> {
     }
     geometry = Polygon.fromLngLats(points);
     fillManager.updateSource();
+  }
+<% } -%>
+<% if (type === "symbol") { -%>
+
+  /**
+   * Set the z-index of a symbol.
+   * <p>
+   * If a symbol z-index is higher as another symbol it will be rendered above it.
+   * </p>
+   * <p>
+   * Default value is 0.
+   * </p>
+   *
+   * @param index the z-index value
+   */
+  public void setZIndex(int index) {
+    jsonObject.addProperty(Z_INDEX, index);
+    symbolManager.updateSource();
+  }
+
+  /**
+   * Get the z-index of a symbol.
+   *
+   * @return the z-index value, 0 if not set
+   */
+  public int getZIndex() {
+    return jsonObject.get(Z_INDEX).getAsInt();
   }
 <% } -%>
 

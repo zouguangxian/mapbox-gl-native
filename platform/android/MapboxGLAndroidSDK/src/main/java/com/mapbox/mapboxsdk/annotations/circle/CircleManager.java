@@ -18,10 +18,13 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
+import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The circle manager allows to add circles to a map.
@@ -159,13 +162,13 @@ public class CircleManager {
 
   private static PropertyValue<?>[] getLayerDefinition() {
     return new PropertyValue[]{
-     circleRadius(get("circle-radius")),
-     circleColor(get("circle-color")),
-     circleBlur(get("circle-blur")),
-     circleOpacity(get("circle-opacity")),
-     circleStrokeWidth(get("circle-stroke-width")),
-     circleStrokeColor(get("circle-stroke-color")),
-     circleStrokeOpacity(get("circle-stroke-opacity")),
+      circleRadius(get("circle-radius")),
+      circleColor(get("circle-color")),
+      circleBlur(get("circle-blur")),
+      circleOpacity(get("circle-opacity")),
+      circleStrokeWidth(get("circle-stroke-width")),
+      circleStrokeColor(get("circle-stroke-color")),
+      circleStrokeOpacity(get("circle-stroke-opacity")),
     };
   }
 
@@ -276,5 +279,4 @@ public class CircleManager {
       }
     }
   }
-
 }

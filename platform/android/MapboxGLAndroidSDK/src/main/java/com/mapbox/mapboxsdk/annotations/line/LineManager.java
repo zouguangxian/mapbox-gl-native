@@ -18,10 +18,13 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.layers.Property;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
+import static com.mapbox.mapboxsdk.annotations.symbol.Symbol.Z_INDEX;
 
 /**
  * The line manager allows to add lines to a map.
@@ -159,13 +162,13 @@ public class LineManager {
 
   private static PropertyValue<?>[] getLayerDefinition() {
     return new PropertyValue[]{
-     lineJoin(get("line-join")),
-     lineOpacity(get("line-opacity")),
-     lineColor(get("line-color")),
-     lineWidth(get("line-width")),
-     lineGapWidth(get("line-gap-width")),
-     lineOffset(get("line-offset")),
-     lineBlur(get("line-blur")),
+      lineJoin(get("line-join")),
+      lineOpacity(get("line-opacity")),
+      lineColor(get("line-color")),
+      lineWidth(get("line-width")),
+      lineGapWidth(get("line-gap-width")),
+      lineOffset(get("line-offset")),
+      lineBlur(get("line-blur")),
     };
   }
 
@@ -314,5 +317,4 @@ public class LineManager {
       }
     }
   }
-
 }

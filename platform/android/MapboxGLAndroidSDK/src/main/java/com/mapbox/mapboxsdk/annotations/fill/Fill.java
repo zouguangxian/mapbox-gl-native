@@ -16,7 +16,6 @@ import java.util.List;
 public class Fill {
 
   public static final String ID_KEY = "id-fill";
-
   private final FillManager fillManager;
   private final JsonObject jsonObject = new JsonObject();
   private Geometry geometry;

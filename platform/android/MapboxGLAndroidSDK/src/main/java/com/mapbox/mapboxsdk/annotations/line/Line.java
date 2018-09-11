@@ -16,7 +16,6 @@ import java.util.List;
 public class Line {
 
   public static final String ID_KEY = "id-line";
-
   private final LineManager lineManager;
   private final JsonObject jsonObject = new JsonObject();
   private Geometry geometry;
