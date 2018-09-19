@@ -59,11 +59,6 @@ public class Marker extends Annotation {
     this(baseMarkerOptions.position, baseMarkerOptions.icon, baseMarkerOptions.title, baseMarkerOptions.snippet);
   }
 
-  Marker(BaseMarkerViewOptions baseMarkerViewOptions) {
-    this(baseMarkerViewOptions.position, baseMarkerViewOptions.icon,
-      baseMarkerViewOptions.title, baseMarkerViewOptions.snippet);
-  }
-
   Marker(LatLng position, Icon icon, String title, String snippet) {
     this.position = position;
     this.title = title;

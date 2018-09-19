@@ -3,9 +3,7 @@ package com.mapbox.mapboxsdk.testapp.annotations;
 import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.testapp.activity.BaseActivityTest;
-import com.mapbox.mapboxsdk.testapp.activity.annotation.MarkerViewActivity;
 import com.mapbox.mapboxsdk.testapp.activity.espresso.EspressoTestActivity;
-import com.mapbox.mapboxsdk.testapp.model.annotations.TextMarkerViewOptions;
 import com.mapbox.mapboxsdk.testapp.utils.TestConstants;
 
 import org.junit.Ignore;

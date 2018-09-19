@@ -6,7 +6,6 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
 import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.annotations.MarkerView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,13 +47,6 @@ class IconManager {
     }
     addIcon(icon);
     return icon;
-  }
-
-  void loadIconForMarkerView(MarkerView marker) {
-    Icon icon = marker.getIcon();
-    Bitmap bitmap = icon.getBitmap();
-    updateHighestIconSize(bitmap);
-    addIcon(icon, false);
   }
 
   int getTopOffsetPixelsForIcon(Icon icon) {
