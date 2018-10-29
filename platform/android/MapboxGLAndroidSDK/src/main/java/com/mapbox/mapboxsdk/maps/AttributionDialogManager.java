@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
-
 import com.mapbox.mapboxsdk.MapStrictMode;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.R;
@@ -24,8 +23,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Responsible for managing attribution interactions on the map.
@@ -42,11 +41,18 @@ public class AttributionDialogManager implements View.OnClickListener, DialogInt
 
   private final Context context;
   private final MapboxMap mapboxMap;
+  private AlertDialog alertDialog;
   private Set<Attribution> attributionSet;
 
   public AttributionDialogManager(@NonNull Context context, @NonNull MapboxMap mapboxMap) {
     this.context = context;
     this.mapboxMap = mapboxMap;
+  }
+
+  public void onStop() {
+    if (alertDialog != null && alertDialog.isShowing()) {
+      alertDialog.dismiss();
+    }
   }
 
   // Called when someone presses the attribution icon on the map
@@ -70,7 +76,8 @@ public class AttributionDialogManager implements View.OnClickListener, DialogInt
     AlertDialog.Builder builder = new AlertDialog.Builder(context);
     builder.setTitle(R.string.mapbox_attributionsDialogTitle);
     builder.setAdapter(new ArrayAdapter<>(context, R.layout.mapbox_attribution_list_item, attributionTitles), this);
-    builder.show();
+    // TODO alter API with semver to return alertdialog from this method
+    alertDialog = builder.show();
   }
 
   private String[] getAttributionTitles() {

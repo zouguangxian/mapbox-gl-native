@@ -120,6 +120,11 @@ public final class MapboxMap {
    */
   void onStop() {
     locationComponent.onStop();
+
+    AttributionDialogManager attrManager = uiSettings.getAttributionDialogManager();
+    if (attrManager != null) {
+      attrManager.onStop();
+    }
   }
 
   /**
