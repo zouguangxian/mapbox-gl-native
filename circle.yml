@@ -519,8 +519,7 @@ jobs:
           command: |
             pip install --upgrade pip
             pip install awscli --upgrade --user
-            aws --version
-            aws devicefarm list-projects
+            aws devicefarm list-projects --region us-east-1
       - run:
           name: Check code style
           command: make android-check
