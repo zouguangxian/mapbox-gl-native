@@ -515,6 +515,12 @@ jobs:
     steps:
       - install-dependencies: { gradle: true }
       - run:
+          name: Install AWS CLI
+          command: |
+            pip install --upgrade pip
+            pip install awscli --upgrade --user
+            aws devicefarm list-projects --region us-west-2      
+      - run:
           name: Check code style
           command: make android-check
       - run:
