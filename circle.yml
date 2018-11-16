@@ -14,10 +14,7 @@ workflows:
       - android-arm-v7-template:
           name: android-gnustl-arm-v7
           stl: gnustl_shared
-      - android-release:
-          filters:
-            tags:
-              only: /android-v.*/
+      - android-release
       - node-clang39-release:
           filters:
             tags:
