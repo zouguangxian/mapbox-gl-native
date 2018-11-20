@@ -30,28 +30,10 @@ import com.mapbox.mapboxsdk.utils.BitmapUtils;
 
 import java.util.List;
 
+import static com.mapbox.mapboxsdk.style.expressions.Expression.*;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.FormatOption.formatFontScale;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.FormatOption.formatTextFont;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.concat;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.format;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.formatEntry;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.switchCase;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.toBool;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAnchor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAllowOverlap;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAnchor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textFont;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textIgnorePlacement;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textSize;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 
 /**
  * Test activity showcasing runtime manipulation of symbol layers.
@@ -72,6 +54,8 @@ public class SymbolLayerActivity extends AppCompatActivity implements MapboxMap.
   private MapboxMap mapboxMap;
   private MapView mapView;
   private boolean initialFont;
+
+  private SymbolLayer symbolLayer;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -116,7 +100,7 @@ public class SymbolLayerActivity extends AppCompatActivity implements MapboxMap.
 
     // Add the symbol-layer
     mapboxMap.addLayer(
-      new SymbolLayer(MARKER_LAYER, MARKER_SOURCE)
+      symbolLayer = new SymbolLayer(MARKER_LAYER, MARKER_SOURCE)
         .withProperties(
           iconImage(MARKER_ICON),
           iconIgnorePlacement(true),
@@ -143,26 +127,19 @@ public class SymbolLayerActivity extends AppCompatActivity implements MapboxMap.
         )
     );
 
+
     // Set a click-listener so we can manipulate the map
     mapboxMap.addOnMapClickListener(SymbolLayerActivity.this);
   }
 
   @Override
   public boolean onMapClick(@NonNull LatLng point) {
-    // Query which features are clicked
-    PointF screenLoc = mapboxMap.getProjection().toScreenLocation(point);
-    List<Feature> features = mapboxMap.queryRenderedFeatures(screenLoc, MARKER_LAYER);
-    if (!features.isEmpty()) {
-      for (Feature feature : markerCollection.features()) {
-        if (feature.getStringProperty(TITLE_FEATURE_PROPERTY)
-          .equals(features.get(0).getStringProperty(TITLE_FEATURE_PROPERTY))) {
-          boolean selected = feature.getBooleanProperty(SELECTED_FEATURE_PROPERTY);
-          feature.addBooleanProperty(SELECTED_FEATURE_PROPERTY, !selected);
-        }
-      }
-      geoJsonSource.setGeoJson(markerCollection);
-    }
-
+    symbolLayer.setProperties(
+      iconOpacity(
+        match(get(TITLE_FEATURE_PROPERTY),
+          literal("Marker 1"), literal(1.0f),
+          literal(0.25f))
+      ));
     return false;
   }
 
