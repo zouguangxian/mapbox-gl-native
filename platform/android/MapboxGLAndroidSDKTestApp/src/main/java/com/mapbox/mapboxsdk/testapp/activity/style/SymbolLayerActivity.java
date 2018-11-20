@@ -108,6 +108,11 @@ public class SymbolLayerActivity extends AppCompatActivity implements MapboxMap.
           iconSize(switchCase(toBool(get(SELECTED_FEATURE_PROPERTY)), literal(3.0f), literal(1.0f))),
           iconAnchor(Property.ICON_ANCHOR_BOTTOM),
           iconColor(Color.RED),
+          iconOpacity(
+            match(get(TITLE_FEATURE_PROPERTY),
+                      literal("Marker 1"), literal(1.0f),
+                      literal(1.0f))
+          ),
           textField(
             format(
               formatEntry("this is", formatFontScale(0.75)),
