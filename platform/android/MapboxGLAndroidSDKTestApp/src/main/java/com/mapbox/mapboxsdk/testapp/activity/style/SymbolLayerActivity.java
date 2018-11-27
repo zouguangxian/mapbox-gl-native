@@ -110,7 +110,8 @@ public class SymbolLayerActivity extends AppCompatActivity implements MapboxMap.
           iconColor(Color.RED),
           iconOpacity(
             match(get(TITLE_FEATURE_PROPERTY),
-                      literal("Marker 1"), literal(1.0f),
+                      literal("UNKNOWN_PROPERTY"), literal(1.0f),
+                      literal("UNKNOWN_PROPERTY"), literal(1.0f),
                       literal(1.0f))
           ),
           textField(
@@ -143,6 +144,7 @@ public class SymbolLayerActivity extends AppCompatActivity implements MapboxMap.
       iconOpacity(
         match(get(TITLE_FEATURE_PROPERTY),
           literal("Marker 1"), literal(1.0f),
+          literal("Marker 2"), literal(0.25f),
           literal(0.25f))
       ));
     return false;
