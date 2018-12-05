@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.constants.Style
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.log.Logger
 import com.mapbox.mapboxsdk.offline.OfflineManager
 import com.mapbox.mapboxsdk.offline.OfflineRegion
@@ -16,8 +18,8 @@ import kotlinx.android.synthetic.main.activity_merge_offline_regions.*
 class MergeOfflineRegionsActivity : AppCompatActivity() {
   companion object {
     private const val LOG_TAG = "Mbgl-MergeOfflineRegionsActivity"
-    private const val TEST_DB_FILE_NAME = "offline.db"
-    private const val TEST_STYLE = Style.SATELLITE
+    private const val TEST_DB_FILE_NAME = "poznan.db"
+    private const val TEST_STYLE = Style.MAPBOX_STREETS
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,15 +27,16 @@ class MergeOfflineRegionsActivity : AppCompatActivity() {
     setContentView(R.layout.activity_merge_offline_regions)
 
     // forcing offline state
-    Mapbox.setConnected(false)
+//    Mapbox.setConnected(false)
 
-    mapView.setStyleUrl(TEST_STYLE)
+//    mapView.setStyleUrl(TEST_STYLE)
 
     mapView.onCreate(savedInstanceState)
     load_region_btn.setOnClickListener {
       copyAsset()
     }
     mapView.getMapAsync {
+      it.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(52.402711, 16.930856), 10.0))
       it.isDebugActive = true
     }
   }
@@ -106,7 +109,7 @@ class MergeOfflineRegionsActivity : AppCompatActivity() {
     mapView.onDestroy()
 
     // restoring connectivity state
-    Mapbox.setConnected(null)
+//    Mapbox.setConnected(null)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
