@@ -539,11 +539,11 @@ jobs:
           name: Check code style
           command: make android-check
       - run:
-          name: Build libmapbox-gl.so for arm-v7
-          command: make android-lib-arm-v7
+          name: Build libmapbox-gl.so for arm-v8
+          command: make android-lib-arm-v8
       - run:
-          name: Compile Core tests for arm-v7
-          command: make android-test-lib-arm-v7
+          name: Compile Core tests for arm-v8
+          command: make android-test-lib-arm-v8
       - run:
           name: Test phone module
           command: make run-android-unit-test
@@ -555,7 +555,7 @@ jobs:
           command: |
             if [ -n "${MAPBOX_DEVELOPER_CONFIG_XML}" ]; then
               echo "${MAPBOX_DEVELOPER_CONFIG_XML}" > platform/android/MapboxGLAndroidSDKTestApp/src/main/res/values/developer-config.xml
-              make android-ui-test-arm-v7
+              make android-ui-test-arm-v8
             fi
       - save-dependencies: { gradle: true }
       - conditionally-skip-firebase
@@ -564,9 +564,9 @@ jobs:
       - run:
           name: gzip debugable .so files
           command: |
-            gzip platform/android/MapboxGLAndroidSDK/build/intermediates/cmake/debug/obj/armeabi-v7a/libmapbox-gl.so
+            gzip platform/android/MapboxGLAndroidSDK/build/intermediates/cmake/debug/obj/arm64-v8a/libmapbox-gl.so
       - store_artifacts:
-          path: platform/android/MapboxGLAndroidSDK/build/intermediates/cmake/debug/obj/armeabi-v7a/libmapbox-gl.so.gz
+          path: platform/android/MapboxGLAndroidSDK/build/intermediates/cmake/debug/obj/arm64-v8a/libmapbox-gl.so.gz
       - store_artifacts:
           path: platform/android/MapboxGLAndroidSDKTestApp/build/outputs/apk/debug
           destination: .
