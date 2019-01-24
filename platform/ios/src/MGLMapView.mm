@@ -1437,7 +1437,7 @@ public:
     self.mbglMap.setGestureInProgress(false);
     if (self.userTrackingState == MGLUserTrackingStateBegan)
     {
-        [self setUserTrackingMode:MGLUserTrackingModeNone animated:NO];
+        [self setUserTrackingMode:MGLUserTrackingModeNone animated:NO completionHandler:NULL];
     }
     
     [self cancelTransitions];
@@ -5188,7 +5188,9 @@ public:
             [self.delegate mapViewDidStopLocatingUser:self];
         }
 
-        [self setUserTrackingMode:MGLUserTrackingModeNone animated:YES];
+        [self setUserTrackingMode:MGLUserTrackingModeNone animated:YES completionHandler:^{
+            MGLLogInfo(@"All done with setting the user tracking mode!");
+        }];
 
         [self.userLocationAnnotationView removeFromSuperview];
         self.userLocationAnnotationView = nil;
@@ -5229,11 +5231,13 @@ public:
 - (void)setUserTrackingMode:(MGLUserTrackingMode)mode
 {
     MGLLogDebug(@"Setting userTrackingMode: %lu", mode);
-    [self setUserTrackingMode:mode animated:YES];
+    [self setUserTrackingMode:mode animated:YES completionHandler:^{
+        MGLLogDebug(@"Finished sertting userTrackingMode: %lu", mode);
+    }];
 }
 
 - (void)setUserTrackingMode:(MGLUserTrackingMode)mode animated:(BOOL)animated
-{
+                 completionHandler:(void (^)(void))completion {
     MGLLogDebug(@"Setting userTrackingMode: %lu animated: %@", mode, MGLStringFromBOOL(animated));
     if (mode == _userTrackingMode) return;
 
@@ -5292,6 +5296,10 @@ public:
         if (location && self.userLocationAnnotationView)
         {
             [self locationManager:self.locationManager didUpdateLocations:@[location] animated:animated];
+            if (completion) {
+                MGLLogInfo(@"Animation is done, userTrackingMode = %lu", mode);
+                completion();
+            }
         }
     }
 
