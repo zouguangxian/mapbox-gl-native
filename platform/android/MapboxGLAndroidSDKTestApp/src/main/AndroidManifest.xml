@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.mapbox.mapboxsdk.testapp">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -902,6 +903,19 @@
         <activity
             android:name=".activity.render.RenderTestActivity"
             android:screenOrientation="landscape" />
+
+        <activity
+            android:name=".activity.geojson.GeoJsonBenchActivity"
+            android:description="@string/category_basic"
+            android:label="@string/category_basic"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="@string/category"
+                android:value="@string/category_basic" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mapbox.mapboxsdk.testapp.activity.FeatureOverviewActivity" />
+        </activity>
         <!-- Configuration Settings -->
         <meta-data
             android:name="com.mapbox.TestEventsServer"
