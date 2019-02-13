@@ -13,6 +13,7 @@ import com.mapbox.mapboxsdk.maps.renderer.MapRenderer
 import com.mapbox.mapboxsdk.style.layers.TransitionOptions
 import com.mapbox.mapboxsdk.testapp.utils.TestConstants
 import junit.framework.Assert.*
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,6 +40,12 @@ class NativeMapViewTest {
         val context = InstrumentationRegistry.getContext()
         nativeMapView = NativeMapView(context, 2.0f, false, null, null, DummyRenderer(context))
         nativeMapView.resizeView(WIDTH, HEIGHT)
+    }
+
+    @After
+    @UiThreadTest
+    fun after() {
+        nativeMapView.destroy()
     }
 
     @Test
