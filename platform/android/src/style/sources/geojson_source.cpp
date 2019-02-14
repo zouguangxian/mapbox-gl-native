@@ -87,11 +87,11 @@ namespace android {
 
     void GeoJSONSource::setURL(jni::JNIEnv& env, const jni::String& url) {
         // Update the core source
-        source.as<mbgl::style::GeoJSONSource>()->GeoJSONSource::setURL(jni::Make<std::string>(env, url));
+        source->as<mbgl::style::GeoJSONSource>()->GeoJSONSource::setURL(jni::Make<std::string>(env, url));
     }
 
     jni::Local<jni::String> GeoJSONSource::getURL(jni::JNIEnv& env) {
-        optional<std::string> url = source.as<mbgl::style::GeoJSONSource>()->GeoJSONSource::getURL();
+        optional<std::string> url = source->as<mbgl::style::GeoJSONSource>()->GeoJSONSource::getURL();
         return url ? jni::Make<jni::String>(env, *url) : jni::Local<jni::String>();
     }
 
@@ -102,7 +102,7 @@ namespace android {
 
         std::vector<mbgl::Feature> features;
         if (rendererFrontend) {
-            features = rendererFrontend->querySourceFeatures(source.getID(),
+            features = rendererFrontend->querySourceFeatures(source->getID(),
                 { {}, toFilter(env, jfilter) });
         }
         return Feature::convert(env, features);
@@ -115,7 +115,7 @@ namespace android {
         if (rendererFrontend) {
             mbgl::Feature _feature = Feature::convert(env, feature);
             _feature.properties["cluster_id"] = static_cast<uint64_t>(_feature.properties["cluster_id"].get<double>());
-            const auto featureExtension = rendererFrontend->queryFeatureExtensions(source.getID(), _feature, "supercluster", "children", {});
+            const auto featureExtension = rendererFrontend->queryFeatureExtensions(source->getID(), _feature, "supercluster", "children", {});
             if (featureExtension.is<mbgl::FeatureCollection>()) {
                 return Feature::convert(env, featureExtension.get<mbgl::FeatureCollection>());
             }
@@ -132,7 +132,7 @@ namespace android {
             _feature.properties["cluster_id"] = static_cast<uint64_t>(_feature.properties["cluster_id"].get<double>());
             const std::map<std::string, mbgl::Value> options = { {"limit", static_cast<uint64_t>(limit)},
                                                                     {"offset", static_cast<uint64_t>(offset)} };
-            auto featureExtension = rendererFrontend->queryFeatureExtensions(source.getID(), _feature, "supercluster", "leaves", options);
+            auto featureExtension = rendererFrontend->queryFeatureExtensions(source->getID(), _feature, "supercluster", "leaves", options);
             if (featureExtension.is<mbgl::FeatureCollection>()) {
                 return Feature::convert(env, featureExtension.get<mbgl::FeatureCollection>());
             }
@@ -147,7 +147,7 @@ namespace android {
         if (rendererFrontend) {
             mbgl::Feature _feature = Feature::convert(env, feature);
             _feature.properties["cluster_id"] = static_cast<uint64_t>(_feature.properties["cluster_id"].get<double>());
-            auto featureExtension = rendererFrontend->queryFeatureExtensions(source.getID(), _feature, "supercluster", "expansion-zoom", {});
+            auto featureExtension = rendererFrontend->queryFeatureExtensions(source->getID(), _feature, "supercluster", "expansion-zoom", {});
             if (featureExtension.is<mbgl::Value>()) {
                 auto value = featureExtension.get<mbgl::Value>();
                 if (value.is<uint64_t>()) {
@@ -186,7 +186,7 @@ namespace android {
                             android::UniqueEnv _env = android::AttachEnv();
 
                             // Update the core source
-                            source.as<mbgl::style::GeoJSONSource>()->GeoJSONSource::setGeoJSON(geoJSON);
+                            source->as<mbgl::style::GeoJSONSource>()->GeoJSONSource::setGeoJSON(geoJSON);
 
                             // if there is an awaiting update, execute it, otherwise, release resources
                             if (awaitingUpdate) {

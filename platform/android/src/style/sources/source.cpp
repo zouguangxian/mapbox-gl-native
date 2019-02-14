@@ -56,14 +56,14 @@ namespace android {
     }
 
     Source::Source(jni::JNIEnv& env, mbgl::style::Source& coreSource, const jni::Object<Source>& obj, AndroidRendererFrontend& frontend)
-        : source(coreSource)
+        : source(&coreSource)
         , javaPeer(jni::NewGlobal(env, obj))
         , rendererFrontend(&frontend) {
     }
 
     Source::Source(jni::JNIEnv&, std::unique_ptr<mbgl::style::Source> coreSource)
         : ownedSource(std::move(coreSource))
-        , source(*ownedSource) {
+        , source(coreSource.release()) {
     }
 
     Source::~Source() {
@@ -85,11 +85,11 @@ namespace android {
     }
 
     jni::Local<jni::String> Source::getId(jni::JNIEnv& env) {
-        return jni::Make<jni::String>(env, source.getID());
+        return jni::Make<jni::String>(env, source->getID());
     }
 
     jni::Local<jni::String> Source::getAttribution(jni::JNIEnv& env) {
-        auto attribution = source.getAttribution();
+        auto attribution = source->getAttribution();
         return attribution ? jni::Make<jni::String>(env, attribution.value()) : jni::Make<jni::String>(env,"");
     }
 
@@ -103,7 +103,7 @@ namespace android {
         map.getStyle().addSource(std::move(ownedSource));
 
         // Add peer to core source
-        source.peer = std::unique_ptr<Source>(this);
+        (*source).peer = std::unique_ptr<Source>(this);
 
         // Add strong reference to java source
         javaPeer = jni::NewGlobal(env, obj);
@@ -118,7 +118,7 @@ namespace android {
         }
 
         // Remove the source from the map and take ownership
-        ownedSource = map.getStyle().removeSource(source.getID());
+        ownedSource = map.getStyle().removeSource(source->getID());
 
         // The source may not be removed if any layers still reference it
         return ownedSource != nullptr;
