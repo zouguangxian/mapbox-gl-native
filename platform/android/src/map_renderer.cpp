@@ -125,7 +125,9 @@ void MapRenderer::scheduleSnapshot(std::unique_ptr<SnapshotCallback> callback) {
 }
 
 void MapRenderer::render(JNIEnv&) {
-    assert (renderer);
+    if (!renderer) {
+        return;
+    }
 
     std::shared_ptr<UpdateParameters> params;
     {
@@ -159,6 +161,12 @@ void MapRenderer::render(JNIEnv&) {
 }
 
 void MapRenderer::onSurfaceCreated(JNIEnv&) {
+    // Make sure to create the surface of the renderer on the GL Thread
+    auto self = ActorRef<MapRenderer>(*this, mailbox);
+    self.ask(&MapRenderer::createRenderer).wait();
+}
+
+void MapRenderer::createRenderer() {
     // Lock as the initialization can come from the main thread or the GL thread first
     std::lock_guard<std::mutex> lock(initialisationMutex);
 

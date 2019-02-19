@@ -1,5 +1,6 @@
 package com.mapbox.mapboxsdk.maps.renderer.glsurfaceview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 
@@ -43,6 +44,11 @@ public class GLSurfaceViewMapRenderer extends MapRenderer implements GLSurfaceVi
         GLSurfaceViewMapRenderer.this.onSurfaceDestroyed();
       }
 
+      @Override
+      public void surfaceCreated(SurfaceHolder holder) {
+        GLSurfaceViewMapRenderer.super.onSurfaceCreated(null, null);
+      }
+
     });
   }
 
@@ -58,7 +64,7 @@ public class GLSurfaceViewMapRenderer extends MapRenderer implements GLSurfaceVi
 
   @Override
   public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-    super.onSurfaceCreated(gl, config);
+    //super.onSurfaceCreated(gl, config);
   }
 
   @Override

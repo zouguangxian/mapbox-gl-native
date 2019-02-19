@@ -90,11 +90,13 @@ private:
     // Renders a frame.
     void render(JNIEnv&);
 
-    void onSurfaceCreated(JNIEnv&);
-
     void onSurfaceChanged(JNIEnv&, jint width, jint height);
 
-    // Called on Main thread
+    void createRenderer();
+
+    // Called from the Main thread //
+    void onSurfaceCreated(JNIEnv&);
+
     void onSurfaceDestroyed(JNIEnv&);
 
 private:
