@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.annotation.StyleRes;
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
 import android.view.WindowManager;
 
 import com.mapbox.android.core.location.LocationEngine;
@@ -667,9 +666,6 @@ public final class LocationComponent {
       locationAnimatorCoordinator.setTrackingAnimationDurationMultiplier(options.trackingAnimationDurationMultiplier());
       locationAnimatorCoordinator.setCompassAnimationEnabled(options.compassAnimationEnabled());
       locationAnimatorCoordinator.setAccuracyAnimationEnabled(options.accuracyAnimationEnabled());
-      if (options.pulseEnabled()) {
-        locationAnimatorCoordinator.startLocationCirclePulsing(options, mapboxMap);
-      }
       updateMapWithOptions(options);
     }
   }
@@ -1047,6 +1043,7 @@ public final class LocationComponent {
    */
   public void onStart() {
     isComponentStarted = true;
+    Logger.d(TAG, "onStart()");
     onLocationLayerStart();
   }
 
@@ -1056,6 +1053,7 @@ public final class LocationComponent {
   public void onStop() {
     onLocationLayerStop();
     isComponentStarted = false;
+    Logger.d(TAG, "onStop()");
   }
 
   /**
@@ -1111,6 +1109,9 @@ public final class LocationComponent {
       setLastLocation();
       updateCompassListenerState(true);
       setLastCompassHeading();
+      if (options.pulseEnabled()) {
+        locationAnimatorCoordinator.startLocationCirclePulsing(options, mapboxMap);
+      }
     }
   }
 
