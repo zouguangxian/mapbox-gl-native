@@ -72,11 +72,6 @@ static_assert(mbgl::underlying_type(QMapboxGLSettings::SharedGLContext) == mbgl:
 static_assert(mbgl::underlying_type(QMapboxGLSettings::Continuous) == mbgl::underlying_type(mbgl::MapMode::Continuous), "error");
 static_assert(mbgl::underlying_type(QMapboxGLSettings::Static) == mbgl::underlying_type(mbgl::MapMode::Static), "error");
 
-// mbgl::ConstrainMode
-static_assert(mbgl::underlying_type(QMapboxGLSettings::NoConstrain) == mbgl::underlying_type(mbgl::ConstrainMode::None), "error");
-static_assert(mbgl::underlying_type(QMapboxGLSettings::ConstrainHeightOnly) == mbgl::underlying_type(mbgl::ConstrainMode::HeightOnly), "error");
-static_assert(mbgl::underlying_type(QMapboxGLSettings::ConstrainWidthAndHeight) == mbgl::underlying_type(mbgl::ConstrainMode::WidthAndHeight), "error");
-
 // mbgl::ViewportMode
 static_assert(mbgl::underlying_type(QMapboxGLSettings::DefaultViewport) == mbgl::underlying_type(mbgl::ViewportMode::Default), "error");
 static_assert(mbgl::underlying_type(QMapboxGLSettings::FlippedYViewport) == mbgl::underlying_type(mbgl::ViewportMode::FlippedY), "error");
@@ -214,24 +209,6 @@ std::unique_ptr<mbgl::style::Image> toStyleImage(const QString &id, const QImage
 */
 
 /*!
-    \enum QMapboxGLSettings::ConstrainMode
-
-    This enum determines if the map wraps.
-
-    \value NoConstrain              The map will wrap on the horizontal axis. Since it doesn't
-    make sense to wrap on the vertical axis in a Web Mercator projection, the map will scroll
-    and show some empty space.
-
-    \value ConstrainHeightOnly      The map will wrap around the horizontal axis, like a spinning
-    globe. This is the recommended constrain mode.
-
-    \value ConstrainWidthAndHeight  The map won't wrap and panning is restricted to the boundaries
-    of the map.
-
-    \sa constrainMode()
-*/
-
-/*!
     \enum QMapboxGLSettings::ViewportMode
 
     This enum flips the map vertically.
@@ -250,7 +227,6 @@ std::unique_ptr<mbgl::style::Image> toStyleImage(const QString &id, const QImage
 QMapboxGLSettings::QMapboxGLSettings()
     : m_contextMode(QMapboxGLSettings::SharedGLContext)
     , m_mapMode(QMapboxGLSettings::Continuous)
-    , m_constrainMode(QMapboxGLSettings::ConstrainHeightOnly)
     , m_viewportMode(QMapboxGLSettings::DefaultViewport)
     , m_cacheMaximumSize(mbgl::util::DEFAULT_MAX_CACHE_SIZE)
     , m_cacheDatabasePath(":memory:")
@@ -302,25 +278,6 @@ QMapboxGLSettings::MapMode QMapboxGLSettings::mapMode() const
 void QMapboxGLSettings::setMapMode(MapMode mode)
 {
     m_mapMode = mode;
-}
-
-/*!
-    Returns the constrain mode. This is used to limit the map to wrap
-    around the globe horizontally.
-
-    By default, it is set to QMapboxGLSettings::ConstrainHeightOnly.
-*/
-QMapboxGLSettings::ConstrainMode QMapboxGLSettings::constrainMode() const
-{
-    return m_constrainMode;
-}
-
-/*!
-    Sets the map constrain \a mode.
-*/
-void QMapboxGLSettings::setConstrainMode(ConstrainMode mode)
-{
-    m_constrainMode = mode;
 }
 
 /*!
@@ -1774,7 +1731,6 @@ QMapboxGLPrivate::QMapboxGLPrivate(QMapboxGL *q, const QMapboxGLSettings &settin
             sanitizedSize(size),
             m_pixelRatio, *m_fileSourceObj, *m_threadPool,
             static_cast<mbgl::MapMode>(settings.mapMode()),
-            static_cast<mbgl::ConstrainMode>(settings.constrainMode()),
             static_cast<mbgl::ViewportMode>(settings.viewportMode()));
 
     // Needs to be Queued to give time to discard redundant draw calls via the `renderQueued` flag.

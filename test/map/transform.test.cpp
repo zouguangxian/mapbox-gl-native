@@ -172,19 +172,6 @@ TEST(Transform, ConstrainHeightOnly) {
     ASSERT_NEAR(util::LONGITUDE_MAX, std::abs(transform.getLatLng().longitude()), 0.001);
 }
 
-TEST(Transform, ConstrainWidthAndHeight) {
-    Transform transform(MapObserver::nullObserver(), ConstrainMode::WidthAndHeight);
-    transform.resize({ 1000, 1000 });
-
-    transform.jumpTo(CameraOptions().withCenter(LatLngBounds::world().southwest()).withZoom(util::MAX_ZOOM));
-    ASSERT_NEAR(-util::LATITUDE_MAX, transform.getLatLng().latitude(), 0.001);
-    ASSERT_NEAR(-util::LONGITUDE_MAX, transform.getLatLng().longitude(), 0.001);
-
-    transform.jumpTo(CameraOptions().withCenter(LatLngBounds::world().northeast()));
-    ASSERT_NEAR(util::LATITUDE_MAX, transform.getLatLng().latitude(), 0.001);
-    ASSERT_NEAR(util::LONGITUDE_MAX, std::abs(transform.getLatLng().longitude()), 0.001);
-}
-
 TEST(Transform, Anchor) {
     Transform transform;
     transform.resize({ 1000, 1000 });

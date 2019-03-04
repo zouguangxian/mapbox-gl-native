@@ -36,7 +36,6 @@ public:
                  FileSource&,
                  Scheduler&,
                  MapMode mapMode = MapMode::Continuous,
-                 ConstrainMode constrainMode = ConstrainMode::HeightOnly,
                  ViewportMode viewportMode = ViewportMode::Default,
                  bool crossSourceCollisions = true);
     ~Map();
@@ -92,10 +91,6 @@ public:
     // North Orientation
     void setNorthOrientation(NorthOrientation);
     NorthOrientation getNorthOrientation() const;
-
-    // Constrain mode
-    void setConstrainMode(ConstrainMode);
-    ConstrainMode getConstrainMode() const;
 
     // Viewport mode
     void setViewportMode(ViewportMode);

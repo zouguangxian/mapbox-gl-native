@@ -34,7 +34,6 @@ Map::Map(RendererFrontend& rendererFrontend,
          FileSource& fileSource,
          Scheduler& scheduler,
          MapMode mapMode,
-         ConstrainMode constrainMode,
          ViewportMode viewportMode,
          bool crossSourceCollisions)
     : impl(std::make_unique<Impl>(*this,
@@ -45,7 +44,6 @@ Map::Map(RendererFrontend& rendererFrontend,
                                   size,
                                   pixelRatio,
                                   mapMode,
-                                  constrainMode,
                                   viewportMode,
                                   crossSourceCollisions)) {}
 
@@ -352,17 +350,6 @@ void Map::setNorthOrientation(NorthOrientation orientation) {
 
 NorthOrientation Map::getNorthOrientation() const {
     return impl->transform.getNorthOrientation();
-}
-
-#pragma mark - Constrain mode
-
-void Map::setConstrainMode(mbgl::ConstrainMode mode) {
-    impl->transform.setConstrainMode(mode);
-    impl->onUpdate();
-}
-
-ConstrainMode Map::getConstrainMode() const {
-    return impl->transform.getConstrainMode();
 }
 
 #pragma mark - Viewport mode
