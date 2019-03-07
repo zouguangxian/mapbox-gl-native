@@ -58,6 +58,7 @@ template optional<LineCapType> Converter<LineCapType>::operator()(const Converti
 template optional<LineJoinType> Converter<LineJoinType>::operator()(const Convertible&, Error&) const;
 template optional<RasterResamplingType> Converter<RasterResamplingType>::operator()(const Convertible&, Error&) const;
 template optional<SymbolAnchorType> Converter<SymbolAnchorType>::operator()(const Convertible&, Error&) const;
+template optional<TextVariableAnchorType> Converter<TextVariableAnchorType>::operator()(const Convertible&, Error&) const;
 template optional<SymbolPlacementType> Converter<SymbolPlacementType>::operator()(const Convertible&, Error&) const;
 template optional<SymbolZOrderType> Converter<SymbolZOrderType>::operator()(const Convertible&, Error&) const;
 template optional<TextJustifyType> Converter<TextJustifyType>::operator()(const Convertible&, Error&) const;
@@ -125,6 +126,11 @@ optional<std::vector<float>> Converter<std::vector<float>>::operator()(const Con
     return result;
 }
 
+
+namespace {
+
+}  // namespace
+
 optional<std::vector<std::string>> Converter<std::vector<std::string>>::operator()(const Convertible& value, Error& error) const {
     if (!isArray(value)) {
         error.message = "value must be an array";
@@ -138,6 +144,26 @@ optional<std::vector<std::string>> Converter<std::vector<std::string>>::operator
         optional<std::string> string = toString(arrayMember(value, i));
         if (!string) {
             error.message = "value must be an array of strings";
+            return nullopt;
+        }
+        result.push_back(*string);
+    }
+
+    return result;
+}
+
+optional<std::vector<TextVariableAnchorType>> Converter<std::vector<TextVariableAnchorType>>::operator()(const Convertible& value, Error& error) const {
+    if (!isArray(value)) {
+        error.message = "value must be an array";
+        return nullopt;
+    }
+
+    std::vector<TextVariableAnchorType> result;
+    result.reserve(arrayLength(value));
+
+     for (std::size_t i = 0; i < arrayLength(value); ++i) {
+        optional<TextVariableAnchorType> string = Converter<TextVariableAnchorType>{}(arrayMember(value, i), error);
+        if (!string) {
             return nullopt;
         }
         result.push_back(*string);

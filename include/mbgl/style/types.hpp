@@ -98,6 +98,18 @@ enum class SymbolAnchorType : uint8_t {
     BottomRight
 };
 
+enum class TextVariableAnchorType : uint8_t {
+    Center,
+    Left,
+    Right,
+    Top,
+    Bottom,
+    TopLeft,
+    TopRight,
+    BottomLeft,
+    BottomRight
+};
+
 enum class TextTransformType : uint8_t {
     None,
     Uppercase,

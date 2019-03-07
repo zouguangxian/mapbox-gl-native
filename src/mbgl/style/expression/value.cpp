@@ -324,6 +324,9 @@ template struct ValueConverter<std::vector<float>>;
 template type::Type valueTypeToExpressionType<std::vector<std::string>>();
 template struct ValueConverter<std::vector<std::string>>;
 
+template type::Type valueTypeToExpressionType<std::vector<TextVariableAnchorType>>();
+template struct ValueConverter<std::vector<TextVariableAnchorType>>;
+
 template type::Type valueTypeToExpressionType<AlignmentType>();
 template struct ValueConverter<AlignmentType>;
 
@@ -347,6 +350,9 @@ template struct ValueConverter<SymbolZOrderType>;
 
 template type::Type valueTypeToExpressionType<SymbolAnchorType>();
 template struct ValueConverter<SymbolAnchorType>;
+
+template type::Type valueTypeToExpressionType<TextVariableAnchorType>();
+template struct ValueConverter<TextVariableAnchorType>;
 
 template type::Type valueTypeToExpressionType<TextJustifyType>();
 template struct ValueConverter<TextJustifyType>;
