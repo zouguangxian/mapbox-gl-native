@@ -161,6 +161,7 @@ void Placement::placeLayerBucket(
     // See https://github.com/mapbox/mapbox-gl-native/issues/12683
     const bool alwaysShowText = textAllowOverlap && (iconAllowOverlap || !bucket.hasIconData() || bucket.layout.get<style::IconOptional>());
     const bool alwaysShowIcon = iconAllowOverlap && (textAllowOverlap || !bucket.hasTextData() || bucket.layout.get<style::TextOptional>());
+    const std::vector<style::TextVariableAnchorType> variableTextAnchors = bucket.layout.get<style::TextVariableAnchor>();
     
     for (auto& symbolInstance : bucket.symbolInstances) {
 
@@ -176,8 +177,8 @@ void Placement::placeLayerBucket(
             bool placeIcon = false;
             bool offscreen = true;
 
-            if (symbolInstance.placedTextIndex) {
-                PlacedSymbol& placedSymbol = bucket.text.placedSymbols.at(*symbolInstance.placedTextIndex);
+            if (variableTextAnchors.empty() && symbolInstance.placedRightTextIndex) {
+                PlacedSymbol& placedSymbol = bucket.text.placedSymbols.at(*symbolInstance.placedRightTextIndex);
                 const float fontSize = evaluateSizeForFeature(partiallyEvaluatedTextSize, placedSymbol);
 
                 auto placed = collisionIndex.placeFeature(symbolInstance.textCollisionFeature,
@@ -339,14 +340,33 @@ void Placement::updateBucketOpacities(SymbolBucket& bucket, std::set<uint32_t>& 
 
         if (symbolInstance.hasText) {
             auto opacityVertex = SymbolSDFTextProgram::opacityVertex(opacityState.text.placed, opacityState.text.opacity);
-            for (size_t i = 0; i < symbolInstance.horizontalGlyphQuads.size() * 4; i++) {
+            for (size_t i = 0; i < symbolInstance.rightJustifiedGlyphQuads.size() * 4; i++) {
                 bucket.text.opacityVertices.emplace_back(opacityVertex);
+            }
+            if (symbolInstance.placedCenterTextIndex) {
+                for (size_t i = 0; i < symbolInstance.centerJustifiedGlyphQuads.size() * 4; i++) {
+                    bucket.text.opacityVertices.emplace_back(opacityVertex);
+                }
+            }
+            if (symbolInstance.placedLeftTextIndex) {
+                for (size_t i = 0; i < symbolInstance.leftJustifiedGlyphQuads.size() * 4; i++) {
+                    bucket.text.opacityVertices.emplace_back(opacityVertex);
+                }
             }
             for (size_t i = 0; i < symbolInstance.verticalGlyphQuads.size() * 4; i++) {
                 bucket.text.opacityVertices.emplace_back(opacityVertex);
             }
-            if (symbolInstance.placedTextIndex) {
-                bucket.text.placedSymbols[*symbolInstance.placedTextIndex].hidden = opacityState.isHidden();
+            if (symbolInstance.placedRightTextIndex) {
+                PlacedSymbol& placed = bucket.text.placedSymbols[*symbolInstance.placedRightTextIndex];
+                placed.hidden = opacityState.isHidden();
+            }
+            if (symbolInstance.placedCenterTextIndex) {
+                PlacedSymbol& placed = bucket.text.placedSymbols[*symbolInstance.placedCenterTextIndex];
+                placed.hidden = opacityState.isHidden();
+            }
+            if (symbolInstance.placedLeftTextIndex) {
+                PlacedSymbol& placed = bucket.text.placedSymbols[*symbolInstance.placedLeftTextIndex];
+                placed.hidden = opacityState.isHidden();
             }
             if (symbolInstance.placedVerticalTextIndex) {
                 bucket.text.placedSymbols[*symbolInstance.placedVerticalTextIndex].hidden = opacityState.isHidden();

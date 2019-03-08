@@ -7,6 +7,17 @@
 
 namespace mbgl {
 
+struct AnchorAlignment {
+    AnchorAlignment(float horizontal, float vertical)
+        : horizontalAlign(horizontal), verticalAlign(vertical) {
+    }
+
+    static AnchorAlignment getAnchorAlignment(style::SymbolAnchorType anchor);
+
+    float horizontalAlign;
+    float verticalAlign;
+};
+
 class SymbolFeature;
 class BiDi;
 
@@ -53,7 +64,7 @@ const Shaping getShaping(const TaggedString& string,
                          style::TextJustifyType textJustify,
                          float spacing,
                          const Point<float>& translate,
-                         float verticalHeight,
+                         //float verticalHeight,
                          const WritingModeType,
                          BiDi& bidi,
                          const GlyphMap& glyphs);

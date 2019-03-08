@@ -214,8 +214,8 @@ void SymbolBucket::sortFeatures(const float angle) {
         const SymbolInstance& symbolInstance = symbolInstances[i];
         featureSortOrder->push_back(symbolInstance.dataFeatureIndex);
 
-        if (symbolInstance.placedTextIndex) {
-            addPlacedSymbol(text.triangles, text.placedSymbols[*symbolInstance.placedTextIndex]);
+        if (symbolInstance.placedRightTextIndex) {
+            addPlacedSymbol(text.triangles, text.placedSymbols[*symbolInstance.placedRightTextIndex]);
         }
         if (symbolInstance.placedVerticalTextIndex) {
             addPlacedSymbol(text.triangles, text.placedSymbols[*symbolInstance.placedVerticalTextIndex]);

@@ -45,7 +45,7 @@ public:
     // visible right away.
     const bool skipFade;
 };
-    
+  
 struct RetainedQueryData {
     uint32_t bucketInstanceId;
     std::shared_ptr<FeatureIndex> featureIndex;

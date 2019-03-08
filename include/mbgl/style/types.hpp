@@ -129,5 +129,22 @@ enum class LightAnchorType: bool {
     Viewport
 };
 
+// Choose the justification that matches the direction of the TextAnchor
+template <typename TextAnchorType>
+static TextJustifyType getAnchorJustification(TextAnchorType anchor) {
+    switch (anchor) {
+    case TextAnchorType::Right:
+    case TextAnchorType::TopRight:
+    case TextAnchorType::BottomRight:
+        return TextJustifyType::Right;
+    case TextAnchorType::Left:
+    case TextAnchorType::TopLeft:
+    case TextAnchorType::BottomLeft:
+        return TextJustifyType::Left;
+    default:
+        return TextJustifyType::Center;
+    }
+}
+
 } // namespace style
 } // namespace mbgl
