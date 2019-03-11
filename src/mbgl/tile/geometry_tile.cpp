@@ -18,6 +18,7 @@
 #include <mbgl/geometry/feature_index.hpp>
 #include <mbgl/map/transform_state.hpp>
 #include <mbgl/util/logging.hpp>
+#include <mbgl/util/task_scheduler.hpp>
 #include <mbgl/actor/scheduler.hpp>
 
 namespace mbgl {
@@ -46,7 +47,7 @@ GeometryTile::GeometryTile(const OverscaledTileID& id_,
     : Tile(Kind::Geometry, id_),
       sourceID(std::move(sourceID_)),
       mailbox(std::make_shared<Mailbox>(*Scheduler::GetCurrent())),
-      worker(Scheduler::GetBackground(),
+      worker(TaskScheduler::GetBackground(),
              ActorRef<GeometryTile>(*this, mailbox),
              id_,
              sourceID,

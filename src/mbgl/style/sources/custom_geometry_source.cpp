@@ -4,6 +4,7 @@
 #include <mbgl/actor/actor.hpp>
 #include <mbgl/actor/scheduler.hpp>
 #include <mbgl/tile/tile_id.hpp>
+#include <mbgl/util/task_scheduler.hpp>
 #include <tuple>
 #include <map>
 
@@ -13,7 +14,7 @@ namespace style {
 CustomGeometrySource::CustomGeometrySource(std::string id,
                                        const CustomGeometrySource::Options options)
     : Source(makeMutable<CustomGeometrySource::Impl>(std::move(id), options)),
-    loader(std::make_unique<Actor<CustomTileLoader>>(Scheduler::GetBackground(), options.fetchTileFunction, options.cancelTileFunction)) {
+    loader(std::make_unique<Actor<CustomTileLoader>>(TaskScheduler::GetBackground(), options.fetchTileFunction, options.cancelTileFunction)) {
 }
 
 CustomGeometrySource::~CustomGeometrySource() = default;

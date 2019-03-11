@@ -7,6 +7,7 @@
 #include <mbgl/util/std.hpp>
 #include <mbgl/util/constants.hpp>
 #include <mbgl/util/exception.hpp>
+#include <mbgl/util/task_scheduler.hpp>
 #include <mbgl/storage/file_source.hpp>
 #include <mbgl/storage/resource.hpp>
 #include <mbgl/storage/response.hpp>
@@ -22,7 +23,7 @@ static SpriteLoaderObserver nullObserver;
 struct SpriteLoader::Loader {
     Loader(SpriteLoader& imageManager)
         : mailbox(std::make_shared<Mailbox>(*Scheduler::GetCurrent())),
-          worker(Scheduler::GetBackground(), ActorRef<SpriteLoader>(imageManager, mailbox)) {
+          worker(TaskScheduler::GetBackground(), ActorRef<SpriteLoader>(imageManager, mailbox)) {
     }
 
     std::shared_ptr<const std::string> image;

@@ -3,6 +3,7 @@
 #include <mbgl/actor/actor_ref.hpp>
 #include <mbgl/test/util.hpp>
 #include <mbgl/util/run_loop.hpp>
+#include <mbgl/util/task_scheduler.hpp>
 #include <mbgl/util/timer.hpp>
 
 #include <atomic>
@@ -139,7 +140,7 @@ TEST(Thread, Concurrency) {
     unsigned numMessages = 100000;
     std::atomic_uint completed(numMessages);
 
-    Actor<TestWorker> poolWorker(Scheduler::GetBackground());
+    Actor<TestWorker> poolWorker(TaskScheduler::GetBackground());
     auto poolWorkerRef = poolWorker.self();
 
     Thread<TestWorker> threadedObject("Test");
@@ -164,7 +165,7 @@ TEST(Thread, Concurrency) {
 TEST(Thread, ThreadPoolMessaging) {
     auto loop = std::make_shared<RunLoop>();
 
-    Actor<TestWorker> poolWorker(Scheduler::GetBackground());
+    Actor<TestWorker> poolWorker(TaskScheduler::GetBackground());
     auto poolWorkerRef = poolWorker.self();
 
     Thread<TestWorker> threadedObject("Test");

@@ -1,7 +1,7 @@
 #include <mbgl/actor/actor.hpp>
 
-#include <mbgl/actor/scheduler.hpp>
 #include <mbgl/test/util.hpp>
+#include <mbgl/util/task_scheduler.hpp>
 
 #include <future>
 
@@ -30,7 +30,7 @@ TEST(ActorRef, CanOutliveActor) {
     bool died = false;
 
     ActorRef<Test> test = [&] () {
-        return Actor<Test>(Scheduler::GetBackground(), std::ref(died)).self();
+        return Actor<Test>(TaskScheduler::GetBackground(), std::ref(died)).self();
     }();
 
     EXPECT_TRUE(died);
@@ -53,7 +53,7 @@ TEST(ActorRef, Ask) {
         }
     };
 
-    Actor<Test> actor(Scheduler::GetBackground());
+    Actor<Test> actor(TaskScheduler::GetBackground());
     ActorRef<Test> ref = actor.self();
 
     EXPECT_EQ(20, ref.ask(&Test::gimme).get());
@@ -75,7 +75,7 @@ TEST(ActorRef, AskVoid) {
     };
     
     bool executed = false;
-    Actor<Test> actor(Scheduler::GetBackground(), executed);
+    Actor<Test> actor(TaskScheduler::GetBackground(), executed);
     ActorRef<Test> ref = actor.self();
     
     ref.ask(&Test::doIt).get();
@@ -101,7 +101,7 @@ TEST(ActorRef, AskOnDestroyedActor) {
     };
     bool died = false;
 
-    auto actor = std::make_unique<Actor<Test>>(Scheduler::GetBackground(), died);
+    auto actor = std::make_unique<Actor<Test>>(TaskScheduler::GetBackground(), died);
     ActorRef<Test> ref = actor->self();
 
     actor.reset();

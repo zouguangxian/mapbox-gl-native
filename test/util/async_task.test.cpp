@@ -1,8 +1,9 @@
 #include <mbgl/util/async_task.hpp>
 
 #include <mbgl/actor/actor_ref.hpp>
-#include <mbgl/util/run_loop.hpp>
 #include <mbgl/test/util.hpp>
+#include <mbgl/util/run_loop.hpp>
+#include <mbgl/util/task_scheduler.hpp>
 
 #include <atomic>
 #include <future>
@@ -104,7 +105,7 @@ TEST(AsyncTask, RequestCoalescingMultithreaded) {
     unsigned count = 0, numThreads = 25;
     AsyncTask async([&count] { ++count; });
 
-    auto mailbox = std::make_shared<Mailbox>(Scheduler::GetBackground());
+    auto mailbox = std::make_shared<Mailbox>(TaskScheduler::GetBackground());
 
     TestWorker worker(&async);
     ActorRef<TestWorker> workerRef(worker, mailbox);
@@ -132,7 +133,7 @@ TEST(AsyncTask, ThreadSafety) {
 
     AsyncTask async([&count] { ++count; });
 
-    auto mailbox = std::make_shared<Mailbox>(Scheduler::GetBackground());
+    auto mailbox = std::make_shared<Mailbox>(TaskScheduler::GetBackground());
 
     TestWorker worker(&async);
     ActorRef<TestWorker> workerRef(worker, mailbox);

@@ -47,14 +47,14 @@ namespace android {
         : Source(env, std::make_unique<mbgl::style::GeoJSONSource>(
                 jni::Make<std::string>(env, sourceId),
                 convertGeoJSONOptions(env, options)))
-        , converter(std::make_unique<Actor<FeatureConverter>>(Scheduler::GetBackground())) {
+        , converter(std::make_unique<Actor<FeatureConverter>>(TaskScheduler::GetBackground())) {
     }
 
     GeoJSONSource::GeoJSONSource(jni::JNIEnv& env,
                                  mbgl::style::Source& coreSource,
                                  AndroidRendererFrontend& frontend)
         : Source(env, coreSource, createJavaPeer(env), frontend)
-        , converter(std::make_unique<Actor<FeatureConverter>>(Scheduler::GetBackground())) {
+        , converter(std::make_unique<Actor<FeatureConverter>>(TaskScheduler::GetBackground())) {
     }
 
     GeoJSONSource::~GeoJSONSource() = default;

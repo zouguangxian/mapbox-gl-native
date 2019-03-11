@@ -2,6 +2,7 @@
 
 #include "source.hpp"
 #include <mbgl/style/sources/geojson_source.hpp>
+#include <mbgl/util/task_scheduler.hpp>
 #include "../../geojson/geometry.hpp"
 #include "../../geojson/feature.hpp"
 #include "../../geojson/feature_collection.hpp"
@@ -30,6 +31,9 @@ struct Update {
 };
 
 class GeoJSONSource : public Source {
+    // Should be instantiated first so we can receive/post messages.
+    std::shared_ptr<TaskScheduler> scheduler = TaskScheduler::GetInstance();
+
 public:
     using SuperTag = Source;
     static constexpr auto Name() { return "com/mapbox/mapboxsdk/style/sources/GeoJsonSource"; };
