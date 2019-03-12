@@ -31,6 +31,14 @@ public:
     OpacityState text;
 };
 
+class DynamicTextOffsets {
+public:
+    DynamicTextOffsets(Point<float> right, Point<float> center, Point<float> left);
+    Point<float> right;
+    Point<float> center;
+    Point<float> left;
+};
+
 class JointPlacement {
 public:
     JointPlacement(bool text_, bool icon_, bool skipFade_)
@@ -121,6 +129,7 @@ private:
 
     std::unordered_map<uint32_t, JointPlacement> placements;
     std::unordered_map<uint32_t, JointOpacityState> opacities;
+    std::unordered_map<uint32_t, DynamicTextOffsets> dynamicOffsets;
 
     bool stale = false;
     

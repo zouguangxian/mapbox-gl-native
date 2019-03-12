@@ -546,8 +546,8 @@ void SymbolLayout::createBucket(const ImagePositions&, std::unique_ptr<FeatureIn
             };
 
             symbolInstance.placedRightTextIndex = placeSymbol(symbolInstance.rightJustifiedGlyphQuads);
-            //symbolInstance.placedCenterTextIndex = placeSymbol(symbolInstance.centerJustifiedGlyphQuads);
-            //symbolInstance.placedLeftTextIndex = placeSymbol(symbolInstance.leftJustifiedGlyphQuads);
+            symbolInstance.placedCenterTextIndex = placeSymbol(symbolInstance.centerJustifiedGlyphQuads);
+            symbolInstance.placedLeftTextIndex = placeSymbol(symbolInstance.leftJustifiedGlyphQuads);
 
             if (symbolInstance.writingModes & WritingModeType::Vertical) {
                 bucket->text.placedSymbols.emplace_back(symbolInstance.anchor.point, symbolInstance.anchor.segment, sizeData.min, sizeData.max,
