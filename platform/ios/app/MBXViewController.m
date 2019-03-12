@@ -6,6 +6,7 @@
 #import "LimeGreenStyleLayer.h"
 #import "MBXEmbeddedMapViewController.h"
 #import "MBXOrnamentsViewController.h"
+#import "MBXStateManager.h"
 
 #import "MBXFrameTimeGraphView.h"
 
@@ -181,10 +182,16 @@ CLLocationCoordinate2D randomWorldCoordinate() {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // MBXStateManager.MBXState
+    MBXState *stateManager = [MBXStateManager sharedManager].currentState;
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveState:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restoreState:) name:UIApplicationWillEnterForegroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveState:) name:UIApplicationWillTerminateNotification object:nil];
+
+    [stateManager saveDebugMaskState:8];
+
+
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveState:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restoreState:) name:UIApplicationWillEnterForegroundNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveState:) name:UIApplicationWillTerminateNotification object:nil];
 
     [self restoreState:nil];
 
