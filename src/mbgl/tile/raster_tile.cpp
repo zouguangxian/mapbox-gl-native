@@ -10,7 +10,7 @@
 #include <mbgl/renderer/tile_parameters.hpp>
 #include <mbgl/renderer/buckets/raster_bucket.hpp>
 #include <mbgl/actor/scheduler.hpp>
-#include <mbgl/util/task_scheduler.hpp>
+#include <mbgl/util/globals.hpp>
 
 namespace mbgl {
 
@@ -20,7 +20,7 @@ RasterTile::RasterTile(const OverscaledTileID& id_,
     : Tile(Kind::Raster, id_),
       loader(*this, id_, parameters, tileset),
       mailbox(std::make_shared<Mailbox>(*Scheduler::GetCurrent())),
-      worker(TaskScheduler::GetBackground(),
+      worker(mbgl_->GetBackgroundScheduler(),
              ActorRef<RasterTile>(*this, mailbox)) {
 }
 

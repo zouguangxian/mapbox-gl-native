@@ -2,6 +2,7 @@
 #include "glfw_renderer_frontend.hpp"
 #include "settings_json.hpp"
 
+#include <mbgl/mbgl.hpp>
 #include <mbgl/util/default_styles.hpp>
 #include <mbgl/util/logging.hpp>
 #include <mbgl/util/platform.hpp>
@@ -34,6 +35,8 @@ void quit_handler(int) {
 }
 
 int main(int argc, char *argv[]) {
+    mbgl::Init();
+
     args::ArgumentParser argumentParser("Mapbox GL GLFW example");
     args::HelpFlag helpFlag(argumentParser, "help", "Display this help menu", {'h', "help"});
 
@@ -185,5 +188,8 @@ int main(int argc, char *argv[]) {
                     settings.latitude, settings.longitude, settings.zoom, settings.bearing);
 
     view = nullptr;
+
+    mbgl::Cleanup();
+
     return 0;
 }

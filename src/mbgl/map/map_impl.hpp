@@ -12,7 +12,6 @@
 #include <mbgl/style/source.hpp>
 #include <mbgl/style/style.hpp>
 #include <mbgl/util/size.hpp>
-#include <mbgl/util/task_scheduler.hpp>
 
 namespace mbgl {
 
@@ -25,10 +24,6 @@ struct StillImageRequest {
 };
 
 class Map::Impl : public style::Observer, public RendererObserver {
-private:
-    // Should be instantiated first so we can receive/post messages.
-    std::shared_ptr<TaskScheduler> scheduler = TaskScheduler::GetInstance();
-
 public:
     Impl(Map&,
          RendererFrontend&,
