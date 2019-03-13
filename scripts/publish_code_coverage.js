@@ -76,6 +76,7 @@ process.on('uncaughtException', (err) => {
 // Parse the response received from codecov.io and build the
 // data point that is going to be uploaded to S3 bucket.
 function parseResponse(data) {
+    console.log('Response', data);
     if (data && data.commit) {
         if (!data.commit.timestamp || !data.commit.totals || !data.commit.totals.c) {
             return;
@@ -117,40 +118,41 @@ function httpRequest() {
     };
 
     return new Promise((resolve, reject) => {
-        const req = https.request(options, (res) => {
+        setTimeout(function() {
+            const req = https.request(options, (res) => {
+                var body = [];
+                res.on('data', (chunk) => {
+                    body.push(chunk);
+                }).on('error', (error) => {
+                    reject(error);
+                }).on('end', () => {
+                    if (res.statusCode < 200 || res.statusCode >= 300) {
+                        return reject(new Error('Failed to fetch the results from codecov.io. StatusCode=' + res.statusCode));
+                    }
 
-            var body = [];
-            res.on('data', (chunk) => {
-                body.push(chunk);
-            }).on('error', (error) => {
-                reject(error);
-            }).on('end', () => {
-                if (res.statusCode < 200 || res.statusCode >= 300) {
-                    return reject(new Error('Failed to fetch the results from codecov.io. StatusCode=' + res.statusCode));
-                }
-
-                try {
-                    body = JSON.parse(Buffer.concat(body).toString());
-                    resolve(body);
-                } catch(e) {
-                    reject(e);
-                }
+                    try {
+                        body = JSON.parse(Buffer.concat(body).toString());
+                        resolve(body);
+                    } catch(e) {
+                        reject(e);
+                    }
+                });
             });
-        });
 
-        // Reject on error
-        req.on('error', (err) => {
-            reject(err);
-        });
+            // Reject on error
+            req.on('error', (err) => {
+                reject(err);
+            });
 
-        req.end();
+            req.end();
+        }, 30000);
     });
 }
 
 httpRequest().then((body) => {
     const dataSource = parseResponse(body);
     if (dataSource) {
-        return uploadData(dataSource);
+        //return uploadData(dataSource);
     } else {
         throw new Error('Failed to parse the results received from codecov.io.');
     }
@@ -158,5 +160,4 @@ httpRequest().then((body) => {
     console.log('Successfully uploaded code coverage metrics to S3');
 }).catch(err => {
     console.error('Failed to upload code coverage metrics to S3: ' + err.message);
-    process.exit(1);
 });
