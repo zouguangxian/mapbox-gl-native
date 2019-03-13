@@ -5,6 +5,7 @@
 #include <mbgl/renderer/render_tile.hpp>
 #include <mbgl/renderer/paint_parameters.hpp>
 #include <mbgl/text/glyph_atlas.hpp>
+#include <mbgl/text/shaping.hpp>
 #include <mbgl/programs/programs.hpp>
 #include <mbgl/programs/symbol_program.hpp>
 #include <mbgl/programs/collision_box_program.hpp>
@@ -151,6 +152,70 @@ void RenderSymbolLayer::render(PaintParameters& parameters, RenderSource*) {
                                     parameters.state);
 
                 parameters.context.updateVertexBuffer(*bucket.icon.dynamicVertexBuffer, std::move(bucket.icon.dynamicVertices));
+             } else if (layout.get<TextVariableAnchor>().size()) {
+                bucket.text.dynamicVertices.clear();
+
+                auto partiallyEvaluatedSize = bucket.textSizeBinder->evaluateForZoom(parameters.state.getZoom());
+                const float tileScale = std::pow(2, parameters.state.getZoom() - tile.tile.id.overscaledZ);
+                const bool rotateWithMap = layout.get<TextRotationAlignment>() == AlignmentType::Map;
+                const bool pitchWithMap = layout.get<TextPitchAlignment>() == AlignmentType::Map;
+                const float pixelsToTileUnits = tile.id.pixelsToTileUnits(1.0, parameters.state.getZoom());
+                auto labelPlaneMatrix = getLabelPlaneMatrix(tile.matrix, pitchWithMap, rotateWithMap, parameters.state, pixelsToTileUnits);
+
+                for (auto& symbol : bucket.text.placedSymbols) {
+                    optional<VariableOffset> variableOffset;
+                    if (!symbol.hidden && symbol.crossTileID != 0u) {
+                        auto it = parameters.variableOffsets.find(symbol.crossTileID);
+                        if (it != parameters.variableOffsets.end()) {
+                            variableOffset = it->second;
+                        }
+                    }
+
+                    if (!variableOffset) {
+                        // These symbols are from a justification that is not being used, or a label that wasn't placed
+                        // so we don't need to do the extra math to figure out what incremental shift to apply.
+                        hideGlyphs(symbol.glyphOffsets.size(), bucket.text.dynamicVertices);
+                    } else {
+                        auto tileAnchor = symbol.anchorPoint;
+                        const auto projectedAnchor = project(tileAnchor, pitchWithMap ? tile.matrix : labelPlaneMatrix);
+                        const float perspectiveRatio = 0.5f + 0.5f * (parameters.state.getCameraToCenterDistance() / projectedAnchor.second);
+                        float renderTextSize = evaluateSizeForFeature(partiallyEvaluatedSize, symbol) * perspectiveRatio / util::ONE_EM;
+                        if (pitchWithMap) {
+                            // Go from size in pixels to equivalent size in tile units
+                            renderTextSize *= bucket.tilePixelRatio / tileScale;
+                        }
+
+                        auto shift = calculateVariableLayoutOffset(
+                                static_cast<style::SymbolAnchorType>((*variableOffset).anchor),
+                                (*variableOffset).width,
+                                (*variableOffset).height,
+                                (*variableOffset).radialOffset,
+                                renderTextSize);
+
+                        // Usual case is that we take the projected anchor and add the pixel-based shift
+                        // calculated above. In the (somewhat weird) case of pitch-aligned text, we add an equivalent
+                        // tile-unit based shift to the anchor before projecting to the label plane.
+                        Point<float> shiftedAnchor;
+                        if (pitchWithMap) {
+                            shiftedAnchor = project(Point<float>(tileAnchor.x + shift.x, tileAnchor.y + shift.y),
+                                                    labelPlaneMatrix).first;
+                        } else {
+                            if (rotateWithMap) {
+                                auto rotated = util::rotate(shift, -parameters.state.getPitch());
+                                shiftedAnchor = Point<float>(projectedAnchor.first.x + rotated.x,
+                                                             projectedAnchor.first.y + rotated.y);
+                            } else {
+                                 shiftedAnchor = Point<float>(projectedAnchor.first.x + shift.x,
+                                                              projectedAnchor.first.y + shift.y);
+                            }
+                        }
+
+                        for (std::size_t i = 0; i < symbol.glyphOffsets.size(); i++) {
+                            addDynamicAttributes(shiftedAnchor, 0, bucket.text.dynamicVertices);
+                        }
+                    }
+                }
+                parameters.context.updateVertexBuffer(*bucket.text.dynamicVertexBuffer, std::move(bucket.text.dynamicVertices));
             }
 
             const bool iconScaled = layout.get<IconSize>().constantOr(1.0) != 1.0 || bucket.iconsNeedLinear;

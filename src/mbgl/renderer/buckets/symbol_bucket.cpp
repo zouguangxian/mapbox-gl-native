@@ -17,7 +17,8 @@ SymbolBucket::SymbolBucket(style::SymbolLayoutProperties::PossiblyEvaluated layo
                            bool iconsNeedLinear_,
                            bool sortFeaturesByY_,
                            const std::string bucketName_,
-                           const std::vector<SymbolInstance>&& symbolInstances_)
+                           const std::vector<SymbolInstance>&& symbolInstances_,
+                           float tilePixelRatio_)
     : layout(std::move(layout_)),
       sdfIcons(sdfIcons_),
       iconsNeedLinear(iconsNeedLinear_ || iconSize.isDataDriven() || !iconSize.isZoomConstant()),
@@ -25,7 +26,8 @@ SymbolBucket::SymbolBucket(style::SymbolLayoutProperties::PossiblyEvaluated layo
       bucketLeaderID(std::move(bucketName_)),
       symbolInstances(std::move(symbolInstances_)),
       textSizeBinder(SymbolSizeBinder::create(zoom, textSize, TextSize::defaultValue())),
-      iconSizeBinder(SymbolSizeBinder::create(zoom, iconSize, IconSize::defaultValue())) {
+      iconSizeBinder(SymbolSizeBinder::create(zoom, iconSize, IconSize::defaultValue())),
+      tilePixelRatio(tilePixelRatio_) {
 
     for (const auto& pair : paintProperties_) {
         paintProperties.emplace(

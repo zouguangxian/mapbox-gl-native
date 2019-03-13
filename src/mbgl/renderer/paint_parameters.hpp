@@ -9,6 +9,7 @@
 #include <mbgl/gfx/color_mode.hpp>
 #include <mbgl/util/mat4.hpp>
 #include <mbgl/algorithm/generate_clip_ids.hpp>
+#include <mbgl/text/placement.hpp>
 
 #include <array>
 
@@ -78,6 +79,7 @@ public:
     const float depthEpsilon = 1.0f / (1 << 16);
     
     float symbolFadeChange;
+    std::unordered_map<uint32_t, VariableOffset> variableOffsets;
 };
 
 } // namespace mbgl

@@ -51,7 +51,8 @@ public:
                  bool iconsNeedLinear,
                  bool sortFeaturesByY,
                  const std::string bucketLeaderID,
-                 const std::vector<SymbolInstance>&&);
+                 const std::vector<SymbolInstance>&&,
+                 const float tilePixelRatio);
     ~SymbolBucket() override;
 
     void upload(gl::Context&) override;
@@ -142,6 +143,7 @@ public:
 
     uint32_t bucketInstanceId = 0;
     bool justReloaded = false;
+    const float tilePixelRatio;
 
     std::shared_ptr<std::vector<size_t>> featureSortOrder;
 };
