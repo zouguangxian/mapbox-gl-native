@@ -31,6 +31,16 @@ public:
     OpacityState text;
 };
 
+class VariableOffset {
+public:
+    float radialOffset;
+    float width;
+    float height;
+    style::TextVariableAnchorType anchor;
+    float textBoxScale;
+    optional<style::TextVariableAnchorType> prevAnchor;
+};
+
 class DynamicTextOffsets {
 public:
     DynamicTextOffsets(Point<float> right, Point<float> center, Point<float> left);
@@ -130,6 +140,7 @@ private:
     std::unordered_map<uint32_t, JointPlacement> placements;
     std::unordered_map<uint32_t, JointOpacityState> opacities;
     std::unordered_map<uint32_t, DynamicTextOffsets> dynamicOffsets;
+    std::unordered_map<uint32_t, VariableOffset> variableOffsets;
 
     bool stale = false;
     

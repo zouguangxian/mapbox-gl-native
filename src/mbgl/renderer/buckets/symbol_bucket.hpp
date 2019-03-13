@@ -36,6 +36,8 @@ public:
     std::vector<float> glyphOffsets;
     bool hidden;
     size_t vertexStartIndex;
+    // The crossTileID is only filled/used on the foreground for variable text anchors
+    uint32_t crossTileID = 0u;
 };
 
 class SymbolBucket final : public Bucket {
