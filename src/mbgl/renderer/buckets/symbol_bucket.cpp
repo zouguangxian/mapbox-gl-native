@@ -214,12 +214,26 @@ void SymbolBucket::sortFeatures(const float angle) {
         const SymbolInstance& symbolInstance = symbolInstances[i];
         featureSortOrder->push_back(symbolInstance.dataFeatureIndex);
 
+        bool placedHorizontalGlyphs = false;
         if (symbolInstance.placedRightTextIndex) {
             addPlacedSymbol(text.triangles, text.placedSymbols[*symbolInstance.placedRightTextIndex]);
+            placedHorizontalGlyphs = true;
         }
+
+        if (symbolInstance.placedCenterTextIndex && !placedHorizontalGlyphs) {
+            addPlacedSymbol(text.triangles, text.placedSymbols[*symbolInstance.placedCenterTextIndex]);
+            placedHorizontalGlyphs = true;
+        }
+
+        if (symbolInstance.placedLeftTextIndex && !placedHorizontalGlyphs) {
+            addPlacedSymbol(text.triangles, text.placedSymbols[*symbolInstance.placedLeftTextIndex]);
+            placedHorizontalGlyphs = true;
+        }
+
         if (symbolInstance.placedVerticalTextIndex) {
             addPlacedSymbol(text.triangles, text.placedSymbols[*symbolInstance.placedVerticalTextIndex]);
         }
+
         if (symbolInstance.placedIconIndex) {
             addPlacedSymbol(icon.triangles, icon.placedSymbols[*symbolInstance.placedIconIndex]);
         }
