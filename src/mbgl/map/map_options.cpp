@@ -10,8 +10,11 @@ public:
     MapMode mapMode = MapMode::Continuous;
     ConstrainMode constrainMode = ConstrainMode::HeightOnly;
     ViewportMode viewportMode = ViewportMode::Default;
+    std::string accessToken;
+    std::string baseURL = mbgl::util::API_BASE_URL;
+    ResourceTransformFn resourceTransformFn;
     std::string cachePath;
-    std::string assetRoot;
+    std::string assetPath;
     uint64_t maximumSize{mbgl::util::DEFAULT_MAX_CACHE_SIZE};
     bool crossSourceCollisions = true;
 };
@@ -46,6 +49,33 @@ ViewportMode MapOptions::viewportMode() const {
     return impl_->viewportMode;
 }
 
+MapOptions& MapOptions::withAccessToken(std::string token) {
+    impl_->accessToken = std::move(token);
+    return *this;
+}
+
+const std::string& MapOptions::accessToken() const {
+    return impl_->accessToken;
+}
+
+MapOptions& MapOptions::withBaseURL(std::string url) {
+    impl_->baseURL = std::move(url);
+    return *this;
+}
+
+const std::string& MapOptions::baseURL() const {
+    return impl_->baseURL;
+}
+
+MapOptions& MapOptions::withResourceTransform(ResourceTransformFn function) {
+    impl_->resourceTransformFn = std::move(function);
+    return *this;
+}
+
+ResourceTransformFn MapOptions::resourceTransform() const {
+    return impl_->resourceTransformFn;
+}
+
 MapOptions& MapOptions::withCachePath(std::string path) {
     impl_->cachePath = std::move(path);
     return *this;
@@ -55,13 +85,13 @@ const std::string& MapOptions::cachePath() const {
     return impl_->cachePath;
 }
 
-MapOptions& MapOptions::withAssetRoot(std::string path) {
-    impl_->assetRoot = std::move(path);
+MapOptions& MapOptions::withAssetPath(std::string path) {
+    impl_->assetPath = std::move(path);
     return *this;
 }
 
-const std::string& MapOptions::assetRoot() const {
-    return impl_->assetRoot;
+const std::string& MapOptions::assetPath() const {
+    return impl_->assetPath;
 }
 
 MapOptions& MapOptions::withMaximumCacheSize(uint64_t size) {

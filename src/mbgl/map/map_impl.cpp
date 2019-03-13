@@ -1,6 +1,8 @@
 #include <mbgl/layermanager/layer_manager.hpp>
 #include <mbgl/map/map_impl.hpp>
 #include <mbgl/renderer/update_parameters.hpp>
+#include <mbgl/storage/file_source.hpp>
+#include <mbgl/storage/resource_transform.hpp>
 #include <mbgl/style/style_impl.hpp>
 #include <mbgl/util/exception.hpp>
 
@@ -8,32 +10,36 @@ namespace mbgl {
 
 Map::Impl::Impl(Map& map_,
                 RendererFrontend& frontend,
-                MapObserver& mapObserver,
+                MapObserver& observer_,
                 FileSource& fileSource_,
                 Scheduler& scheduler_,
                 Size size_,
                 float pixelRatio_,
-                MapMode mode_,
-                ConstrainMode constrainMode_,
-                ViewportMode viewportMode_,
-                bool crossSourceCollisions_)
+                const MapOptions& options)
     : map(map_),
-      observer(mapObserver),
+      observer(observer_),
       rendererFrontend(frontend),
       fileSource(fileSource_),
       scheduler(scheduler_),
       transform(observer,
-                constrainMode_,
-                viewportMode_),
-      mode(mode_),
+                options.constrainMode(),
+                options.viewportMode()),
+      mode(options.mapMode()),
       pixelRatio(pixelRatio_),
-      crossSourceCollisions(crossSourceCollisions_),
+      crossSourceCollisions(options.crossSourceCollisions()),
       style(std::make_unique<style::Style>(scheduler, fileSource, pixelRatio)),
       annotationManager(*style) {
 
     style->impl->setObserver(this);
     rendererFrontend.setObserver(*this);
     transform.resize(size_);
+    if (options.resourceTransform()) {
+        resourceTransform = std::make_unique<Actor<ResourceTransform>>(scheduler,
+            [callback = options.resourceTransform()] (Resource::Kind, const std::string &&url_) -> std::string {
+                return callback(std::move(url_));
+            });
+       fileSource.setResourceTransform(resourceTransform->self());
+    }
 }
 
 Map::Impl::~Impl() {

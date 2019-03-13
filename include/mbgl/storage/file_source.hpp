@@ -1,15 +1,20 @@
 #pragma once
 
+#include <mbgl/actor/actor_ref.hpp>
 #include <mbgl/storage/response.hpp>
 #include <mbgl/storage/resource.hpp>
 
 #include <mbgl/util/noncopyable.hpp>
 #include <mbgl/util/async_request.hpp>
+#include <mbgl/util/optional.hpp>
 
 #include <functional>
 #include <memory>
 
 namespace mbgl {
+
+class MapOptions;
+class ResourceTransform;
 
 class FileSource : private util::noncopyable {
 public:
@@ -31,6 +36,12 @@ public:
     virtual bool supportsCacheOnlyRequests() const {
         return false;
     }
+
+    // Sets the resource transform. When given, resource transformation will be used to
+    // transform the requested resource URLs before they are requested from internet.
+    // This can be used add or remove custom parameters, or reroute certain requests to
+    // other servers or endpoints.
+    virtual void setResourceTransform(optional<ActorRef<ResourceTransform>>&&) {}
 };
 
 } // namespace mbgl

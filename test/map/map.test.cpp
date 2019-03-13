@@ -44,10 +44,10 @@ public:
     }
 
     template <typename T = FileSource>
-    MapTest(const std::string& cachePath, const std::string& assetRoot,
+    MapTest(const std::string& cachePath, const std::string& assetPath,
             float pixelRatio = 1, MapMode mode = MapMode::Static,
             typename std::enable_if<std::is_same<T, DefaultFileSource>::value>::type* = 0)
-            : fileSource { cachePath, assetRoot }
+            : fileSource { cachePath, assetPath }
             , frontend(pixelRatio, threadPool)
             , map(frontend, observer, frontend.getSize(), pixelRatio,
                   fileSource, threadPool, MapOptions().withMapMode(mode)) {

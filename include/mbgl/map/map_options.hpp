@@ -2,10 +2,13 @@
 
 #include <mbgl/map/mode.hpp>
 
+#include <functional>
 #include <memory>
 #include <string>
 
 namespace mbgl {
+
+using ResourceTransformFn = std::function<std::string(const std::string &&)>;
 
 /**
  * @brief Holds values for Map options.
@@ -69,6 +72,56 @@ public:
     ViewportMode viewportMode() const;
 
     /**
+     * @brief Sets the Mapbox access token - see https://docs.mapbox.com/help/how-mapbox-works/access-tokens/ for details.
+     *
+     * @param token Mapbox access token.
+     * @return reference to MapOptions for chaining options together.
+     */
+    MapOptions& withAccessToken(std::string token);
+
+    /**
+     * @brief Gets the previously set (or default) Mapbox access token.
+     *
+     * @return const std::string& Mapbox access token.
+     */
+    const std::string& accessToken() const;
+
+    /**
+     * @brief Sets the API base URL. Default is https://api.mapbox.com for Mapbox.
+     *
+     * @param baseURL API base URL.
+     * @return reference to MapOptions for chaining options together.
+     */
+    MapOptions& withBaseURL(std::string baseURL);
+
+    /**
+     * @brief Gets the previously set (or default) API base URL.
+     *
+     * @return const std::string& API base URL.
+     */
+    const std::string& baseURL() const;
+
+    /**
+     * @brief Sets the resource transform callback.
+     *
+     * When given, a resource transformation callback will be used to transform the
+     * requested resource URLs before they are requested from internet. This can be
+     * used to add or remove custom parameters, or shift certain requests to other
+     * servers or endpoints.
+     *
+     * @param function Resource transform callback.
+     * @return reference to MapOptions for chaining options together.
+     */
+    MapOptions& withResourceTransform(ResourceTransformFn function);
+
+    /**
+     * @brief Gets the previously set (or default) resource transform callback.
+     *
+     * @return const std::string& Resource transform callback.
+     */
+    ResourceTransformFn resourceTransform() const;
+
+    /**
      * @brief Sets the cache path.
      *
      * @param path Cache path.
@@ -90,14 +143,14 @@ public:
      * @param path Asset path.
      * @return reference to MapOptions for chaining options together.
      */
-    MapOptions& withAssetRoot(std::string path);
+    MapOptions& withAssetPath(std::string path);
 
     /**
      * @brief Gets the previously set (or default) asset path.
      *
      * @return asset path
      */
-    const std::string& assetRoot() const;
+    const std::string& assetPath() const;
 
     /**
      * @brief Sets the maximum cache size.

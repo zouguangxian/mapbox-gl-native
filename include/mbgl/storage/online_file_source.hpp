@@ -20,7 +20,7 @@ public:
     void setAccessToken(const std::string& t) { accessToken = t; }
     std::string getAccessToken() const { return accessToken; }
 
-    void setResourceTransform(optional<ActorRef<ResourceTransform>>&&);
+    void setResourceTransform(optional<ActorRef<ResourceTransform>>&&) override;
 
     std::unique_ptr<AsyncRequest> request(const Resource&, Callback) override;
 
