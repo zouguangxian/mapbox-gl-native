@@ -422,13 +422,13 @@ void Placement::updateBucketOpacities(SymbolBucket& bucket, std::set<uint32_t>& 
         }
 
         if (dynamicText && offsetIt == dynamicOffsets.end()) {
-            auto rightPlaced = bucket.text.placedSymbols.at(*symbolInstance.placedRightTextIndex);
-            auto centerPlaced = bucket.text.placedSymbols.at(*symbolInstance.placedCenterTextIndex);
-            auto leftPlaced = bucket.text.placedSymbols.at(*symbolInstance.placedLeftTextIndex);
-            dynamicOffsetState = DynamicTextOffsets(rightPlaced.dynamicShift, centerPlaced.dynamicShift, leftPlaced.dynamicShift);
+            auto rightShift = symbolInstance.placedRightTextIndex  ? bucket.text.placedSymbols.at(*symbolInstance.placedRightTextIndex).dynamicShift : Point<float>{};
+            auto centerShift = symbolInstance.placedCenterTextIndex ? bucket.text.placedSymbols.at(*symbolInstance.placedCenterTextIndex).dynamicShift : Point<float>{};
+            auto leftShift = symbolInstance.placedLeftTextIndex ? bucket.text.placedSymbols.at(*symbolInstance.placedLeftTextIndex).dynamicShift : Point<float>{};
+            dynamicOffsetState = DynamicTextOffsets(rightShift, centerShift, leftShift);
             dynamicOffsets.emplace(symbolInstance.crossTileID, dynamicOffsetState);
         }
-        
+
         if (it == opacities.end()) {
             opacities.emplace(symbolInstance.crossTileID, defaultOpacityState);
         }
@@ -437,38 +437,34 @@ void Placement::updateBucketOpacities(SymbolBucket& bucket, std::set<uint32_t>& 
 
         if (symbolInstance.hasText) {
             auto opacityVertex = SymbolSDFTextProgram::opacityVertex(opacityState.text.placed, opacityState.text.opacity);
-            for (size_t i = 0; i < symbolInstance.rightJustifiedGlyphQuads.size() * 4; i++) {
-                bucket.text.opacityVertices.emplace_back(opacityVertex);
-            }
-            if (symbolInstance.placedCenterTextIndex) {
-                for (size_t i = 0; i < symbolInstance.centerJustifiedGlyphQuads.size() * 4; i++) {
-                    bucket.text.opacityVertices.emplace_back(opacityVertex);
-                }
-            }
-            if (symbolInstance.placedLeftTextIndex) {
-                for (size_t i = 0; i < symbolInstance.leftJustifiedGlyphQuads.size() * 4; i++) {
-                    bucket.text.opacityVertices.emplace_back(opacityVertex);
-                }
-            }
-            for (size_t i = 0; i < symbolInstance.verticalGlyphQuads.size() * 4; i++) {
-                bucket.text.opacityVertices.emplace_back(opacityVertex);
-            }
             if (symbolInstance.placedRightTextIndex) {
+                for (size_t i = 0; i < symbolInstance.rightJustifiedGlyphQuads.size() * 4; i++) {
+                    bucket.text.opacityVertices.emplace_back(opacityVertex);
+                }
                 PlacedSymbol& placed = bucket.text.placedSymbols[*symbolInstance.placedRightTextIndex];
                 placed.hidden = opacityState.isHidden();
                 placed.dynamicShift = dynamicOffsetState.right;
             }
             if (symbolInstance.placedCenterTextIndex) {
+                for (size_t i = 0; i < symbolInstance.centerJustifiedGlyphQuads.size() * 4; i++) {
+                    bucket.text.opacityVertices.emplace_back(opacityVertex);
+                }
                 PlacedSymbol& placed = bucket.text.placedSymbols[*symbolInstance.placedCenterTextIndex];
                 placed.hidden = opacityState.isHidden();
                 placed.dynamicShift = dynamicOffsetState.center;
             }
             if (symbolInstance.placedLeftTextIndex) {
+                for (size_t i = 0; i < symbolInstance.leftJustifiedGlyphQuads.size() * 4; i++) {
+                    bucket.text.opacityVertices.emplace_back(opacityVertex);
+                }
                 PlacedSymbol& placed = bucket.text.placedSymbols[*symbolInstance.placedLeftTextIndex];
                 placed.hidden = opacityState.isHidden();
                 placed.dynamicShift = dynamicOffsetState.left;
             }
             if (symbolInstance.placedVerticalTextIndex) {
+                for (size_t i = 0; i < symbolInstance.verticalGlyphQuads.size() * 4; i++) {
+                    bucket.text.opacityVertices.emplace_back(opacityVertex);
+                }
                 bucket.text.placedSymbols[*symbolInstance.placedVerticalTextIndex].hidden = opacityState.isHidden();
             }
         }

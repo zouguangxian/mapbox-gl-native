@@ -527,7 +527,12 @@ void SymbolLayout::createBucket(const ImagePositions&, std::unique_ptr<FeatureIn
 
         if (hasText) {
             const Range<float> sizeData = bucket->textSizeBinder->getVertexSizeData(feature);
-            auto placeSymbol = [&] (const SymbolQuads& glyphQuads) {
+            auto placeSymbol = [&] (const SymbolQuads& glyphQuads) -> optional<std::size_t> {
+
+                if (glyphQuads.empty()) {
+                    return nullopt;
+                }
+
                 bucket->text.placedSymbols.emplace_back(symbolInstance.anchor.point, symbolInstance.anchor.segment, sizeData.min, sizeData.max,symbolInstance.textOffset, symbolInstance.writingModes, symbolInstance.line, CalculateTileDistances(symbolInstance.line, symbolInstance.anchor));
 
                 PlacedSymbol& horizontalSymbol = bucket->text.placedSymbols.back();
@@ -550,21 +555,23 @@ void SymbolLayout::createBucket(const ImagePositions&, std::unique_ptr<FeatureIn
             symbolInstance.placedLeftTextIndex = placeSymbol(symbolInstance.leftJustifiedGlyphQuads);
 
             if (symbolInstance.writingModes & WritingModeType::Vertical) {
-                bucket->text.placedSymbols.emplace_back(symbolInstance.anchor.point, symbolInstance.anchor.segment, sizeData.min, sizeData.max,
-                        symbolInstance.textOffset, WritingModeType::Vertical, symbolInstance.line, CalculateTileDistances(symbolInstance.line, symbolInstance.anchor));
-                symbolInstance.placedVerticalTextIndex = bucket->text.placedSymbols.size() - 1;
+                if (!symbolInstance.verticalGlyphQuads.empty()) {
+                    bucket->text.placedSymbols.emplace_back(symbolInstance.anchor.point, symbolInstance.anchor.segment, sizeData.min, sizeData.max,
+                            symbolInstance.textOffset, WritingModeType::Vertical, symbolInstance.line, CalculateTileDistances(symbolInstance.line, symbolInstance.anchor));
+                    symbolInstance.placedVerticalTextIndex = bucket->text.placedSymbols.size() - 1;
 
-                PlacedSymbol& verticalSymbol = bucket->text.placedSymbols.back();
-                bool firstVertical = true;
+                    PlacedSymbol& verticalSymbol = bucket->text.placedSymbols.back();
+                    bool firstVertical = true;
 
-                for (const auto& symbol : symbolInstance.verticalGlyphQuads) {
-                    size_t index = addSymbol(
-                        bucket->text, sizeData, symbol,
-                        symbolInstance.anchor, verticalSymbol);
+                    for (const auto& symbol : symbolInstance.verticalGlyphQuads) {
+                        size_t index = addSymbol(
+                            bucket->text, sizeData, symbol,
+                            symbolInstance.anchor, verticalSymbol);
 
-                    if (firstVertical) {
-                        verticalSymbol.vertexStartIndex = index;
-                        firstVertical = false;
+                        if (firstVertical) {
+                            verticalSymbol.vertexStartIndex = index;
+                            firstVertical = false;
+                        }
                     }
                 }
             }         
