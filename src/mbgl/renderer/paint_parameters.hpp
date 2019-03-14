@@ -38,7 +38,8 @@ public:
                     const EvaluatedLight&,
                     RenderStaticData&,
                     ImageManager&,
-                    LineAtlas&);
+                    LineAtlas&,
+                    Placement::VariableOffsets);
 
     gl::Context& context;
     RendererBackend& backend;
@@ -57,6 +58,7 @@ public:
     TimePoint timePoint;
 
     float pixelRatio;
+    Placement::VariableOffsets variableOffsets;
     std::array<float, 2> pixelsToGLUnits;
     algorithm::ClipIDGenerator clipIDGenerator;
 
@@ -79,7 +81,6 @@ public:
     const float depthEpsilon = 1.0f / (1 << 16);
     
     float symbolFadeChange;
-    std::unordered_map<uint32_t, VariableOffset> variableOffsets;
 };
 
 } // namespace mbgl

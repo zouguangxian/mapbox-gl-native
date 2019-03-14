@@ -25,7 +25,6 @@ public:
     {
     }
     Point<float> anchorPoint;
-    Point<float> dynamicShift;
     uint16_t segment;
     float lowerSize;
     float upperSize;

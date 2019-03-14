@@ -258,7 +258,8 @@ void Renderer::Impl::render(const UpdateParameters& updateParameters) {
         renderLight.getEvaluated(),
         *staticData,
         *imageManager,
-        *lineAtlas
+        *lineAtlas,
+        placement->getVariableOffsets()
     };
 
     bool loaded = updateParameters.styleLoaded && isLoaded();
@@ -340,7 +341,7 @@ void Renderer::Impl::render(const UpdateParameters& updateParameters) {
         std::set<std::string> usedSymbolLayers;
 
         if (placementChanged) {
-            newPlacement = std::make_unique<Placement>(parameters.state, parameters.mapMode, updateParameters.transitionOptions, updateParameters.crossSourceCollisions);
+            newPlacement = std::make_unique<Placement>(parameters.state, parameters.mapMode, updateParameters.transitionOptions, updateParameters.crossSourceCollisions, std::move(placement));
         }
 
         for (const auto& item : renderItemsWithSymbols) {
@@ -353,9 +354,10 @@ void Renderer::Impl::render(const UpdateParameters& updateParameters) {
         }
 
         if (newPlacement) {
-            newPlacement->commit(*placement, parameters.timePoint);
+            newPlacement->commit(parameters.timePoint);
             crossTileSymbolIndex.pruneUnusedLayers(usedSymbolLayers);
             placement = std::move(newPlacement);
+            parameters.variableOffsets = placement->getVariableOffsets();
             updateFadingTiles();
         } else {
             placement->setStale();
