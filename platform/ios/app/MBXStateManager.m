@@ -27,7 +27,7 @@
 }
 
 -(void)resetState {
-
+    self.currentState = nil;
 }
 
 

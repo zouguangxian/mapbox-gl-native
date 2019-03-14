@@ -1,16 +1,24 @@
 #import "MBXState.h"
 
+NSString *const MBXCamera = @"MBXCamera";
+NSString *const MBXUserTrackingMode = @"MBXUserTrackingMode";
+NSString *const MBXShowsUserLocation = @"MBXShowsUserLocation";
+NSString *const MBXShowsDebugMask = @"MBXDebugMask";
+NSString *const MBXShowsZoomLevelHUD =  @"MBXShowsZoomLevelHUD";
+NSString *const MBXShowsTimeFrameGraph = @"MBXShowsFrameTimeGraph";
+
+
 @implementation MBXState
 
 - (instancetype) init {
     if ((self = super.self)) {
-        NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys: @"", @"MBXCamera",
-         @"", @"MBXUserTrackingMode",
-         @"", @"MBXShowsUserLocation",
-         @"", @"MBXDebugMask",
-         @"", @"MBXShowsZoomLevelHUD",
-         @"", @"MBXShowsFrameTimeGraph",
-         nil];
+        NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys: @"", MBXCamera,
+            @"", MBXUserTrackingMode,
+            @"", MBXShowsUserLocation,
+            @"", MBXShowsDebugMask,
+            @"", MBXShowsZoomLevelHUD,
+            @"", MBXShowsTimeFrameGraph,
+            nil];
 
         _state = dictionary;
     }
@@ -49,6 +57,7 @@
 - (void)saveZoomLevelHUDState:(BOOL)showsZoomLevelHUD {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [self.state setValue:@(showsZoomLevelHUD) forKey:@"MBXShowsZoomLevelHUD"];
+    _showsZoomLevelHUD = &showsZoomLevelHUD;
     [defaults setBool:showsZoomLevelHUD forKey:@"MBXShowsZoomLevelHUD"];
     [defaults synchronize];
 }

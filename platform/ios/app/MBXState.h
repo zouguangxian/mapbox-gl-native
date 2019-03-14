@@ -3,6 +3,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+FOUNDATION_EXTERN NSString *const MBXCamera;
+FOUNDATION_EXTERN NSString *const MBXUserTrackingMode;
+FOUNDATION_EXTERN NSString *const MBXShowsUserLocation;
+FOUNDATION_EXTERN NSString *const MBXShowsDebugMask;
+FOUNDATION_EXTERN NSString *const MBXShowsZoomLevelHUD;
+FOUNDATION_EXTERN NSString *const MBXShowsTimeFrameGraph;
+
 @interface MBXState : NSObject
 
 @property (nonatomic, nullable) NSMutableDictionary *state;

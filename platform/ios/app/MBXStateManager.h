@@ -5,7 +5,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MBXStateManager : NSObject
 
-@property (nonatomic) MBXState* currentState;
+@property (nonatomic, nullable) MBXState* currentState;
 
 + (instancetype) sharedManager;
 

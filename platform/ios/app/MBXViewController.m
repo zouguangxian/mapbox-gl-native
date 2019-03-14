@@ -167,35 +167,22 @@ CLLocationCoordinate2D randomWorldCoordinate() {
 
 #pragma mark - Setup & Teardown
 
-+ (void)initialize
-{
-    if (self == [MBXViewController class])
-    {
-        [[NSUserDefaults standardUserDefaults] registerDefaults:@{
-            @"MBXUserTrackingMode": @(MGLUserTrackingModeNone),
-            @"MBXShowsUserLocation": @NO,
-            @"MBXDebug": @NO,
-        }];
-    }
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // MBXStateManager.MBXState
-    MBXState *stateManager = [MBXStateManager sharedManager].currentState;
 
+    [[MBXStateManager sharedManager].currentState saveDebugMaskState:NO];
+    [[MBXStateManager sharedManager].currentState saveUserTrackingModeState:MGLUserTrackingModeNone];
+    [[MBXStateManager sharedManager].currentState saveShowsUserLocationState:NO];
 
-    [stateManager saveDebugMaskState:8];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveState:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restoreState:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveState:) name:UIApplicationWillTerminateNotification object:nil];
 
+//    [self restoreState:nil];
 
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveState:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restoreState:) name:UIApplicationWillEnterForegroundNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveState:) name:UIApplicationWillTerminateNotification object:nil];
+    self.debugLoggingEnabled = [[MBXStateManager sharedManager].currentState.state objectForKey:MBXCamera];
 
-    [self restoreState:nil];
-
-    self.debugLoggingEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"MGLMapboxMetricsDebugLoggingEnabled"];
     self.mapView.showsScale = YES;
     self.mapView.showsUserHeadingIndicator = YES;
     self.mapView.experimental_enableFrameRateMeasurement = YES;
@@ -300,8 +287,7 @@ CLLocationCoordinate2D randomWorldCoordinate() {
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-
-    [self saveState:nil];
+    [[MBXStateManager sharedManager] resetState];
 }
 
 #pragma mark - Debugging Interface
@@ -432,8 +418,13 @@ CLLocationCoordinate2D randomWorldCoordinate() {
                     break;
                 case MBXSettingsDebugToolsShowZoomLevel:
                 {
+                    MBXState *currentState = [MBXStateManager sharedManager].currentState;
+
                     self.mapInfoHUDEnabled = !self.mapInfoHUDEnabled;
                     self.hudLabel.hidden = !self.mapInfoHUDEnabled;
+                    [currentState saveShowsUserLocationState:YES];
+                    BOOL *result = currentState.showsZoomLevelHUD;
+
                     self.reuseQueueStatsEnabled = NO;
                     [self updateHUD];
                     break;
