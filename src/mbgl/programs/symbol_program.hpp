@@ -363,6 +363,7 @@ public:
     using SymbolProgram::SymbolProgram;
 
     static UniformValues uniformValues(const bool isText,
+                                       const bool hasVariablePacement,
                                        const style::SymbolPropertyValues&,
                                        const Size& texsize,
                                        const std::array<float, 2>& pixelsToGLUnits,
@@ -429,6 +430,7 @@ public:
     using BaseProgram::BaseProgram;
 
     static UniformValues uniformValues(const bool isText,
+                                       const bool hasVariablePacement,
                                        const style::SymbolPropertyValues&,
                                        const Size& texsize,
                                        const std::array<float, 2>& pixelsToGLUnits,

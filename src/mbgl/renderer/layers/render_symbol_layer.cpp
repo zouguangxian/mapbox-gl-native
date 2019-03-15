@@ -14,6 +14,7 @@
 #include <mbgl/tile/geometry_tile_data.hpp>
 #include <mbgl/style/layers/symbol_layer_impl.hpp>
 #include <mbgl/layout/symbol_projection.hpp>
+#include <mbgl/layout/symbol_layout.hpp>
 #include <mbgl/util/math.hpp>
 
 #include <cmath>
@@ -21,6 +22,19 @@
 namespace mbgl {
 
 using namespace style;
+
+namespace {
+Point<float> calculateVariableRenderShift(style::SymbolAnchorType anchor, float width, float height, float radialOffset, float textBoxScale, float renderTextSize) {
+    AnchorAlignment alignment = AnchorAlignment::getAnchorAlignment(anchor);
+    float shiftX = -(alignment.horizontalAlign - 0.5f) * width;
+    float shiftY = -(alignment.verticalAlign - 0.5f) * height;
+    Point<float> offset = SymbolLayout::evaluateRadialOffset(anchor, radialOffset);
+    return Point<float>(
+        (shiftX / textBoxScale + offset.x) * renderTextSize,
+        (shiftY / textBoxScale + offset.y) * renderTextSize
+    );
+}
+} // namespace
 
 RenderSymbolLayer::RenderSymbolLayer(Immutable<style::SymbolLayer::Impl> _impl)
     : RenderLayer(std::move(_impl)),
@@ -166,7 +180,7 @@ void RenderSymbolLayer::render(PaintParameters& parameters, RenderSource*) {
             if (bucket.sdfIcons) {
                 if (values.hasHalo) {
                     draw(parameters.programs.getSymbolLayerPrograms().symbolIconSDF,
-                         SymbolSDFIconProgram::uniformValues(false, values, texsize, parameters.pixelsToGLUnits, alongLine, tile, parameters.state, parameters.symbolFadeChange, SymbolSDFPart::Halo),
+                         SymbolSDFIconProgram::uniformValues(false, false, values, texsize, parameters.pixelsToGLUnits, alongLine, tile, parameters.state, parameters.symbolFadeChange, SymbolSDFPart::Halo),
                          bucket.icon,
                          bucket.iconSizeBinder,
                          values,
@@ -176,7 +190,7 @@ void RenderSymbolLayer::render(PaintParameters& parameters, RenderSource*) {
 
                 if (values.hasFill) {
                     draw(parameters.programs.getSymbolLayerPrograms().symbolIconSDF,
-                         SymbolSDFIconProgram::uniformValues(false, values, texsize, parameters.pixelsToGLUnits, alongLine, tile, parameters.state, parameters.symbolFadeChange, SymbolSDFPart::Fill),
+                         SymbolSDFIconProgram::uniformValues(false, false, values, texsize, parameters.pixelsToGLUnits, alongLine, tile, parameters.state, parameters.symbolFadeChange, SymbolSDFPart::Fill),
                          bucket.icon,
                          bucket.iconSizeBinder,
                          values,
@@ -185,7 +199,7 @@ void RenderSymbolLayer::render(PaintParameters& parameters, RenderSource*) {
                 }
             } else {
                 draw(parameters.programs.getSymbolLayerPrograms().symbolIcon,
-                     SymbolIconProgram::uniformValues(false, values, texsize, parameters.pixelsToGLUnits, alongLine, tile, parameters.state, parameters.symbolFadeChange),
+                     SymbolIconProgram::uniformValues(false, false, values, texsize, parameters.pixelsToGLUnits, alongLine, tile, parameters.state, parameters.symbolFadeChange),
                      bucket.icon,
                      bucket.iconSizeBinder,
                      values,
@@ -199,6 +213,7 @@ void RenderSymbolLayer::render(PaintParameters& parameters, RenderSource*) {
 
             auto values = textPropertyValues(evaluated_, layout);
             const auto& paintPropertyValues = textPaintProperties(evaluated_);
+            bool hasVariablePacement = false;
 
             const bool alongLine = layout.get<SymbolPlacement>() != SymbolPlacementType::Point &&
                 layout.get<TextRotationAlignment>() == AlignmentType::Map;
@@ -229,6 +244,7 @@ void RenderSymbolLayer::render(PaintParameters& parameters, RenderSource*) {
                         auto it = parameters.variableOffsets.get().find(symbol.crossTileID);
                         if (it != parameters.variableOffsets.get().end()) {
                             variableOffset = it->second;
+                            hasVariablePacement |= true;
                         }
                     }
 
@@ -246,11 +262,12 @@ void RenderSymbolLayer::render(PaintParameters& parameters, RenderSource*) {
                             renderTextSize *= bucket.tilePixelRatio / tileScale;
                         }
 
-                        auto shift = calculateVariableLayoutOffset(
+                        auto shift = calculateVariableRenderShift(
                                 static_cast<style::SymbolAnchorType>((*variableOffset).anchor),
                                 (*variableOffset).width,
                                 (*variableOffset).height,
                                 (*variableOffset).radialOffset,
+                                (*variableOffset).textBoxScale,
                                 renderTextSize);
 
                         // Usual case is that we take the projected anchor and add the pixel-based shift
@@ -283,7 +300,7 @@ void RenderSymbolLayer::render(PaintParameters& parameters, RenderSource*) {
 
             if (values.hasHalo) {
                 draw(parameters.programs.getSymbolLayerPrograms().symbolGlyph,
-                     SymbolSDFTextProgram::uniformValues(true, values, texsize, parameters.pixelsToGLUnits, alongLine, tile, parameters.state, parameters.symbolFadeChange, SymbolSDFPart::Halo),
+                     SymbolSDFTextProgram::uniformValues(true, hasVariablePacement, values, texsize, parameters.pixelsToGLUnits, alongLine, tile, parameters.state, parameters.symbolFadeChange, SymbolSDFPart::Halo),
                      bucket.text,
                      bucket.textSizeBinder,
                      values,
@@ -293,7 +310,7 @@ void RenderSymbolLayer::render(PaintParameters& parameters, RenderSource*) {
 
             if (values.hasFill) {
                 draw(parameters.programs.getSymbolLayerPrograms().symbolGlyph,
-                     SymbolSDFTextProgram::uniformValues(true, values, texsize, parameters.pixelsToGLUnits, alongLine, tile, parameters.state, parameters.symbolFadeChange, SymbolSDFPart::Fill),
+                     SymbolSDFTextProgram::uniformValues(true, hasVariablePacement, values, texsize, parameters.pixelsToGLUnits, alongLine, tile, parameters.state, parameters.symbolFadeChange, SymbolSDFPart::Fill),
                      bucket.text,
                      bucket.textSizeBinder,
                      values,

@@ -37,6 +37,7 @@ std::unique_ptr<SymbolSizeBinder> SymbolSizeBinder::create(const float tileZoom,
 
 template <class Values, class...Args>
 Values makeValues(const bool isText,
+                  const bool hasVariablePacement,
                   const style::SymbolPropertyValues& values,
                   const Size& texsize,
                   const std::array<float, 2>& pixelsToGLUnits,
@@ -66,7 +67,7 @@ Values makeValues(const bool isText,
     const bool rotateInShader = rotateWithMap && !pitchWithMap && !alongLine;
 
     mat4 labelPlaneMatrix;
-    if (alongLine) {
+    if (alongLine || (isText && hasVariablePacement)) {
         // For labels that follow lines the first part of the projection is handled on the cpu.
         // Pass an identity matrix because no transformation needs to be done in the vertex shader.
         matrix::identity(labelPlaneMatrix);
@@ -102,6 +103,7 @@ Values makeValues(const bool isText,
 
 SymbolIconProgram::UniformValues
 SymbolIconProgram::uniformValues(const bool isText,
+                                 const bool hasVariablePacement,
                                  const style::SymbolPropertyValues& values,
                                  const Size& texsize,
                                  const std::array<float, 2>& pixelsToGLUnits,
@@ -112,6 +114,7 @@ SymbolIconProgram::uniformValues(const bool isText,
 {
     return makeValues<SymbolIconProgram::UniformValues>(
         isText,
+        hasVariablePacement,
         values,
         texsize,
         pixelsToGLUnits,
@@ -125,6 +128,7 @@ SymbolIconProgram::uniformValues(const bool isText,
 template <class PaintProperties>
 typename SymbolSDFProgram<PaintProperties>::UniformValues SymbolSDFProgram<PaintProperties>::uniformValues(
       const bool isText,
+      const bool hasVariablePacement,
       const style::SymbolPropertyValues& values,
       const Size& texsize,
       const std::array<float, 2>& pixelsToGLUnits,
@@ -140,6 +144,7 @@ typename SymbolSDFProgram<PaintProperties>::UniformValues SymbolSDFProgram<Paint
 
     return makeValues<SymbolSDFProgram<PaintProperties>::UniformValues>(
         isText,
+        hasVariablePacement,
         values,
         texsize,
         pixelsToGLUnits,

@@ -128,6 +128,7 @@ void Placement::placeLayer(const RenderLayerSymbolInterface& symbolInterface, co
     }
 }
 
+namespace {
 Point<float> calculateVariableLayoutOffset(style::SymbolAnchorType anchor, float width, float height, float radialOffset, float textBoxScale) {
     AnchorAlignment alignment = AnchorAlignment::getAnchorAlignment(anchor);
     float shiftX = -(alignment.horizontalAlign - 0.5f) * width;
@@ -138,6 +139,7 @@ Point<float> calculateVariableLayoutOffset(style::SymbolAnchorType anchor, float
         shiftY + offset.y * textBoxScale
     );
 }
+} // namespace
 
 void Placement::placeLayerBucket(
         SymbolBucket& bucket,
