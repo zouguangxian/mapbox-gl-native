@@ -23,8 +23,7 @@ public:
     explicit CollisionIndex(const TransformState&);
 
     std::pair<bool,bool> placeFeature(CollisionFeature& feature,
-                                      const float shiftX,
-                                      const float shiftY,
+                                      Point<float> shift,
                                       const mat4& posMatrix,
                                       const mat4& labelPlaneMatrix,
                                       const float textPixelRatio,

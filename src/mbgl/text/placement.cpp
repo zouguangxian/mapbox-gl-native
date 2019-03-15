@@ -7,6 +7,7 @@
 #include <mbgl/tile/geometry_tile.hpp>
 #include <mbgl/renderer/buckets/symbol_bucket.hpp>
 #include <mbgl/renderer/bucket.hpp>
+#include <mbgl/util/math.hpp>
 
 namespace mbgl {
 
@@ -183,7 +184,6 @@ void Placement::placeLayerBucket(
     const bool alwaysShowIcon = iconAllowOverlap && (textAllowOverlap || !bucket.hasTextData() || bucket.layout.get<style::TextOptional>());
     std::vector<style::TextVariableAnchorType> variableTextAnchors = bucket.layout.get<style::TextVariableAnchor>();
     const bool rotateWithMap = bucket.layout.get<style::TextRotationAlignment>() == style::AlignmentType::Map;
-    (void)rotateWithMap; // TODO: rotate collision box.
     const bool pitchWithMap = bucket.layout.get<style::TextPitchAlignment>() == style::AlignmentType::Map;
     
     for (SymbolInstance& symbolInstance : bucket.symbolInstances) {
@@ -204,7 +204,7 @@ void Placement::placeLayerBucket(
                 PlacedSymbol& placedSymbol = bucket.text.placedSymbols.at(*symbolInstance.placedRightTextIndex);
                 const float fontSize = evaluateSizeForFeature(partiallyEvaluatedTextSize, placedSymbol);
 
-                auto placed = collisionIndex.placeFeature(symbolInstance.textCollisionFeature, 0, 0,
+                auto placed = collisionIndex.placeFeature(symbolInstance.textCollisionFeature, {},
                         posMatrix, textLabelPlaneMatrix, textPixelRatio,
                         placedSymbol, scale, fontSize,
                         bucket.layout.get<style::TextAllowOverlap>(),
@@ -237,6 +237,11 @@ void Placement::placeLayerBucket(
 
                 for (auto anchor : variableTextAnchors) {
                     Point<float> shift = calculateVariableLayoutOffset(static_cast<style::SymbolAnchorType>(anchor), width, height, symbolInstance.radialTextOffset, textBoxScale);
+                    if (rotateWithMap) {            
+                        float angle = pitchWithMap ? state.getBearing() : -state.getBearing();
+                        shift = util::rotate(shift, angle);
+                    }
+
                     assert(!symbolInstance.textCollisionFeature.alongLine);
                     // TODO: placedSymbol not needed.
                     optional<size_t> horizontalTextIndex;
@@ -253,7 +258,7 @@ void Placement::placeLayerBucket(
                     PlacedSymbol& placedSymbol = bucket.text.placedSymbols.at(*horizontalTextIndex);
                     const float fontSize = evaluateSizeForFeature(partiallyEvaluatedTextSize, placedSymbol);
 
-                    auto placed = collisionIndex.placeFeature(symbolInstance.textCollisionFeature, shift.x, shift.y,
+                    auto placed = collisionIndex.placeFeature(symbolInstance.textCollisionFeature, shift,
                                                               posMatrix, {}, textPixelRatio,
                                                               placedSymbol, scale, fontSize,
                                                               bucket.layout.get<style::TextAllowOverlap>(),
@@ -307,7 +312,7 @@ void Placement::placeLayerBucket(
                 PlacedSymbol& placedSymbol = bucket.icon.placedSymbols.at(*symbolInstance.placedIconIndex);
                 const float fontSize = evaluateSizeForFeature(partiallyEvaluatedIconSize, placedSymbol);
 
-                auto placed = collisionIndex.placeFeature(symbolInstance.iconCollisionFeature, 0, 0,
+                auto placed = collisionIndex.placeFeature(symbolInstance.iconCollisionFeature, {},
                         posMatrix, iconLabelPlaneMatrix, textPixelRatio,
                         placedSymbol, scale, fontSize,
                         bucket.layout.get<style::IconAllowOverlap>(),

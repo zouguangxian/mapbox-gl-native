@@ -80,8 +80,7 @@ bool CollisionIndex::isInsideTile(const CollisionBox& box, const CollisionTileBo
 
 
 std::pair<bool,bool> CollisionIndex::placeFeature(CollisionFeature& feature,
-                                      const float shiftX,
-                                      const float shiftY,
+                                      Point<float> shift,
                                       const mat4& posMatrix,
                                       const mat4& labelPlaneMatrix,
                                       const float textPixelRatio,
@@ -97,10 +96,10 @@ std::pair<bool,bool> CollisionIndex::placeFeature(CollisionFeature& feature,
         CollisionBox& box = feature.boxes.front();
         const auto projectedPoint = projectAndGetPerspectiveRatio(posMatrix, box.anchor);
         const float tileToViewport = textPixelRatio * projectedPoint.second;
-        box.px1 = (box.x1 + shiftX) * tileToViewport + projectedPoint.first.x;
-        box.py1 = (box.y1 + shiftY) * tileToViewport + projectedPoint.first.y;
-        box.px2 = (box.x2 + shiftX) * tileToViewport + projectedPoint.first.x;
-        box.py2 = (box.y2 + shiftY) * tileToViewport + projectedPoint.first.y;
+        box.px1 = (box.x1 + shift.x) * tileToViewport + projectedPoint.first.x;
+        box.py1 = (box.y1 + shift.y) * tileToViewport + projectedPoint.first.y;
+        box.px2 = (box.x2 + shift.x) * tileToViewport + projectedPoint.first.x;
+        box.py2 = (box.y2 + shift.y) * tileToViewport + projectedPoint.first.y;
     
 
         if ((avoidEdges && !isInsideTile(box, *avoidEdges)) ||
