@@ -25,6 +25,15 @@ class Style;
 
 class MapSnapshotter {
 public:
+    MapSnapshotter(std::shared_ptr<Scheduler> scheduler,
+                   const std::pair<bool, std::string> style,
+                   const Size&,
+                   const float pixelRatio,
+                   const optional<CameraOptions> cameraOptions,
+                   const optional<LatLngBounds> region,
+                   const optional<std::string> cacheDir = {},
+                   const optional<std::string> localFontFamily = {});
+
     MapSnapshotter(std::shared_ptr<FileSource> fileSource,
                    std::shared_ptr<Scheduler> scheduler,
                    const std::pair<bool, std::string> style,

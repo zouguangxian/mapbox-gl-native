@@ -3,7 +3,7 @@
 #import <GLKit/GLKit.h>
 #import <OpenGLES/EAGL.h>
 
-#include <mbgl/map/map_adapter.hpp>
+#include <mbgl/map/map.hpp>
 #include <mbgl/map/map_options.hpp>
 #include <mbgl/annotation/annotation.hpp>
 #include <mbgl/map/camera.hpp>
@@ -11,7 +11,6 @@
 #include <mbgl/util/platform.hpp>
 #include <mbgl/storage/reachability.h>
 #include <mbgl/util/default_thread_pool.hpp>
-#include <mbgl/storage/default_file_source.hpp>
 #include <mbgl/storage/network_status.hpp>
 #include <mbgl/style/style.hpp>
 #include <mbgl/style/image.hpp>
@@ -484,7 +483,7 @@ public:
               .withCrossSourceCollisions(enableCrossSourceCollisions);
 
     NSAssert(!_mbglMap, @"_mbglMap should be NULL");
-    _mbglMap = new mbgl::MapAdapter(*_rendererFrontend, *_mbglView, self.size, config.scaleFactor, [MGLOfflineStorage sharedOfflineStorage].mbglFileSource, *_mbglThreadPool, mapOptions);
+    _mbglMap = new mbgl::Map(*_rendererFrontend, *_mbglView, self.size, config.scaleFactor, *_mbglThreadPool, mapOptions);
 
     // start paused if in IB
     if (_isTargetingInterfaceBuilder || background) {

@@ -14,6 +14,15 @@ namespace mbgl {
 
 class MapSnapshotter::Impl {
 public:
+    Impl(std::shared_ptr<Scheduler>,
+         const std::pair<bool, std::string> style,
+         const Size&,
+         const float pixelRatio,
+         const optional<CameraOptions> cameraOptions,
+         const optional<LatLngBounds> region,
+         const optional<std::string> programCacheDir,
+         const optional<std::string> localFontFamily = {});
+
     Impl(std::shared_ptr<FileSource>,
          std::shared_ptr<Scheduler>,
          const std::pair<bool, std::string> style,
@@ -42,33 +51,51 @@ public:
     void snapshot(ActorRef<MapSnapshotter::Callback>);
 
 private:
+    void initialize(const std::pair<bool, std::string> style, const optional<CameraOptions>, const optional<LatLngBounds>);
+
     std::shared_ptr<Scheduler> scheduler;
     HeadlessFrontend frontend;
-    MapAdapter map;
+    std::unique_ptr<Map> map;
 };
 
-MapSnapshotter::Impl::Impl(
-           std::shared_ptr<FileSource> fileSource,
-           std::shared_ptr<Scheduler> scheduler_,
-           const std::pair<bool, std::string> style,
-           const Size& size,
-           const float pixelRatio,
-           const optional<CameraOptions> cameraOptions,
-           const optional<LatLngBounds> region,
-           const optional<std::string> programCacheDir,
-           const optional<std::string> localFontFamily)
-    : scheduler(std::move(scheduler_))
-    , frontend(size, pixelRatio, *scheduler, programCacheDir, GLContextMode::Unique, localFontFamily)
-    , map(frontend, MapObserver::nullObserver(), size, pixelRatio, std::move(fileSource), *scheduler, MapOptions().withMapMode(MapMode::Static)) {
+MapSnapshotter::Impl::Impl(std::shared_ptr<Scheduler> scheduler_,
+                           const std::pair<bool, std::string> style,
+                           const Size& size,
+                           const float pixelRatio,
+                           const optional<CameraOptions> cameraOptions,
+                           const optional<LatLngBounds> region,
+                           const optional<std::string> programCacheDir,
+                           const optional<std::string> localFontFamily)
+        : scheduler(std::move(scheduler_))
+        , frontend(size, pixelRatio, *scheduler, programCacheDir, GLContextMode::Unique, localFontFamily)
+        , map(std::make_unique<Map>(frontend, MapObserver::nullObserver(), size, pixelRatio, *scheduler, MapOptions().withMapMode(MapMode::Static))) {
+    initialize(style, cameraOptions, region);
+}
 
+MapSnapshotter::Impl::Impl(std::shared_ptr<FileSource> fileSource,
+                           std::shared_ptr<Scheduler> scheduler_,
+                           const std::pair<bool, std::string> style,
+                           const Size& size,
+                           const float pixelRatio,
+                           const optional<CameraOptions> cameraOptions,
+                           const optional<LatLngBounds> region,
+                           const optional<std::string> programCacheDir,
+                           const optional<std::string> localFontFamily)
+        : scheduler(std::move(scheduler_))
+        , frontend(size, pixelRatio, *scheduler, programCacheDir, GLContextMode::Unique, localFontFamily)
+        , map(std::make_unique<MapAdapter>(frontend, MapObserver::nullObserver(), size, pixelRatio, std::move(fileSource), *scheduler, MapOptions().withMapMode(MapMode::Static))) {
+    initialize(style, cameraOptions, region);
+}
+
+void MapSnapshotter::Impl::initialize(const std::pair<bool, std::string> style, const optional<CameraOptions> cameraOptions, const optional<LatLngBounds> region) {
     if (style.first) {
-        map.getStyle().loadJSON(style.second);
+        map->getStyle().loadJSON(style.second);
     } else{
-        map.getStyle().loadURL(style.second);
+        map->getStyle().loadURL(style.second);
     }
 
     if (cameraOptions) {
-        map.jumpTo(*cameraOptions);
+        map->jumpTo(*cameraOptions);
     }
 
     // Set region, if specified
@@ -78,13 +105,13 @@ MapSnapshotter::Impl::Impl(
 }
 
 void MapSnapshotter::Impl::snapshot(ActorRef<MapSnapshotter::Callback> callback) {
-    map.renderStill([this, callback = std::move(callback)] (std::exception_ptr error) mutable {
+    map->renderStill([this, callback = std::move(callback)] (std::exception_ptr error) mutable {
 
         // Create lambda that captures the current transform state
         // and can be used to translate for geographic to screen
         // coordinates
         assert (frontend.getTransformState());
-        PointForFn pointForFn { [=, center = *map.getCameraOptions().center, transformState = *frontend.getTransformState()] (const LatLng& latLng) {
+        PointForFn pointForFn { [=, center = *map->getCameraOptions().center, transformState = *frontend.getTransformState()] (const LatLng& latLng) {
             LatLng unwrappedLatLng = latLng.wrapped();
             unwrappedLatLng.unwrapForShortestPath(center);
             Transform transform { transformState };
@@ -102,7 +129,7 @@ void MapSnapshotter::Impl::snapshot(ActorRef<MapSnapshotter::Callback> callback)
 
         // Collect all source attributions
         std::vector<std::string> attributions;
-        for (auto source : map.getStyle().getSources()) {
+        for (auto source : map->getStyle().getSources()) {
             auto attribution = source->getAttribution();
             if (attribution) {
                 attributions.push_back(*attribution);
@@ -122,47 +149,47 @@ void MapSnapshotter::Impl::snapshot(ActorRef<MapSnapshotter::Callback> callback)
 }
 
 void MapSnapshotter::Impl::setStyleURL(std::string styleURL) {
-    map.getStyle().loadURL(styleURL);
+    map->getStyle().loadURL(styleURL);
 }
 
 std::string MapSnapshotter::Impl::getStyleURL() const {
-    return map.getStyle().getURL();
+    return map->getStyle().getURL();
 }
 
 void MapSnapshotter::Impl::setStyleJSON(std::string styleJSON) {
-    map.getStyle().loadJSON(styleJSON);
+    map->getStyle().loadJSON(styleJSON);
 }
 
 std::string MapSnapshotter::Impl::getStyleJSON() const {
-   return map.getStyle().getJSON();
+   return map->getStyle().getJSON();
 }
 
 void MapSnapshotter::Impl::setSize(Size size) {
-    map.setSize(size);
+    map->setSize(size);
     frontend.setSize(size);
 }
 
 Size MapSnapshotter::Impl::getSize() const {
-    return map.getSize();
+    return map->getSize();
 }
 
 void MapSnapshotter::Impl::setCameraOptions(CameraOptions cameraOptions) {
-    map.jumpTo(cameraOptions);
+    map->jumpTo(cameraOptions);
 }
 
 CameraOptions MapSnapshotter::Impl::getCameraOptions() const {
     EdgeInsets insets;
-    return map.getCameraOptions(insets);
+    return map->getCameraOptions(insets);
 }
 
 void MapSnapshotter::Impl::setRegion(LatLngBounds region) {
     mbgl::EdgeInsets insets = { 0, 0, 0, 0 };
     std::vector<LatLng> latLngs = { region.southwest(), region.northeast() };
-    map.jumpTo(map.cameraForLatLngs(latLngs, insets));
+    map->jumpTo(map->cameraForLatLngs(latLngs, insets));
 }
 
 LatLngBounds MapSnapshotter::Impl::getRegion() const {
-    return map.latLngBoundsForCamera(getCameraOptions());
+    return map->latLngBoundsForCamera(getCameraOptions());
 }
 
 MapSnapshotter::MapSnapshotter(std::shared_ptr<FileSource> fileSource,
