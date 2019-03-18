@@ -49,6 +49,13 @@ public:
                    const float rotate,
                    float radialTextOffset);
 
+    optional<size_t> defaultHorizontalPlacedTextIndex() const {
+        if (placedRightTextIndex) return placedRightTextIndex;
+        if (placedCenterTextIndex) return placedCenterTextIndex;
+        if (placedLeftTextIndex) return placedLeftTextIndex;
+        return nullopt;
+    }
+
     Anchor anchor;
     GeometryCoordinates line;
     bool hasText;
