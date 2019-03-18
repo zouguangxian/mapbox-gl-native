@@ -42,6 +42,10 @@ public:
     // This can be used add or remove custom parameters, or reroute certain requests to
     // other servers or endpoints.
     virtual void setResourceTransform(optional<ActorRef<ResourceTransform>>&&) {}
+
+    // Singleton to obtain the platform-default file source. A single instance of a file source is
+    // provided for each unique combination of a Mapbox API base URL, access token and cache path.
+    static std::shared_ptr<FileSource> platformFileSource(const MapOptions&);
 };
 
 } // namespace mbgl

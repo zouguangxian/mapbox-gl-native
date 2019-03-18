@@ -4,11 +4,9 @@
 #include "qmapboxgl_map_observer.hpp"
 #include "qmapboxgl_map_renderer.hpp"
 
-#include <mbgl/actor/actor.hpp>
 #include <mbgl/map/map.hpp>
 #include <mbgl/renderer/renderer_frontend.hpp>
-#include <mbgl/storage/default_file_source.hpp>
-#include <mbgl/storage/resource_transform.hpp>
+#include <mbgl/storage/file_source.hpp>
 #include <mbgl/util/default_thread_pool.hpp>
 #include <mbgl/util/geo.hpp>
 
@@ -57,10 +55,9 @@ private:
     std::shared_ptr<mbgl::UpdateParameters> m_updateParameters;
 
     std::unique_ptr<QMapboxGLMapObserver> m_mapObserver;
-    std::shared_ptr<mbgl::DefaultFileSource> m_fileSourceObj;
+    std::shared_ptr<mbgl::FileSource> m_fileSource;
     std::shared_ptr<mbgl::ThreadPool> m_threadPool;
     std::unique_ptr<QMapboxGLMapRenderer> m_mapRenderer;
-    std::unique_ptr<mbgl::Actor<mbgl::ResourceTransform>> m_resourceTransform;
 
     QMapboxGLSettings::GLContextMode m_mode;
     qreal m_pixelRatio;
