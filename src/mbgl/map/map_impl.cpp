@@ -8,16 +8,14 @@
 
 namespace mbgl {
 
-Map::Impl::Impl(Map& map_,
-                RendererFrontend& frontend,
+Map::Impl::Impl(RendererFrontend& frontend,
                 MapObserver& observer_,
                 FileSource& fileSource_,
                 Scheduler& scheduler_,
                 Size size_,
                 float pixelRatio_,
                 const MapOptions& options)
-    : map(map_),
-      observer(observer_),
+    : observer(observer_),
       rendererFrontend(frontend),
       fileSource(fileSource_),
       scheduler(scheduler_),
@@ -96,7 +94,7 @@ void Map::Impl::onStyleLoading() {
 
 void Map::Impl::onStyleLoaded() {
     if (!cameraMutated) {
-        map.jumpTo(style->getDefaultCamera());
+        jumpTo(style->getDefaultCamera());
     }
     if (LayerManager::annotationsEnabled) {
         annotationManager.onStyleLoaded();
@@ -178,5 +176,11 @@ void Map::Impl::onDidFinishRenderingMap() {
         }
     }
 };
+
+void Map::Impl::jumpTo(const CameraOptions& camera) {
+    cameraMutated = true;
+    transform.jumpTo(camera);
+    onUpdate();
+}
 
 } // namespace mbgl

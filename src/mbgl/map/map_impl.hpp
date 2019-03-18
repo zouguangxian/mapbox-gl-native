@@ -31,7 +31,7 @@ struct StillImageRequest {
 
 class Map::Impl : public style::Observer, public RendererObserver {
 public:
-    Impl(Map&, RendererFrontend&, MapObserver&, FileSource&, Scheduler&, Size, float pixelRatio, const MapOptions&);
+    Impl(RendererFrontend&, MapObserver&, FileSource&, Scheduler&, Size size, float pixelRatio, const MapOptions&);
     ~Impl() final;
 
     // StyleObserver
@@ -49,7 +49,9 @@ public:
     void onWillStartRenderingMap() final;
     void onDidFinishRenderingMap() final;
 
-    Map& map;
+    // Map
+    void jumpTo(const CameraOptions&);
+
     MapObserver& observer;
     RendererFrontend& rendererFrontend;
     FileSource& fileSource;

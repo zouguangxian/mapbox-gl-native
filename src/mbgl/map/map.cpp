@@ -34,7 +34,7 @@ Map::Map(RendererFrontend& rendererFrontend,
          FileSource& fileSource,
          Scheduler& scheduler,
          const MapOptions& options)
-    : impl(std::make_unique<Impl>(*this, rendererFrontend, mapObserver, fileSource, scheduler, size, pixelRatio, options)) {}
+    : impl(std::make_unique<Impl>(rendererFrontend, mapObserver, fileSource, scheduler, size, pixelRatio, options)) {}
 
 Map::~Map() = default;
 
@@ -129,9 +129,7 @@ CameraOptions Map::getCameraOptions(const EdgeInsets& padding) const {
 }
 
 void Map::jumpTo(const CameraOptions& camera) {
-    impl->cameraMutated = true;
-    impl->transform.jumpTo(camera);
-    impl->onUpdate();
+    impl->jumpTo(camera);
 }
 
 void Map::easeTo(const CameraOptions& camera, const AnimationOptions& animation) {
