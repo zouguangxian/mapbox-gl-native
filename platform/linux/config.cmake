@@ -155,6 +155,7 @@ endmacro()
 macro(mbgl_platform_test)
     target_sources(mbgl-test
         PRIVATE platform/default/src/mbgl/test/main.cpp
+        PRIVATE platform/default/include/mbgl/map/map_adapter.hpp
     )
 
     target_include_directories(mbgl-test

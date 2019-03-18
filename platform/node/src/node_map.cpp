@@ -20,16 +20,58 @@
 #include <mbgl/style/layers/raster_layer.hpp>
 #include <mbgl/style/layers/symbol_layer.hpp>
 
+#include <mbgl/storage/file_source.hpp>
 #include <mbgl/style/style.hpp>
 #include <mbgl/style/image.hpp>
 #include <mbgl/style/light.hpp>
+#include <mbgl/map/map_adapter.hpp>
 #include <mbgl/map/map_observer.hpp>
 #include <mbgl/util/exception.hpp>
 #include <mbgl/util/premultiply.hpp>
 
 #include <unistd.h>
 
+namespace mbgl {
+
+std::shared_ptr<FileSource> FileSource::platformFileSource(const MapOptions&) {
+    assert(false); // Should not be called.
+    return {};
+}
+
+} // namespace mbgl
+
 namespace node_mbgl {
+
+struct NodeFileSource : public mbgl::FileSource {
+    NodeFileSource(NodeMap* nodeMap_) : nodeMap(nodeMap_) {}
+    std::unique_ptr<mbgl::AsyncRequest> request(const mbgl::Resource&, mbgl::FileSource::Callback) final;
+    NodeMap* nodeMap;
+};
+
+std::unique_ptr<mbgl::AsyncRequest> NodeFileSource::request(const mbgl::Resource& resource, mbgl::FileSource::Callback callback_) {
+    assert(nodeMap);
+
+    Nan::HandleScope scope;
+    // Because this method may be called while this NodeMap is already eligible for garbage collection,
+    // we need to explicitly hold onto our own handle here so that GC during a v8 call doesn't destroy
+    // *this while we're still executing code.
+    nodeMap->handle();
+
+    v8::Local<v8::Value> argv[] = {
+        Nan::New<v8::External>(nodeMap),
+        Nan::New<v8::External>(&callback_)
+    };
+
+    auto instance = Nan::NewInstance(Nan::New(node_mbgl::NodeRequest::constructor), 2, argv).ToLocalChecked();
+
+    Nan::Set(instance, Nan::New("url").ToLocalChecked(), Nan::New(resource.url).ToLocalChecked());
+    Nan::Set(instance, Nan::New("kind").ToLocalChecked(), Nan::New<v8::Integer>(resource.kind));
+
+    auto request = Nan::ObjectWrap::Unwrap<node_mbgl::NodeRequest>(instance);
+    request->Execute();
+
+    return std::make_unique<node_mbgl::NodeRequest::NodeAsyncRequest>(request);
+}
 
 struct NodeMap::RenderOptions {
     double zoom = 0;
@@ -626,8 +668,9 @@ void NodeMap::cancel() {
            .withConstrainMode(mbgl::ConstrainMode::HeightOnly)
            .withViewportMode(mbgl::ViewportMode::Default)
            .withCrossSourceCollisions(crossSourceCollisions);
-    map = std::make_unique<mbgl::Map>(*frontend, mapObserver, frontend->getSize(), pixelRatio,
-                                      fileSource, threadpool, options);
+
+    map = std::make_unique<mbgl::MapAdapter>(*frontend, mapObserver, frontend->getSize(), pixelRatio,
+                                             std::make_shared<NodeFileSource>(this), threadpool, options);
 
     // FIXME: Reload the style after recreating the map. We need to find
     // a better way of canceling an ongoing rendering on the core level
@@ -1205,20 +1248,11 @@ NodeMap::NodeMap(v8::Local<v8::Object> options)
             : true;
     }())
     , mapObserver(NodeMapObserver())
-    , fileSource(this)
     , frontend(std::make_unique<mbgl::HeadlessFrontend>(mbgl::Size { 256, 256 }, pixelRatio, threadpool))
-    , map(std::make_unique<mbgl::Map>(*frontend,
-                                      mapObserver,
-                                      frontend->getSize(),
-                                      pixelRatio,
-                                      fileSource,
-                                      threadpool,
-                                      mbgl::MapOptions().withMapMode(mode)
-                                                        .withConstrainMode(mbgl::ConstrainMode::HeightOnly)
-                                                        .withViewportMode(mbgl::ViewportMode::Default)
-                                                        .withCrossSourceCollisions(crossSourceCollisions))),
-      async(new uv_async_t) {
-
+    , map(std::make_unique<mbgl::MapAdapter>(*frontend, mapObserver, frontend->getSize(), pixelRatio,
+                                             std::make_shared<NodeFileSource>(this), threadpool,
+                                             mbgl::MapOptions().withMapMode(mode).withCrossSourceCollisions(crossSourceCollisions)))
+    , async(new uv_async_t) {
     async->data = this;
     uv_async_init(uv_default_loop(), async, [](uv_async_t* h) {
         reinterpret_cast<NodeMap *>(h->data)->renderFinished();
@@ -1230,33 +1264,6 @@ NodeMap::NodeMap(v8::Local<v8::Object> options)
 
 NodeMap::~NodeMap() {
     if (map) release();
-}
-
-NodeFileSource::NodeFileSource(NodeMap* nodeMap_) : nodeMap(nodeMap_) {}
-
-std::unique_ptr<mbgl::AsyncRequest> NodeFileSource::request(const mbgl::Resource& resource, mbgl::FileSource::Callback callback_) {
-    assert(nodeMap);
-
-    Nan::HandleScope scope;
-    // Because this method may be called while this NodeMap is already eligible for garbage collection,
-    // we need to explicitly hold onto our own handle here so that GC during a v8 call doesn't destroy
-    // *this while we're still executing code.
-    nodeMap->handle();
-
-    v8::Local<v8::Value> argv[] = {
-        Nan::New<v8::External>(nodeMap),
-        Nan::New<v8::External>(&callback_)
-    };
-
-    auto instance = Nan::NewInstance(Nan::New(NodeRequest::constructor), 2, argv).ToLocalChecked();
-
-    Nan::Set(instance, Nan::New("url").ToLocalChecked(), Nan::New(resource.url).ToLocalChecked());
-    Nan::Set(instance, Nan::New("kind").ToLocalChecked(), Nan::New<v8::Integer>(resource.kind));
-
-    auto request = Nan::ObjectWrap::Unwrap<NodeRequest>(instance);
-    request->Execute();
-
-    return std::make_unique<NodeRequest::NodeAsyncRequest>(request);
 }
 
 } // namespace node_mbgl

@@ -21,7 +21,6 @@
 
 namespace mbgl {
 
-class FileSource;
 class Scheduler;
 class RendererFrontend;
 
@@ -36,7 +35,6 @@ public:
                  MapObserver&,
                  Size size,
                  float pixelRatio,
-                 FileSource&,
                  Scheduler&,
                  const MapOptions&);
     ~Map();
@@ -137,9 +135,12 @@ public:
     bool isFullyLoaded() const;
     void dumpDebugLogs() const;
 
-private:
+protected:
     class Impl;
     const std::unique_ptr<Impl> impl;
+
+    // For testing only.
+    Map(std::unique_ptr<Impl>);
 };
 
 } // namespace mbgl

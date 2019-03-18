@@ -100,6 +100,7 @@
         "jni/string_conversion.hpp": "platform/default/include/jni/string_conversion.hpp",
         "mbgl/gl/headless_backend.hpp": "platform/default/include/mbgl/gl/headless_backend.hpp",
         "mbgl/gl/headless_frontend.hpp": "platform/default/include/mbgl/gl/headless_frontend.hpp",
+        "mbgl/map/map_adapter.hpp": "platform/default/include/mbgl/map/map_adapter.hpp",
         "mbgl/map/map_snapshotter.hpp": "platform/default/include/mbgl/map/map_snapshotter.hpp",
         "mbgl/text/unaccent.hpp": "platform/default/include/mbgl/text/unaccent.hpp",
         "mbgl/util/default_thread_pool.hpp": "platform/default/include/mbgl/util/default_thread_pool.hpp",

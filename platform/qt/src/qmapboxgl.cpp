@@ -1718,7 +1718,6 @@ mbgl::MapOptions mapOptionsFromQMapboxGLSettings(const QMapboxGLSettings &settin
 
 QMapboxGLPrivate::QMapboxGLPrivate(QMapboxGL *q, const QMapboxGLSettings &settings, const QSize &size, qreal pixelRatio_)
     : QObject(q)
-    , m_fileSource(mbgl::FileSource::platformFileSource(mapOptionsFromQMapboxGLSettings(settings)))
     , m_threadPool(mbgl::sharedThreadPool())
     , m_mode(settings.contextMode())
     , m_pixelRatio(pixelRatio_)
@@ -1734,8 +1733,7 @@ QMapboxGLPrivate::QMapboxGLPrivate(QMapboxGL *q, const QMapboxGLSettings &settin
     connect(m_mapObserver.get(), SIGNAL(copyrightsChanged(QString)), q, SIGNAL(copyrightsChanged(QString)));
 
     // Setup the Map object.
-    mapObj = std::make_unique<mbgl::Map>(*this, *m_mapObserver, sanitizedSize(size), m_pixelRatio,
-                                         *m_fileSource, *m_threadPool, mapOptionsFromQMapboxGLSettings(settings));
+    mapObj = std::make_unique<mbgl::Map>(*this, *m_mapObserver, sanitizedSize(size), m_pixelRatio, *m_threadPool, mapOptionsFromQMapboxGLSettings(settings));
 
     // Needs to be Queued to give time to discard redundant draw calls via the `renderQueued` flag.
     connect(this, SIGNAL(needsRendering()), q, SIGNAL(needsRendering()), Qt::QueuedConnection);

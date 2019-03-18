@@ -9,7 +9,6 @@
 #include <mbgl/renderer/update_parameters.hpp>
 #include <mbgl/renderer/renderer_frontend.hpp>
 #include <mbgl/renderer/renderer_observer.hpp>
-#include <mbgl/storage/file_source.hpp>
 #include <mbgl/storage/resource.hpp>
 #include <mbgl/storage/response.hpp>
 #include <mbgl/util/constants.hpp>
@@ -31,10 +30,11 @@ Map::Map(RendererFrontend& rendererFrontend,
          MapObserver& mapObserver,
          const Size size,
          const float pixelRatio,
-         FileSource& fileSource,
          Scheduler& scheduler,
          const MapOptions& options)
-    : impl(std::make_unique<Impl>(rendererFrontend, mapObserver, fileSource, scheduler, size, pixelRatio, options)) {}
+    : impl(std::make_unique<Impl>(rendererFrontend, mapObserver, scheduler, size, pixelRatio, options)) {}
+
+Map::Map(std::unique_ptr<Impl> impl_) : impl(std::move(impl_)) {}
 
 Map::~Map() = default;
 

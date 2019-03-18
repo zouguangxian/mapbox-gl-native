@@ -8,7 +8,6 @@
 #include <mbgl/renderer/renderer.hpp>
 #include <mbgl/style/style.hpp>
 #include <mbgl/style/image.hpp>
-#include <mbgl/storage/default_file_source.hpp>
 #include <mbgl/storage/network_status.hpp>
 #include <mbgl/util/image.hpp>
 #include <mbgl/util/io.hpp>
@@ -22,11 +21,9 @@ class RenderBenchmark {
 public:
     RenderBenchmark() {
         NetworkStatus::Set(NetworkStatus::Status::Offline);
-        fileSource.setAccessToken("foobar");
     }
 
     util::RunLoop loop;
-    DefaultFileSource fileSource { "benchmark/fixtures/api/cache.db", "." };
     ThreadPool threadPool { 4 };
 };
     
@@ -42,8 +39,8 @@ static void prepare(Map& map, optional<std::string> json = {}) {
 static void API_renderStill_reuse_map(::benchmark::State& state) {
     RenderBenchmark bench;
     HeadlessFrontend frontend { { 1000, 1000 }, 1, bench.threadPool };
-    Map map { frontend, MapObserver::nullObserver(), frontend.getSize(), 1,
-              bench.fileSource, bench.threadPool, MapOptions().withMapMode(MapMode::Static) };
+    Map map { frontend, MapObserver::nullObserver(), frontend.getSize(), 1, bench.threadPool,
+              MapOptions().withMapMode(MapMode::Static).withCachePath("benchmark/fixtures/api/cache.db").withAssetPath(".").withAccessToken("foobar") };
     prepare(map);
 
     while (state.KeepRunning()) {
@@ -54,8 +51,8 @@ static void API_renderStill_reuse_map(::benchmark::State& state) {
 static void API_renderStill_reuse_map_formatted_labels(::benchmark::State& state) {
     RenderBenchmark bench;
     HeadlessFrontend frontend { { 1000, 1000 }, 1, bench.threadPool };
-    Map map { frontend, MapObserver::nullObserver(), frontend.getSize(), 1,
-              bench.fileSource, bench.threadPool, MapOptions().withMapMode(MapMode::Static) };
+    Map map { frontend, MapObserver::nullObserver(), frontend.getSize(), 1, bench.threadPool,
+              MapOptions().withMapMode(MapMode::Static).withCachePath("benchmark/fixtures/api/cache.db").withAssetPath(".").withAccessToken("foobar") };
     prepare(map, util::read_file("benchmark/fixtures/api/style_formatted_labels.json"));
 
     while (state.KeepRunning()) {
@@ -66,8 +63,8 @@ static void API_renderStill_reuse_map_formatted_labels(::benchmark::State& state
 static void API_renderStill_reuse_map_switch_styles(::benchmark::State& state) {
     RenderBenchmark bench;
     HeadlessFrontend frontend { { 1000, 1000 }, 1, bench.threadPool };
-    Map map { frontend, MapObserver::nullObserver(), frontend.getSize(), 1,
-              bench.fileSource, bench.threadPool, MapOptions().withMapMode(MapMode::Static) };
+    Map map { frontend, MapObserver::nullObserver(), frontend.getSize(), 1, bench.threadPool,
+              MapOptions().withMapMode(MapMode::Static).withCachePath("benchmark/fixtures/api/cache.db").withAssetPath(".").withAccessToken("foobar") };
     
     while (state.KeepRunning()) {
         prepare(map, { "{}" });
@@ -79,11 +76,10 @@ static void API_renderStill_reuse_map_switch_styles(::benchmark::State& state) {
 
 static void API_renderStill_recreate_map(::benchmark::State& state) {
     RenderBenchmark bench;
-    
+    MapOptions options = MapOptions().withMapMode(MapMode::Static).withCachePath("benchmark/fixtures/api/cache.db").withAssetPath(".").withAccessToken("foobar");
     while (state.KeepRunning()) {
         HeadlessFrontend frontend { { 1000, 1000 }, 1, bench.threadPool };
-        Map map { frontend, MapObserver::nullObserver(), frontend.getSize(), 1,
-                  bench.fileSource, bench.threadPool, MapOptions().withMapMode(MapMode::Static) };
+        Map map { frontend, MapObserver::nullObserver(), frontend.getSize(), 1, bench.threadPool, options };
         prepare(map);
         frontend.render(map);
     }

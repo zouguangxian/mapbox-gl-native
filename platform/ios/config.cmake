@@ -25,6 +25,7 @@ macro(mbgl_platform_core)
     target_include_directories(mbgl-core
         PUBLIC platform/darwin/include
         PUBLIC platform/default/include
+        PUBLIC src
     )
 
     target_link_libraries(mbgl-core

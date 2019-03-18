@@ -37,7 +37,6 @@ MapSnapshotter::MapSnapshotter(jni::JNIEnv& _env,
     }
 
     jFileSource = FileSource::getNativePeer(_env, _jFileSource);
-    auto& fileSource = mbgl::android::FileSource::getDefaultFileSource(_env, _jFileSource);
     auto size = mbgl::Size { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
 
     optional<mbgl::CameraOptions> cameraOptions;
@@ -59,7 +58,7 @@ MapSnapshotter::MapSnapshotter(jni::JNIEnv& _env,
     
     showLogo = _showLogo;
     // Create the core snapshotter
-    snapshotter = std::make_unique<mbgl::MapSnapshotter>(&fileSource,
+    snapshotter = std::make_unique<mbgl::MapSnapshotter>(mbgl::android::FileSource::getDefaultFileSource(_env, _jFileSource),
                                                          threadPool,
                                                          style,
                                                          size,

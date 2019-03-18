@@ -44,7 +44,7 @@ const MGLExceptionName MGLUnsupportedRegionTypeException = @"MGLUnsupportedRegio
 @interface MGLOfflineStorage ()
 
 @property (nonatomic, strong, readwrite) NSMutableArray<MGLOfflinePack *> *packs;
-@property (nonatomic) mbgl::DefaultFileSource *mbglFileSource;
+@property (nonatomic) std::shared_ptr<mbgl::DefaultFileSource> mbglFileSource;
 @property (nonatomic, getter=isPaused) BOOL paused;
 
 @end
@@ -223,7 +223,7 @@ const MGLExceptionName MGLUnsupportedRegionTypeException = @"MGLUnsupportedRegio
             [[NSFileManager defaultManager] moveItemAtPath:subdirectorylessCacheURL.path toPath:cachePath error:NULL];
         }
 
-        _mbglFileSource = new mbgl::DefaultFileSource(cachePath.UTF8String, [NSBundle mainBundle].resourceURL.path.UTF8String);
+        _mbglFileSource = std::make_shared<mbgl::DefaultFileSource>(cachePath.UTF8String, [NSBundle mainBundle].resourceURL.path.UTF8String);
 
         // Observe for changes to the API base URL (and find out the current one).
         [[MGLAccountManager sharedManager] addObserver:self
@@ -250,9 +250,6 @@ const MGLExceptionName MGLUnsupportedRegionTypeException = @"MGLUnsupportedRegio
     for (MGLOfflinePack *pack in self.packs) {
         [pack invalidate];
     }
-
-    delete _mbglFileSource;
-    _mbglFileSource = nullptr;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context {

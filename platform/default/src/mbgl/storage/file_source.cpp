@@ -15,7 +15,7 @@ std::shared_ptr<FileSource> FileSource::platformFileSource(const MapOptions& opt
 
     // Purge entries no longer in use.
     for (auto it = fileSources.begin(); it != fileSources.end();) {
-        if (it->second.expired()) { fileSources.erase(it); } else { it++; };
+        it = it->second.expired() ? fileSources.erase(it) : ++it;
     }
 
     const std::string key = options.baseURL() + '|' + options.accessToken() + '|' + options.cachePath();

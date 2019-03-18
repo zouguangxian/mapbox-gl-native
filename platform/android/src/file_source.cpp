@@ -23,7 +23,7 @@ FileSource::FileSource(jni::JNIEnv& _env,
     mapbox::sqlite::setTempPath(path);
 
     // Create a core default file source
-    fileSource = std::make_unique<mbgl::DefaultFileSource>(
+    fileSource = std::make_shared<mbgl::DefaultFileSource>(
         path + DATABASE_FILE,
         std::make_unique<AssetManagerFileSource>(_env, assetManager));
 
@@ -110,10 +110,10 @@ FileSource* FileSource::getNativePeer(jni::JNIEnv& env, const jni::Object<FileSo
     return reinterpret_cast<FileSource *>(jFileSource.Get(env, field));
 }
 
-mbgl::DefaultFileSource& FileSource::getDefaultFileSource(jni::JNIEnv& env, const jni::Object<FileSource>& jFileSource) {
+std::shared_ptr<mbgl::DefaultFileSource> FileSource::getDefaultFileSource(jni::JNIEnv& env, const jni::Object<FileSource>& jFileSource) {
     FileSource* fileSource = FileSource::getNativePeer(env, jFileSource);
     assert(fileSource != nullptr);
-    return *fileSource->fileSource;
+    return fileSource->fileSource;
 }
 
 void FileSource::registerNative(jni::JNIEnv& env) {

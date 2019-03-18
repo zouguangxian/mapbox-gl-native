@@ -10,24 +10,29 @@ namespace mbgl {
 
 Map::Impl::Impl(RendererFrontend& frontend,
                 MapObserver& observer_,
-                FileSource& fileSource_,
                 Scheduler& scheduler_,
                 Size size_,
                 float pixelRatio_,
                 const MapOptions& options)
-    : observer(observer_),
-      rendererFrontend(frontend),
-      fileSource(fileSource_),
-      scheduler(scheduler_),
-      transform(observer,
-                options.constrainMode(),
-                options.viewportMode()),
-      mode(options.mapMode()),
-      pixelRatio(pixelRatio_),
-      crossSourceCollisions(options.crossSourceCollisions()),
-      style(std::make_unique<style::Style>(scheduler, fileSource, pixelRatio)),
-      annotationManager(*style) {
+        : Impl(frontend, observer_, scheduler_, size_, pixelRatio_, FileSource::platformFileSource(options), options) {}
 
+Map::Impl::Impl(RendererFrontend& frontend_,
+                MapObserver& observer_,
+                Scheduler& scheduler_,
+                Size size_,
+                float pixelRatio_,
+                std::shared_ptr<FileSource> fileSource_,
+                const MapOptions& options)
+        : observer(observer_),
+          rendererFrontend(frontend_),
+          scheduler(scheduler_),
+          transform(observer, options.constrainMode(), options.viewportMode()),
+          mode(options.mapMode()),
+          pixelRatio(pixelRatio_),
+          crossSourceCollisions(options.crossSourceCollisions()),
+          fileSource(std::move(fileSource_)),
+          style(std::make_unique<style::Style>(scheduler, *fileSource, pixelRatio)),
+          annotationManager(*style) {
     style->impl->setObserver(this);
     rendererFrontend.setObserver(*this);
     transform.resize(size_);
@@ -36,7 +41,7 @@ Map::Impl::Impl(RendererFrontend& frontend,
             [callback = options.resourceTransform()] (Resource::Kind, const std::string &&url_) -> std::string {
                 return callback(std::move(url_));
             });
-       fileSource.setResourceTransform(resourceTransform->self());
+       fileSource->setResourceTransform(resourceTransform->self());
     }
 }
 
@@ -77,7 +82,7 @@ void Map::Impl::onUpdate() {
         style->impl->getSourceImpls(),
         style->impl->getLayerImpls(),
         annotationManager,
-        fileSource,
+        *fileSource,
         prefetchZoomDelta,
         bool(stillImageRequest),
         crossSourceCollisions

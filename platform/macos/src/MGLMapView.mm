@@ -25,7 +25,7 @@
 #import "MGLMapViewDelegate.h"
 #import "MGLImageSource.h"
 
-#import <mbgl/map/map.hpp>
+#import <mbgl/map/map_adapter.hpp>
 #import <mbgl/map/map_options.hpp>
 #import <mbgl/style/style.hpp>
 #import <mbgl/annotation/annotation.hpp>
@@ -287,6 +287,7 @@ public:
     MGLRendererConfiguration *config = [MGLRendererConfiguration currentConfiguration];
 
     auto renderer = std::make_unique<mbgl::Renderer>(*_mbglView, config.scaleFactor, *_mbglThreadPool, config.contextMode, config.cacheDir, config.localFontFamilyName);
+    auto fileSource = [MGLOfflineStorage sharedOfflineStorage].mbglFileSource;
     BOOL enableCrossSourceCollisions = !config.perSourceCollisions;
     _rendererFrontend = std::make_unique<MGLRenderFrontend>(std::move(renderer), self, *_mbglView, true);
 
@@ -295,7 +296,7 @@ public:
               .withConstrainMode(mbgl::ConstrainMode::None)
               .withViewportMode(mbgl::ViewportMode::Default)
               .withCrossSourceCollisions(enableCrossSourceCollisions);
-    _mbglMap = new mbgl::Map(*_rendererFrontend, *_mbglView, self.size, config.scaleFactor, *config.fileSource, *_mbglThreadPool, mapOptions);
+    _mbglMap = new mbgl::MapAdapter(*_rendererFrontend, *_mbglView, self.size, config.scaleFactor, fileSource, *_mbglThreadPool, mapOptions);
 
     // Install the OpenGL layer. Interface Builder’s synchronous drawing means
     // we can’t display a map, so don’t even bother to have a map layer.

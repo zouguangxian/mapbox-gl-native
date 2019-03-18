@@ -3,7 +3,6 @@
 #include "node_thread_pool.hpp"
 
 #include <mbgl/map/map.hpp>
-#include <mbgl/storage/file_source.hpp>
 #include <mbgl/util/image.hpp>
 
 #include <exception>
@@ -15,7 +14,6 @@
 #pragma GCC diagnostic pop
 
 namespace mbgl {
-class Map;
 class HeadlessFrontend;
 } // namespace mbgl
 
@@ -23,18 +21,6 @@ namespace node_mbgl {
 
 class NodeMapObserver : public mbgl::MapObserver {
     void onDidFailLoadingMap(mbgl::MapLoadError, const std::string&) override;
-};
-
-class NodeMap;
-
-class NodeFileSource : public mbgl::FileSource {
-public:
-    NodeFileSource(NodeMap*);
-
-    std::unique_ptr<mbgl::AsyncRequest> request(const mbgl::Resource&, mbgl::FileSource::Callback) final;
-
-private:
-    NodeMap* nodeMap;
 };
 
 class RenderRequest;
@@ -94,7 +80,6 @@ public:
     bool crossSourceCollisions;
     NodeThreadPool threadpool;
     NodeMapObserver mapObserver;
-    NodeFileSource fileSource;
     std::unique_ptr<mbgl::HeadlessFrontend> frontend;
     std::unique_ptr<mbgl::Map> map;
 

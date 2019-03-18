@@ -49,7 +49,7 @@ public:
 
     static FileSource* getNativePeer(jni::JNIEnv&, const jni::Object<FileSource>&);
 
-    static mbgl::DefaultFileSource& getDefaultFileSource(jni::JNIEnv&, const jni::Object<FileSource>&);
+    static std::shared_ptr<mbgl::DefaultFileSource> getDefaultFileSource(jni::JNIEnv&, const jni::Object<FileSource>&);
 
     static void registerNative(jni::JNIEnv&);
 
@@ -57,7 +57,7 @@ private:
     const std::string DATABASE_FILE = "/mbgl-offline.db";
     optional<int> activationCounter;
     std::unique_ptr<Actor<ResourceTransform>> resourceTransform;
-    std::unique_ptr<mbgl::DefaultFileSource> fileSource;
+    std::shared_ptr<mbgl::DefaultFileSource> fileSource;
 };
 
 
