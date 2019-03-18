@@ -72,7 +72,7 @@ const MGLExceptionName MGLUnsupportedRegionTypeException = @"MGLUnsupportedRegio
     if (self.isPaused) {
         return;
     }
-    _mbglFileSource->pause();
+    self.mbglFileSource->pause();
     self.paused = YES;
 }
 
@@ -80,7 +80,7 @@ const MGLExceptionName MGLUnsupportedRegionTypeException = @"MGLUnsupportedRegio
     if (!self.isPaused) {
         return;
     }
-    _mbglFileSource->resume();
+    self.mbglFileSource->resume();
     self.paused = NO;
 }
 #endif
@@ -128,10 +128,10 @@ const MGLExceptionName MGLUnsupportedRegionTypeException = @"MGLUnsupportedRegio
             return url.absoluteString.UTF8String;
         });
 
-        _mbglFileSource->setResourceTransform(_mbglResourceTransform->self());
+        self.mbglFileSource->setResourceTransform(_mbglResourceTransform->self());
     } else {
         _mbglResourceTransform.reset();
-        _mbglFileSource->setResourceTransform({});
+        self.mbglFileSource->setResourceTransform({});
     }
 }
 
@@ -222,8 +222,8 @@ const MGLExceptionName MGLUnsupportedRegionTypeException = @"MGLUnsupportedRegio
             [[NSFileManager defaultManager] moveItemAtPath:subdirectorylessCacheURL.path toPath:cachePath error:NULL];
         }
 
-        _mbglMapOptions = mbgl::MapOptions().withCachePath(cachePath.UTF8String).withAssetPath([NSBundle mainBundle].resourceURL.path.UTF8String);
-        _mbglFileSource = mbgl::FileSource::platformFileSource(_mbglMapOptions);
+        self.mbglMapOptions = mbgl::MapOptions().withCachePath(cachePath.UTF8String).withAssetPath([NSBundle mainBundle].resourceURL.path.UTF8String);
+        self.mbglFileSource = std::static_pointer_cast<mbgl::DefaultFileSource>(mbgl::FileSource::platformFileSource(self.mbglMapOptions));
 
         // Observe for changes to the API base URL (and find out the current one).
         [[MGLAccountManager sharedManager] addObserver:self
@@ -477,7 +477,7 @@ const MGLExceptionName MGLUnsupportedRegionTypeException = @"MGLUnsupportedRegio
 
 - (void)setMaximumAllowedMapboxTiles:(uint64_t)maximumCount {
     MGLLogDebug(@"Setting maximumAllowedMapboxTiles: %lu", (unsigned long)maximumCount);
-    _mbglFileSource->setOfflineMapboxTileCountLimit(maximumCount);
+    self.mbglFileSource->setOfflineMapboxTileCountLimit(maximumCount);
 }
 
 #pragma mark -
@@ -511,7 +511,7 @@ const MGLExceptionName MGLUnsupportedRegionTypeException = @"MGLUnsupportedRegio
         response.expires = mbgl::Timestamp() + std::chrono::duration_cast<mbgl::Seconds>(MGLDurationFromTimeInterval(expires.timeIntervalSince1970));
     }
     
-    _mbglFileSource->put(resource, response);
+    self.mbglFileSource->put(resource, response);
 }
 
 - (void)putResourceWithUrl:(NSURL *)url data:(NSData *)data modified:(nullable NSDate *)modified expires:(nullable NSDate *)expires etag:(nullable NSString *)etag mustRevalidate:(BOOL)mustRevalidate {

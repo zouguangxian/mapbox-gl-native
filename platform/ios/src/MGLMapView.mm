@@ -476,7 +476,7 @@ public:
     BOOL enableCrossSourceCollisions = !config.perSourceCollisions;
     _rendererFrontend = std::make_unique<MGLRenderFrontend>(std::move(renderer), self, *_mbglView);
 
-    mbgl::MapOptions mapOptions;
+    mbgl::MapOptions mapOptions = [[MGLOfflineStorage sharedOfflineStorage] mbglMapOptions];
     mapOptions.withMapMode(mbgl::MapMode::Continuous)
               .withConstrainMode(mbgl::ConstrainMode::None)
               .withViewportMode(mbgl::ViewportMode::Default)

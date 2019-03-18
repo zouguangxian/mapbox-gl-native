@@ -192,6 +192,18 @@ LatLngBounds MapSnapshotter::Impl::getRegion() const {
     return map->latLngBoundsForCamera(getCameraOptions());
 }
 
+MapSnapshotter::MapSnapshotter(std::shared_ptr<Scheduler> scheduler,
+                               const std::pair<bool, std::string> style,
+                               const Size& size,
+                               const float pixelRatio,
+                               const optional<CameraOptions> cameraOptions,
+                               const optional<LatLngBounds> region,
+                               const optional<std::string> programCacheDir,
+                               const optional<std::string> localFontFamily)
+   : impl(std::make_unique<util::Thread<MapSnapshotter::Impl>>(
+       "Map Snapshotter", std::move(scheduler), style, size, pixelRatio, cameraOptions,
+       region, programCacheDir, localFontFamily)) {}
+
 MapSnapshotter::MapSnapshotter(std::shared_ptr<FileSource> fileSource,
                                std::shared_ptr<Scheduler> scheduler,
                                const std::pair<bool, std::string> style,
